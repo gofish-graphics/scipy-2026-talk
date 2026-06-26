@@ -411,69 +411,73 @@ function renderBalloonChart() {
   const el = getContainer("chart-balloon");
   if (!el || el.children.length > 0) return;
 
-  const Balloon = (
-    x: number,
-    y: number,
-    scale: number,
-    colors: { body: string; highlight: string; knot: string }
-  ) =>
-    Frame(
-      {
-        x: x - 15 * scale,
-        y: y + 27 * scale,
-        box: true,
-        transform: { scale: { x: scale, y: -scale } },
-      },
-      [
-        ellipse({
-          cx: 15,
-          cy: 15,
-          w: 24,
-          h: 30,
-          fill: colors.body,
-        }),
-        ellipse({
-          cx: 12,
-          cy: 11,
-          w: 7,
-          h: 11,
-          fill: colors.highlight,
-        }),
-        rect({
-          cx: 15,
-          cy: 32,
-          w: 8,
-          h: 4,
-          fill: colors.knot,
-          rx: 3,
-          ry: 2,
-        }),
-        rect({
-          cx: 15,
-          cy: 32,
-          w: 5,
-          h: 2.4,
-          fill: colors.knot,
-          rx: 2,
-          ry: 1,
-        }),
-      ]
-    );
+  const Balloon = (colors: {
+    body: string;
+    highlight: string;
+    knot: string;
+  }) =>
+    markLayer([
+      ellipse({
+        cx: 0,
+        cy: 19,
+        w: 24,
+        h: 30,
+        fill: colors.body,
+      }),
+      ellipse({
+        cx: -3,
+        cy: 23,
+        w: 7,
+        h: 11,
+        fill: colors.highlight,
+      }),
+      rect({
+        cx: 0,
+        cy: 2,
+        w: 8,
+        h: 4,
+        fill: colors.knot,
+        rx: 3,
+        ry: 2,
+      }),
+      rect({
+        cx: 0,
+        cy: 2,
+        w: 5,
+        h: 2.4,
+        fill: colors.knot,
+        rx: 2,
+        ry: 1,
+      }),
+    ]);
 
-  Frame(
+  Layer(
     { coord: wavy(), x: 0, y: 0 },
-    scatterByLake.map((data) => {
-      const top3 = _.orderBy(data.collection, "count", "desc").slice(0, 3);
-      const colors = {
-        body: speciesColorMap[top3[0]?.species] ?? color6[0],
-        highlight: speciesColorMap[top3[1]?.species] ?? color6[1],
-        knot: speciesColorMap[top3[2]?.species] ?? color6[2],
-      };
-      return Frame({ x: data.x }, [
-        rect({ x: 0, y: 0, w: 1, h: data.y, emY: true, fill: "#333" }),
-        Balloon(0, data.y, 1, colors),
-      ]);
-    })
+    [
+      Chart(scatterByLake)
+        .flow(scatter("lake", { x: "x" }))
+        .mark(rect({ w: 1, h: "y", emY: true, fill: "#333" }).name("strings")),
+      Chart(select("strings"))
+        .flow(group("lake"))
+        .mark(((d: any[]) => {
+          const datum = d[0].datum as
+            | { collection: { species: string; count: number }[] }
+            | { collection: { species: string; count: number }[] }[];
+          const collection = Array.isArray(datum)
+            ? datum[0]?.collection
+            : datum.collection;
+          const top3 = _.orderBy(collection ?? [], "count", "desc").slice(0, 3);
+          const colors = {
+            body: speciesColorMap[top3[0]?.species] ?? color6[0],
+            highlight: speciesColorMap[top3[1]?.species] ?? color6[1],
+            knot: speciesColorMap[top3[2]?.species] ?? color6[2],
+          };
+          return gofishSpread({ dir: "y", alignment: "middle", spacing: 0 }, [
+            d[0],
+            Balloon(colors),
+          ]);
+        }) as any),
+    ]
   ).render(el, { w: CHART_W, h: CHART_H, axes: true });
 }
 
