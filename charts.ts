@@ -14,6 +14,8 @@ import {
   selectAll as select,
   clock,
   polar,
+  linear,
+  Constraint,
   area,
   group as gofishGroup,
   layer as markLayer,
@@ -416,39 +418,43 @@ function renderBalloonChart() {
     highlight: string;
     knot: string;
   }) =>
-    markLayer([
-      ellipse({
-        cx: 0,
-        cy: 19,
-        w: 24,
-        h: 30,
-        fill: colors.body,
-      }),
-      ellipse({
-        cx: -3,
-        cy: 23,
-        w: 7,
-        h: 11,
-        fill: colors.highlight,
-      }),
-      rect({
-        cx: 0,
-        cy: 2,
-        w: 8,
-        h: 4,
-        fill: colors.knot,
-        rx: 3,
-        ry: 2,
-      }),
-      rect({
-        cx: 0,
-        cy: 2,
-        w: 5,
-        h: 2.4,
-        fill: colors.knot,
-        rx: 2,
-        ry: 1,
-      }),
+    Frame({ box: true }, [
+      markLayer({ coord: linear() }, [
+        ellipse({
+          cx: 0,
+          cy: 19,
+          w: 24,
+          h: 30,
+          fill: colors.body,
+        }).name("body"),
+        ellipse({
+          cx: -3,
+          cy: 23,
+          w: 7,
+          h: 11,
+          fill: colors.highlight,
+        }),
+        rect({
+          cx: 0,
+          cy: 2,
+          w: 8,
+          h: 4,
+          fill: colors.knot,
+          rx: 3,
+          ry: 2,
+        }).name("knot"),
+        rect({
+          cx: 0,
+          cy: 2,
+          w: 5,
+          h: 2.4,
+          fill: colors.knot,
+          rx: 2,
+          ry: 1,
+        }),
+      ]).constrain(({ body, knot }) => [
+        Constraint.align({ x: "middle", y: ["start", "end"] }, [body, knot]),
+      ]),
     ]);
 
   Layer(
@@ -478,7 +484,7 @@ function renderBalloonChart() {
           ]);
         }) as any),
     ]
-  ).render(el, { w: CHART_W, h: CHART_H, axes: true });
+  ).render(el, { w: CHART_W, h: CHART_H, axes: false });
 }
 
 // ── Public API ────────────────────────────────────────────────────────────
