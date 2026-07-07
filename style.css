@@ -808,6 +808,54 @@
   font-size: 0.95em !important;
 }
 
+.runway-pl-slide {
+  grid-template-columns: 0.94fr 1.06fr;
+}
+
+.runway-pl-slide .big-claim {
+  font-size: 0.92em !important;
+}
+
+.source-line {
+  color: var(--muted);
+  font-size: 0.42em !important;
+  margin-top: 1.5em !important;
+}
+
+.fashion-board {
+  display: flex;
+  justify-content: center;
+}
+
+.runway-photo-frame {
+  background: #fffdf8;
+  border: 3px solid #24211f;
+  border-radius: 9px 6px 8px 6px;
+  box-shadow: 6px 7px 0 rgba(30, 30, 30, 0.13);
+  margin: 0;
+  overflow: hidden;
+  width: min(100%, 430px);
+}
+
+.runway-photo {
+  display: block;
+  height: 485px;
+  object-fit: cover;
+  object-position: 50% 46%;
+  width: 100%;
+}
+
+.runway-photo-frame figcaption {
+  border-top: 2px solid #24211f;
+  color: #24211f;
+  font-family: "Shantell Sans Local", sans-serif;
+  font-size: 0.5em;
+  font-weight: 760;
+  margin: 0;
+  padding: 0.28em 0.5em 0.36em;
+  text-align: center;
+}
+
 .lake-map {
   background: #eef8fb;
   border: 3px solid #24211f;
@@ -936,4 +984,186 @@
 
 .todo-note code {
   font-size: 0.9em;
+}
+
+/* ── VizChitra-style barley walkthrough (ported from presentation-scipy-vizchitra-walkthrough) ── */
+.viz-step {
+  --viz-op: #49a66a;
+  --viz-mark: #d6a62f;
+  --viz-transform: #4d90cf;
+  --viz-ink: #24211f;
+}
+
+.viz-step.split {
+  grid-template-columns: 1.08fr 0.92fr;
+}
+
+.viz-step h2 {
+  font-size: 1.85em;
+  margin-bottom: 0.35em;
+}
+
+.viz-code {
+  background: #fffdf8;
+  border: 2px solid var(--viz-ink);
+  border-radius: 6px 9px 5px 8px;
+  box-shadow: 4px 5px 0 rgba(30, 30, 30, 0.11);
+  color: #222;
+  font-size: 0.52em !important;
+  line-height: 1.34 !important;
+  margin: 0.4em 0 0;
+  padding: 0.72em 0.85em !important;
+  white-space: pre-wrap;
+}
+
+.viz-code.compact {
+  font-size: 0.38em !important;
+  margin-top: 0.35em;
+}
+
+.viz-op {
+  color: var(--viz-op);
+  font-weight: 760;
+}
+
+.viz-mark {
+  color: var(--viz-mark);
+  font-weight: 760;
+}
+
+.viz-transform {
+  color: var(--viz-transform);
+  font-weight: 760;
+}
+
+.viz-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55em;
+  margin-top: 0.75em;
+}
+
+.viz-legend span {
+  align-items: center;
+  color: #403c37;
+  display: inline-flex;
+  font-size: 0.46em;
+  gap: 0.35em;
+}
+
+.viz-legend b {
+  border: 2px solid var(--viz-ink);
+  border-radius: 999px;
+  display: inline-block;
+  height: 0.85em;
+  width: 0.85em;
+}
+
+.viz-legend .viz-op {
+  background: var(--viz-op);
+}
+
+.viz-legend .viz-mark {
+  background: var(--viz-mark);
+}
+
+.viz-legend .viz-transform {
+  background: var(--viz-transform);
+}
+
+.viz-step-copy {
+  color: #403c37;
+  font-size: 0.58em !important;
+  line-height: 1.28 !important;
+  margin-top: 0.75em !important;
+}
+
+.viz-data-card,
+.viz-compare-card {
+  background: #fffdf8;
+  border: 3px solid var(--viz-ink);
+  border-radius: 8px 5px 9px 6px;
+  box-shadow: 5px 6px 0 rgba(30, 30, 30, 0.12);
+}
+
+.viz-data-card {
+  padding: 0.55em;
+}
+
+.viz-data-card div {
+  align-items: baseline;
+  border-bottom: 2px solid rgba(36, 33, 31, 0.18);
+  display: grid;
+  gap: 0.5em;
+  grid-template-columns: 0.48fr 1fr;
+  padding: 0.38em 0;
+}
+
+.viz-data-card div:last-child {
+  border-bottom: 0;
+}
+
+.viz-data-card strong {
+  color: #24211f;
+  font-family: "Fira Code", monospace;
+  font-size: 0.62em;
+}
+
+.viz-data-card span {
+  color: #403c37;
+  font-size: 0.54em;
+  line-height: 1.2;
+}
+
+.viz-gofish-chart {
+  min-height: 340px;
+  width: 100%;
+}
+
+.viz-gofish-chart > svg {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  width: 91% !important;
+  overflow: visible;
+}
+
+.viz-gofish-compare {
+  margin-top: 0.4em;
+  min-height: 170px;
+  width: 100%;
+}
+
+.viz-callout {
+  background: rgba(77, 144, 207, 0.1);
+  border: 2px solid var(--viz-transform);
+  border-radius: 7px;
+  display: inline-block;
+  font-size: 0.62em !important;
+  margin-top: 0.85em !important;
+  padding: 0.35em 0.55em;
+}
+
+.viz-compare {
+  display: grid;
+  gap: 0.75em;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 0.45em;
+}
+
+.viz-compare-card {
+  padding: 0.55em;
+}
+
+.viz-compare-card h3 {
+  color: #24211f;
+  font-size: 0.8em;
+  margin: 0 0 0.2em;
+}
+
+.viz-compare-card p {
+  color: #403c37;
+  font-size: 0.46em !important;
+  line-height: 1.2 !important;
+  min-height: 2.5em;
 }

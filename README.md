@@ -1,51 +1,44 @@
-# Seeing Graphics Clearly - SciPy 2026
+# Seeing Graphics Clearly - SciPy draft
 
-Standalone Reveal/Vite deck for the SciPy version of the GoFish talk. It uses
-`gofish-graphics@nightly` from npm and includes the small copied demo dataset it
-needs under `data/`.
+Full Reveal/Vite deck adapted from the `pydata-meetup-2026` branch of `/Users/jmp/gofish-20250316`.
 
-## Prerequisites
+This version keeps the PyData slide sequence, speaker notes, live GoFish-rendered chart examples, and code/spec slides, then adds the SciPy framing:
 
-- Node.js 20 or newer
-- pnpm 10
-- GitHub access to this private repository
+- lake/data setup
+- direct perception before chart-type judgment
+- rules are brittle
+- stylistic anarchism
+- grammar vs elements of style
 
-If pnpm is not already available:
+## Running
 
-```bash
-corepack enable
-```
-
-## Running the presentation locally
+From this directory:
 
 ```bash
-git clone git@github.com:gofish-graphics/scipy-2026-talk.git
-cd scipy-2026-talk
-pnpm install
-pnpm dev
+./node_modules/.bin/vite --host 127.0.0.1
 ```
 
-Opens at **http://localhost:4001**. Navigate with arrow keys; press `S` for
-speaker notes.
+The dev server is configured for `http://localhost:4001/`.
 
-During install, pnpm may print a warning about ignored build scripts for
-`esbuild`. The deck still installs and builds normally.
+Dependencies are already installed in `node_modules/`. If you reinstall with
+the bundled pnpm, it may print an `esbuild` build-script approval warning even
+after placing the dependencies on disk; invoking Vite directly avoids rerunning
+that wrapper check.
 
-## Building and previewing
+The deck uses a local vendored copy of the GoFish source from the PyData branch:
 
-```bash
-pnpm build
-pnpm preview
+```text
+presentation-scipy/vendor-gofish/src/lib.ts
 ```
 
-`pnpm build` writes the static site to `dist/`. `pnpm preview` serves that built
-output locally, usually at **http://localhost:4173**.
+This is intentional: the current `/Users/jmp/gofish-20250316` checkout may be on a newer branch whose exported API no longer matches the talk.
+
 
 ## Editing
 
 - Slide content: `index.html`
 - Live chart specs/renderers: `charts.ts`
-- Visual skin and layout: `style.css`
-- Demo data: `data/catch.ts`
-- Original PyData planning notes: `20260316-talk-outline.md`,
-  `20260317-talk-outline.md`, `20260317-schema.md`
+- Thesis-style visual skin: bottom section of `style.css`
+- Original PyData planning notes: `20260316-talk-outline.md`, `20260317-talk-outline.md`, `20260317-schema.md`
+
+Press `S` in Reveal for speaker notes.

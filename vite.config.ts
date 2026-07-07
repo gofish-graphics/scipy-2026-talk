@@ -9,7 +9,10 @@ export default defineConfig({
   plugins: [solidPlugin()],
   resolve: {
     alias: {
-      "@gofish-data": path.resolve(__dirname, "data"),
+      "@gofish-data": path.resolve(
+        __dirname,
+        "vendor-gofish/src/data"
+      ),
     },
   },
   server: {

@@ -32,6 +32,7 @@ import {
   seafood,
   catchLocations,
 } from "@gofish-data/catch";
+import barleyRaw from "./data/barley.json";
 
 const CHART_W = 480;
 const CHART_H = 320;
@@ -79,8 +80,59 @@ const color6 = [
   "#d45e83",
 ];
 
+const vizStepColors = {
+  Manchuria: "#f0bf4d",
+  Glabron: "#e86f5d",
+  Svansota: "#d45e83",
+  Velvet: "#68a9d8",
+  Trebi: "#8fcf8f",
+  "No. 457": "#a181c8",
+  "No. 462": "#ff9666",
+  Peatland: "#b58cd9",
+  "No. 475": "#5aa6a6",
+  "Wisconsin No. 38": "#c78755",
+  "University Farm": "#9aa3ad",
+  Waseca: "#f0bf4d",
+  Morris: "#49a66a",
+  Crookston: "#68a9d8",
+  "Grand Rapids": "#4e79a7",
+  Duluth: "#e86f5d",
+};
+
+type BarleyRow = {
+  year: 1931 | 1932;
+  variety: string;
+  site: string;
+  yield: number;
+};
+
+const barley = barleyRaw as BarleyRow[];
+
 function getContainer(id: string): HTMLElement | null {
   return document.getElementById(id);
+}
+
+// GoFish's `.render()` promise can resolve a tick before the SVG is actually
+// committed to the DOM (the insertion appears to happen on a later
+// microtask/frame). Poll briefly for a child to appear rather than assuming
+// it's there the instant `await ...render()` returns.
+function waitForChild(
+  el: HTMLElement,
+  selector: string,
+  timeoutMs = 500
+): Promise<SVGSVGElement | null> {
+  return new Promise((resolve) => {
+    const start = performance.now();
+    const tick = () => {
+      const found = el.querySelector<SVGSVGElement>(selector);
+      if (found || performance.now() - start > timeoutMs) {
+        resolve(found);
+        return;
+      }
+      requestAnimationFrame(tick);
+    };
+    tick();
+  });
 }
 
 // ── Opening: Franconeri — same data, two groupings ────────────────────────
@@ -195,139 +247,125 @@ function renderFranconeriBKey() {
     .render(el, { w: KEY_W, h: KEY_H, axes: true });
 }
 
-const SPEC_BAR_W = 440;
-const SPEC_BAR_H = 260;
+// ── VizChitra-style walkthrough — native GoFish charts (barley) ──────────
+const VIZ_W = 470;
+const VIZ_H = 300;
+const VIZ_COMPARE_W = 250;
+const VIZ_COMPARE_H = 150;
+const VIZ_RENDER_OPTIONS = { w: VIZ_W, h: VIZ_H, axes: true, legend: false };
+const VIZ_COMPARE_RENDER_OPTIONS = {
+  w: VIZ_COMPARE_W,
+  h: VIZ_COMPARE_H,
+  axes: true,
+  legend: false,
+};
+const vizChartOptions = { color: palette(vizStepColors), legend: false };
 
-/** Live bar chart on “our first GoFish spec” slides (bottom-left). */
-function renderSpecBarChart(id: string) {
+function renderVizSiteSlots() {
+  const el = getContainer("chart-viz-site-slots");
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(spread("site", { dir: "x" }))
+    .mark(rect({ h: 1, fill: "#dff1e5" }))
+    .render(el, VIZ_RENDER_OPTIONS);
+}
+
+function renderVizSiteYield(id = "chart-viz-site-yield") {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(seafood)
-    .flow(spread("lake", { dir: "x" }))
-    .mark(rect({ h: "count" }))
-    .render(el, { w: SPEC_BAR_W, h: SPEC_BAR_H, axes: true });
+  Chart(barley, vizChartOptions)
+    .flow(spread("site", { dir: "x" }))
+    .mark(rect({ h: "yield", fill: "#68a9d8" }))
+    .render(el, VIZ_RENDER_OPTIONS);
 }
 
-// ── Part 1 — Step 2: Stacked bar ─────────────────────────────────────────
-function renderStackedChart() {
-  const el = getContainer("chart-stacked");
+function renderVizSiteVariety(id = "chart-viz-site-variety") {
+  const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(seafood)
-    .flow(spread("lake", { dir: "x" }), stack("species", { dir: "y" }))
-    .mark(rect({ h: "count", fill: "species" }))
-    .render(el, { w: CHART_W, h: CHART_H, axes: true });
-}
-
-// ── Part 1 — Step 5: Color/labels discussion — same chart, second instance
-function renderStackedChart2() {
-  const el = getContainer("chart-stacked-2");
-  if (!el || el.children.length > 0) return;
-  Chart(seafood)
-    .flow(spread("lake", { dir: "x" }), stack("species", { dir: "y" }))
-    .mark(rect({ h: "count", fill: "species" }))
-    .render(el, { w: CHART_W, h: 240, axes: true });
-}
-
-// ── Part 1 — Step 2b: Sorted stacked bar ─────────────────────────────────
-function renderSortedChart() {
-  const el = getContainer("chart-sorted");
-  if (!el || el.children.length > 0) return;
-  Chart(seafood)
+  Chart(barley, vizChartOptions)
     .flow(
-      spread("lake", { dir: "x" }),
-      derive((d) => _.orderBy(d, "count", "asc")),
-      stack("species", { dir: "y" })
+      spread("site", { dir: "x", spacing: 24 }),
+      spread("variety", { dir: "x", spacing: 4 })
     )
-    .mark(rect({ h: "count", fill: "species" }))
-    .render(el, { w: CHART_W, h: CHART_H, axes: true });
+    .mark(rect({ h: "yield", fill: "variety" }))
+    .render(el, VIZ_RENDER_OPTIONS);
 }
 
-// ── Part 1 — Step 3: Ribbon (stacked area) ───────────────────────────────
-function renderRibbonChart() {
-  const el = getContainer("chart-ribbon");
+function renderVizSiteVarietyMini() {
+  const el = getContainer("chart-viz-site-variety-mini");
   if (!el || el.children.length > 0) return;
-  Layer([
-    Chart(seafood)
-      .flow(
-        spread("lake", { dir: "x", spacing: 64 }),
-        derive((d) => _.orderBy(d, "count", "asc")),
-        stack("species", { dir: "y" })
-      )
-      .mark(rect({ h: "count", fill: "species" }).name("bars")),
-    Chart(select("bars"))
-      .flow(group("species"))
-      .mark(area({ opacity: 0.8 })),
-  ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
+  Chart(barley, vizChartOptions)
+    .flow(
+      spread("site", { dir: "x", spacing: 14 }),
+      spread("variety", { dir: "x", spacing: 2 })
+    )
+    .mark(rect({ h: "yield", fill: "variety" }))
+    .render(el, VIZ_COMPARE_RENDER_OPTIONS);
 }
 
-// ── Part 1 — Step 4: Polar ribbon ────────────────────────────────────────
-function renderPolarChart() {
-  const el = getContainer("chart-polar");
+function renderVizVarietySiteMini() {
+  const el = getContainer("chart-viz-variety-site-mini");
   if (!el || el.children.length > 0) return;
-  Layer({ coord: clock() }, [
-    Chart(seafood)
-      .flow(
-        spread("lake", {
-          dir: "x",
-          spacing: (2 * Math.PI) / 6,
-          mode: "center",
-          y: 50,
-          label: false,
+  Chart(barley, vizChartOptions)
+    .flow(
+      spread("variety", { dir: "x", spacing: 14 }),
+      spread("site", { dir: "x", spacing: 2 })
+    )
+    .mark(rect({ h: "yield", fill: "site" }))
+    .render(el, VIZ_COMPARE_RENDER_OPTIONS);
+}
+
+function renderVizStacked(id = "chart-viz-stacked") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(spread("variety", { dir: "x" }), stack("site", { dir: "y" }))
+    .mark(rect({ h: "yield", fill: "site" }))
+    .render(el, VIZ_RENDER_OPTIONS);
+}
+
+function renderVizYearSorted() {
+  const el = getContainer("chart-viz-year-sorted");
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(
+      spread("variety", { dir: "x", spacing: 24 }),
+      spread("year", { dir: "x", spacing: 4 }),
+      derive((d) => _.orderBy(d, "yield", "asc")),
+      stack("site", { dir: "y" })
+    )
+    .mark(rect({ h: "yield", fill: "site" }))
+    .render(el, VIZ_RENDER_OPTIONS);
+}
+
+function renderVizRibbon(id = "chart-viz-ribbon", highlight = false) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  const chartOptions = highlight
+    ? {
+        color: palette({
+          Waseca: "#d7dadd",
+          Morris: "#49a66a",
+          "Grand Rapids": "#d7dadd",
+          Crookston: "#d7dadd",
+          Duluth: "#d7dadd",
         }),
-        derive((d) => _.orderBy(d, "count", "asc")),
-        stack("species", { dir: "y", label: false })
-      )
-      .mark(rect({ w: 0.1, h: "count", fill: "species" }).name("bars")),
-    Chart(select("bars"))
-      .flow(group("species"))
-      .mark(area({ opacity: 0.8 })),
-  ]).render(el, { w: CHART_H, h: CHART_H, axes: true });
-}
-
-// ── Part 1 — Step 4b: Highlighted ribbon ─────────────────────────────────
-function renderRibbonHighlightChart() {
-  const el = getContainer("chart-ribbon-highlight");
-  if (!el || el.children.length > 0) return;
+        legend: false,
+      }
+    : vizChartOptions;
   Layer([
-    Chart(seafood, {
-      color: palette({ Salmon: "#e15759", Trout: "#4e79a7" }),
-    })
+    Chart(barley, chartOptions)
       .flow(
-        spread("lake", { dir: "x", spacing: 64 }),
-        derive((d) => _.orderBy(d, "count", "asc")),
-        stack("species", { dir: "y" })
+        spread("variety", { dir: "x", spacing: 38 }),
+        spread("year", { dir: "x", spacing: 8 }),
+        derive((d) => _.orderBy(d, "yield", "asc")),
+        stack("site", { dir: "y" })
       )
-      .mark(rect({ h: "count", fill: "species" }).name("bars")),
+      .mark(rect({ w: 16, h: "yield", fill: "site" }).name("bars")),
     Chart(select("bars"))
-      .flow(group("species"))
-      .mark(area({ opacity: 0.6 })),
-  ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
-}
-
-// ── Part 1 — Step 4b: Highlighted polar ribbon ───────────────────────────
-function renderPolarHighlightChart() {
-  const el = getContainer("chart-polar-highlight");
-  if (!el || el.children.length > 0) return;
-  Layer({ coord: clock() }, [
-    Chart(seafood, {
-      color: palette({ Salmon: "#e15759", Trout: "#4e79a7" }),
-    })
-      .flow(
-        spread("lake", {
-          dir: "x",
-          spacing: (2 * Math.PI) / 6,
-          mode: "center",
-          y: 50,
-          label: false,
-        }),
-        derive((d) => _.orderBy(d, "count", "asc")),
-        stack("species", { dir: "y", label: false })
-      )
-      .mark(rect({ w: 0.1, h: "count", fill: "species" }).name("bars")),
-    Chart(select("bars"))
-      .flow(group("species"))
-      .mark(area({ opacity: 0.6 })),
-  ]).render(el, { w: CHART_H, h: CHART_H, axes: true });
+      .flow(group("variety"), group("site"))
+      .mark(area({ opacity: highlight ? 0.78 : 0.5 })),
+  ]).render(el, VIZ_RENDER_OPTIONS);
 }
 
 // ── Part 2: Scatter pie ───────────────────────────────────────────────────
@@ -355,6 +393,95 @@ function renderScatterPieChart() {
         .mark(rect({ w: "count", fill: "species" }))
     )
     .render(el, { w: CHART_W, h: CHART_H, axes: true });
+}
+
+// Barley analog of scatterByLake: one glyph per site, per year. Sites are
+// spread evenly along x (there's no natural geography here, so we lay them
+// out in a row, mirroring the lake scatter's "one point per group" shape).
+// Pie radius (h) is scaled by each site's total yield that year — using a
+// shared min/max across both years so 1931 and 1932 read on the same scale.
+// That radius encoding is what makes the Morris anomaly visible: Morris is
+// the only site whose total yield *rises* from 1931 to 1932 while every
+// other site's total falls, so its pie visibly grows while the rest shrink.
+const barleySiteOrder = [
+  "University Farm",
+  "Waseca",
+  "Morris",
+  "Crookston",
+  "Grand Rapids",
+  "Duluth",
+];
+
+function barleyScatterByYear(year: 1931 | 1932) {
+  return _(barley)
+    .filter((d) => d.year === year)
+    .groupBy("site")
+    .map((siteData, site) => ({
+      site,
+      x: barleySiteOrder.indexOf(site) * 60,
+      collection: siteData.map((item) => ({
+        variety: item.variety,
+        yield: item.yield,
+      })),
+    }))
+    .value();
+}
+
+const barleySiteYearTotalYield: Record<string, number> = {};
+for (const row of barley) {
+  const key = `${row.year}|${row.site}`;
+  barleySiteYearTotalYield[key] = (barleySiteYearTotalYield[key] ?? 0) + row.yield;
+}
+const barleyMaxTotalYield = _.max(Object.values(barleySiteYearTotalYield)) as number;
+const barleyMinTotalYield = _.min(Object.values(barleySiteYearTotalYield)) as number;
+const BARLEY_PIE_MIN_H = 10;
+const BARLEY_PIE_MAX_H = 26;
+
+function barleyPieRadius(totalYield: number) {
+  const t =
+    (totalYield - barleyMinTotalYield) /
+    (barleyMaxTotalYield - barleyMinTotalYield);
+  return BARLEY_PIE_MIN_H + t * (BARLEY_PIE_MAX_H - BARLEY_PIE_MIN_H);
+}
+
+async function renderBarleyScatterPie(year: 1931 | 1932, id: string) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  await Chart(barleyScatterByYear(year), {
+    color: palette(vizStepColors),
+    legend: false,
+    axes: false,
+  })
+    .flow(scatter("site", { x: "x" }))
+    .mark((data) => {
+      const site = data[0].site as string;
+      const totalYield = barleySiteYearTotalYield[`${year}|${site}`];
+      return Chart(data[0].collection, {
+        coord: clock(),
+        axes: false,
+        color: palette(vizStepColors),
+        legend: false,
+      })
+        .flow(stack("variety", { dir: "x", h: barleyPieRadius(totalYield) }))
+        .mark(rect({ w: "yield", fill: "variety" }));
+    })
+    .render(el, { w: VIZ_COMPARE_W, h: VIZ_COMPARE_H, axes: false, legend: false });
+
+  // GoFish auto-seats a color legend the first time a nested chart-as-glyph
+  // mark (like these pies) introduces a given categorical domain in the
+  // render session, regardless of the (undocumented / no-op) `legend: false`
+  // option above — so only one of the two years ends up with a swatch
+  // column, which breaks the side-by-side comparison. Strip it: the pies
+  // themselves never render text, so any <text> matching a variety name is
+  // legend chrome — remove its nearest ancestor <g> whose siblings include
+  // the swatch <rect>s.
+  const svg = await waitForChild(el, "svg");
+  const varietyNames = new Set(Object.keys(vizStepColors));
+  svg?.querySelectorAll("text").forEach((t) => {
+    if (!varietyNames.has(t.textContent ?? "")) return;
+    const column = t.parentElement?.parentElement;
+    column?.remove();
+  });
 }
 
 function renderFlowerChart() {
@@ -496,23 +623,21 @@ export function renderCharts() {
   renderFranconeriC();
   renderFranconeriAKey();
   renderFranconeriBKey();
-  renderSpecBarChart("chart-spec-bar-1");
-  renderSpecBarChart("chart-spec-bar-2");
-  renderSpecBarChart("chart-spec-bar-3");
-  renderStackedChart();
-  renderSortedChart();
-  renderStackedChart2();
-  renderRibbonChart();
-  renderPolarChart();
-  renderRibbonHighlightChart();
-  renderPolarHighlightChart();
+  renderVizSiteSlots();
+  renderVizSiteYield();
+  renderVizSiteYield("chart-viz-site-yield-transform");
+  renderVizSiteVariety();
+  renderVizSiteVarietyMini();
+  renderVizVarietySiteMini();
+  renderVizStacked();
+  renderVizYearSorted();
+  renderVizRibbon();
+  renderVizRibbon("chart-viz-ribbon-highlight", true);
   renderScatterPieChart();
+  renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931");
+  renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932");
   renderFlowerChart();
   renderBalloonChart();
-  // ribbon build sequence
-  renderChartById("chart-ribbon-build-sorted");
-  renderChartById("chart-ribbon-build-spaced");
-  renderChartById("chart-ribbon-build-ribbon");
 }
 
 function renderChartById(id: string) {
@@ -521,9 +646,22 @@ function renderChartById(id: string) {
 }
 
 export const chartRenderers: Record<string, () => void> = {
-  "chart-spec-bar-1": () => renderSpecBarChart("chart-spec-bar-1"),
-  "chart-spec-bar-2": () => renderSpecBarChart("chart-spec-bar-2"),
-  "chart-spec-bar-3": () => renderSpecBarChart("chart-spec-bar-3"),
+  "chart-viz-site-slots": renderVizSiteSlots,
+  "chart-viz-site-yield": () => renderVizSiteYield(),
+  "chart-viz-site-yield-transform": () =>
+    renderVizSiteYield("chart-viz-site-yield-transform"),
+  "chart-viz-site-variety": () => renderVizSiteVariety(),
+  "chart-viz-site-variety-mini": renderVizSiteVarietyMini,
+  "chart-viz-variety-site-mini": renderVizVarietySiteMini,
+  "chart-viz-stacked": () => renderVizStacked(),
+  "chart-viz-year-sorted": renderVizYearSorted,
+  "chart-viz-ribbon": () => renderVizRibbon(),
+  "chart-viz-ribbon-highlight": () =>
+    renderVizRibbon("chart-viz-ribbon-highlight", true),
+  "chart-viz-barley-pie-1931": () =>
+    renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931"),
+  "chart-viz-barley-pie-1932": () =>
+    renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932"),
   "chart-franconeri-a": renderFranconeriA,
   "chart-franconeri-a-color": renderFranconeriAColor,
   "chart-franconeri-a-color-key": renderFranconeriAColorKey,
@@ -564,83 +702,6 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-franconeri-c": renderFranconeriC,
   "chart-franconeri-a-key": renderFranconeriAKey,
   "chart-franconeri-b-key": renderFranconeriBKey,
-  // bar→stacked transition
-  "chart-ba1-a": () => {
-    const el = getContainer("chart-ba1-a");
-    if (!el || el.children.length > 0) return;
-    Chart(seafood)
-      .flow(spread("lake", { dir: "x" }))
-      .mark(rect({ h: "count" }))
-      .render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-ba1-b": () => {
-    const el = getContainer("chart-ba1-b");
-    if (!el || el.children.length > 0) return;
-    Chart(seafood)
-      .flow(spread("lake", { dir: "x" }), stack("species", { dir: "y" }))
-      .mark(rect({ h: "count", fill: "species" }))
-      .render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  // stacked→ribbon transition
-  "chart-ba2-a": () => {
-    const el = getContainer("chart-ba2-a");
-    if (!el || el.children.length > 0) return;
-    Chart(seafood)
-      .flow(spread("lake", { dir: "x" }), stack("species", { dir: "y" }))
-      .mark(rect({ h: "count", fill: "species" }))
-      .render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-ba2-b": () => {
-    const el = getContainer("chart-ba2-b");
-    if (!el || el.children.length > 0) return;
-    Layer([
-      Chart(seafood)
-        .flow(
-          spread("lake", { dir: "x", spacing: 64 }),
-          derive((d) => _.orderBy(d, "count", "asc")),
-          stack("species", { dir: "y" })
-        )
-        .mark(rect({ h: "count", fill: "species" }).name("bars-ba2")),
-      Chart(select("bars-ba2"))
-        .flow(group("species"))
-        .mark(area({ opacity: 0.8 })),
-    ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  // ribbon→color transition
-  "chart-ba3-a": () => {
-    const el = getContainer("chart-ba3-a");
-    if (!el || el.children.length > 0) return;
-    Layer([
-      Chart(seafood)
-        .flow(
-          spread("lake", { dir: "x", spacing: 64 }),
-          derive((d) => _.orderBy(d, "count", "asc")),
-          stack("species", { dir: "y" })
-        )
-        .mark(rect({ h: "count", fill: "species" }).name("bars-ba3a")),
-      Chart(select("bars-ba3a"))
-        .flow(group("species"))
-        .mark(area({ opacity: 0.8 })),
-    ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-ba3-b": () => {
-    const el = getContainer("chart-ba3-b");
-    if (!el || el.children.length > 0) return;
-    Layer([
-      Chart(seafood, {
-        color: palette({ Salmon: "#e15759", Trout: "#4e79a7" }),
-      })
-        .flow(
-          spread("lake", { dir: "x", spacing: 64 }),
-          derive((d) => _.orderBy(d, "count", "asc")),
-          stack("species", { dir: "y" })
-        )
-        .mark(rect({ h: "count", fill: "species" }).name("bars-ba3b")),
-      Chart(select("bars-ba3b"))
-        .flow(group("species"))
-        .mark(area({ opacity: 0.6 })),
-    ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
   // retrospective — three Franconeri charts with specs
   "chart-retro-a": () => {
     const el = getContainer("chart-retro-a");
@@ -676,29 +737,6 @@ export const chartRenderers: Record<string, () => void> = {
         .mark(line({ strokeWidth: 2 })),
     ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
   },
-  "chart-sorted": renderSortedChart,
-  "chart-sort-before": () => {
-    const el = getContainer("chart-sort-before");
-    if (!el || el.children.length > 0) return;
-    Chart(seafood)
-      .flow(spread("lake", { dir: "x" }), stack("species", { dir: "y" }))
-      .mark(rect({ h: "count", fill: "species" }))
-      .render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-sort-after": () => {
-    const el = getContainer("chart-sort-after");
-    if (!el || el.children.length > 0) return;
-    Chart(seafood)
-      .flow(
-        spread("lake", { dir: "x" }),
-        derive((d) => _.orderBy(d, "count", "asc")),
-        stack("species", { dir: "y" })
-      )
-      .mark(rect({ h: "count", fill: "species" }))
-      .render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-stacked": renderStackedChart,
-  "chart-stacked-2": renderStackedChart2,
   // ── Key/value structure digression ──────────────────────────────────────
   "chart-kv-stacked-2": () => {
     const el = getContainer("chart-kv-stacked-2");
@@ -746,51 +784,6 @@ export const chartRenderers: Record<string, () => void> = {
       .mark(rect({ fill: "count" }))
       .render(el, { w: 280, h: 220, axes: true, legend: false });
   },
-  // ribbon progressive build
-  "chart-ribbon-build-sorted": () => {
-    const el = getContainer("chart-ribbon-build-sorted");
-    if (!el || el.children.length > 0) return;
-    Chart(seafood)
-      .flow(
-        spread("lake", { dir: "x" }),
-        derive((d) => _.orderBy(d, "count", "asc")),
-        stack("species", { dir: "y" })
-      )
-      .mark(rect({ h: "count", fill: "species" }))
-      .render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-ribbon-build-spaced": () => {
-    const el = getContainer("chart-ribbon-build-spaced");
-    if (!el || el.children.length > 0) return;
-    Chart(seafood)
-      .flow(
-        spread("lake", { dir: "x", spacing: 64 }),
-        derive((d) => _.orderBy(d, "count", "asc")),
-        stack("species", { dir: "y" })
-      )
-      .mark(rect({ h: "count", fill: "species" }))
-      .render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-ribbon-build-ribbon": () => {
-    const el = getContainer("chart-ribbon-build-ribbon");
-    if (!el || el.children.length > 0) return;
-    Layer([
-      Chart(seafood)
-        .flow(
-          spread("lake", { dir: "x", spacing: 64 }),
-          derive((d) => _.orderBy(d, "count", "asc")),
-          stack("species", { dir: "y" })
-        )
-        .mark(rect({ h: "count", fill: "species" }).name("bars-rbuild")),
-      Chart(select("bars-rbuild"))
-        .flow(group("species"))
-        .mark(area({ opacity: 0.8 })),
-    ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
-  },
-  "chart-ribbon": renderRibbonChart,
-  "chart-polar": renderPolarChart,
-  "chart-ribbon-highlight": renderRibbonHighlightChart,
-  "chart-polar-highlight": renderPolarHighlightChart,
   "chart-scatter-pie": renderScatterPieChart,
   "chart-flower": renderFlowerChart,
   "chart-balloon": renderBalloonChart,

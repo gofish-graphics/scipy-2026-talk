@@ -6,7 +6,10 @@
     "strict": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "gofish-graphics": ["../../packages/gofish-graphics/src/lib.ts"]
+    }
   },
   "include": ["*.ts", "*.tsx"]
 }

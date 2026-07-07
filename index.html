@@ -35,6 +35,51 @@
             </aside>
           </section>
 
+          <section
+            class="split runway-pl-slide"
+            data-background-color="#f7f2e8"
+          >
+            <div>
+              <p class="part">Runway PL</p>
+              <h2>high fashion for graphics tools</h2>
+              <p class="big-claim">
+                Jean Yang asks what happens when programming-language ideas get
+                the same public design culture that fashion has.
+              </p>
+              <p class="tight-copy">
+                I want that for scientific figures: couture-level structure,
+                made available for everyday chart decisions.
+              </p>
+              <p class="source-line">
+                Jean Yang, “Runway PL” and Fast Fashion · Schiaparelli FW
+                2026-27
+              </p>
+            </div>
+            <div class="fashion-board">
+              <figure class="runway-photo-frame">
+                <img
+                  class="runway-photo"
+                  src="source-images/schiaparelli-fw2026-look10.jpg"
+                  alt="Schiaparelli Fall/Winter 2026-27 runway look with kinetic tentacle-like shoulders"
+                />
+                <figcaption>Schiaparelli FW 2026-27</figcaption>
+              </figure>
+            </div>
+            <aside class="notes">
+              This opening is borrowing Jean Yang's runway PL framing: make the
+              ideas behind programming languages feel like a design culture more
+              people can enter. I looked for a fish-fashion reference and the
+              strongest one is Schiaparelli Fall/Winter 2026-27, whose official
+              collection notes describe a look encrusted with real fish scales
+              and a palette drawn from sea fauna. The recent Louis Vuitton
+              Spring/Summer 2027 menswear show also had the giant artificial
+              wave set, but Schiaparelli gives us the tighter bridge: fish,
+              couture, structure, and technique. Source links:
+              https://jeanstack.substack.com/p/runway-pl-and-fast-fashion and
+              https://schiaparelli.com/en/pages/haute-couture-automne-hiver-2026-27
+            </aside>
+          </section>
+
           <section class="split lake-slide" data-background-color="#f7f2e8">
             <div>
               <h2>start with the lakes</h2>
@@ -932,697 +977,183 @@
                C. Tasks / queries [placeholder]
              ══════════════════════════════════════════════════════ -->
 
-          <!-- ─── STEP 1: BAR CHART — progressive builder ─────── -->
+          <!-- ─── VIZCHITRA WALKTHROUGH: GOFISH STRUCTURAL BUILD (barley) ─── -->
 
-          <!-- chart(data) -->
-          <section>
-            <h2>our first GoFish spec</h2>
-            <div class="spec-slide-layout">
-              <div class="spec-slide-main spec-slide-cols">
-                <div class="spec-slide-col spec-slide-col-left">
-                  <div class="spec-slide-code">
-                    <pre><code class="language-python" data-line-numbers="1">chart(seafood)
-    .flow(spread("lake", dir="x"))
-    .mark(rect(h="count"))</code></pre>
-                    <div
-                      class="callout"
-                      style="margin-top: 0.9rem; font-size: 0.82em"
-                    >
-                      <strong>chart(data)</strong> — attach your DataFrame
-                    </div>
-                  </div>
-                  <div class="spec-slide-chart-cell">
-                    <div
-                      id="chart-spec-bar-1"
-                      class="chart-container spec-slide-chart"
-                    ></div>
-                  </div>
-                </div>
-                <div class="spec-slide-col spec-slide-col-right">
-                  <div class="spec-slide-diagram">
-                    <svg
-                      viewBox="0 0 260 310"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        x="10"
-                        y="8"
-                        width="240"
-                        height="100"
-                        fill="#f6f8fa"
-                        stroke="#d0d7de"
-                        stroke-width="1"
-                        rx="6"
-                      />
-                      <text
-                        x="20"
-                        y="26"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        seafood = [
-                      </text>
-                      <text
-                        x="28"
-                        y="41"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        {
-                      </text>
-                      <text
-                        x="28"
-                        y="56"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">lake:</tspan>
-                        <tspan fill="#032f62">"Lake A"</tspan>
-                        <tspan fill="#24292e">,</tspan>
-                      </text>
-                      <text
-                        x="28"
-                        y="71"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">species:</tspan>
-                        <tspan fill="#032f62">"Bass"</tspan>
-                        <tspan fill="#24292e">,</tspan>
-                      </text>
-                      <text
-                        x="28"
-                        y="86"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">count:</tspan>
-                        <tspan fill="#005cc5">23</tspan>
-                        <tspan fill="#6a737d">, …</tspan>
-                      </text>
-                      <text
-                        x="20"
-                        y="101"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        }, … ]
-                      </text>
-                    </svg>
-                  </div>
-                  <div
-                    class="spec-slide-query spec-slide-query--empty"
-                    aria-hidden="true"
-                  ></div>
-                </div>
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <p class="part">GoFish walkthrough</p>
+              <h2>start with the data shape</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+  )
+  .<span class="viz-mark">mark</span>(
+  )</pre>
+              <div class="viz-legend">
+                <span><b class="viz-op"></b>operators</span>
+                <span><b class="viz-mark"></b>marks</span>
+                <span><b class="viz-transform"></b>data transforms</span>
               </div>
             </div>
-            <aside class="notes">Step 1 of 3: chart(data). ~7 min mark.</aside>
-          </section>
-
-          <!-- .flow() -->
-          <section>
-            <h2>our first GoFish spec</h2>
-            <div class="spec-slide-layout">
-              <div class="spec-slide-main spec-slide-cols">
-                <div class="spec-slide-col spec-slide-col-left">
-                  <div class="spec-slide-code">
-                    <pre><code class="language-python" data-line-numbers="2">chart(seafood)
-    .flow(spread("lake", dir="x"))
-    .mark(rect(h="count"))</code></pre>
-                    <div
-                      class="callout"
-                      style="margin-top: 0.9rem; font-size: 0.82em"
-                    >
-                      <strong>.flow()</strong> — graphical
-                      <em>operators</em> arrange data into positions in space
-                    </div>
-                  </div>
-                  <div class="spec-slide-chart-cell">
-                    <div
-                      id="chart-spec-bar-2"
-                      class="chart-container spec-slide-chart"
-                    ></div>
-                  </div>
-                </div>
-                <div class="spec-slide-col spec-slide-col-right">
-                  <div class="spec-slide-diagram">
-                    <svg
-                      viewBox="0 0 260 310"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        x="10"
-                        y="8"
-                        width="240"
-                        height="100"
-                        fill="#f6f8fa"
-                        stroke="#d0d7de"
-                        stroke-width="1"
-                        rx="6"
-                      />
-                      <text
-                        x="20"
-                        y="26"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        seafood = [
-                      </text>
-                      <text
-                        x="28"
-                        y="41"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        {
-                      </text>
-                      <text
-                        x="28"
-                        y="56"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">lake:</tspan>
-                        <tspan fill="#032f62">"Lake A"</tspan>
-                        <tspan fill="#24292e">,</tspan>
-                      </text>
-                      <text
-                        x="28"
-                        y="71"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">species:</tspan>
-                        <tspan fill="#032f62">"Bass"</tspan>
-                        <tspan fill="#24292e">,</tspan>
-                      </text>
-                      <text
-                        x="28"
-                        y="86"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">count:</tspan>
-                        <tspan fill="#005cc5">23</tspan>
-                        <tspan fill="#6a737d">, …</tspan>
-                      </text>
-                      <text
-                        x="20"
-                        y="101"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        }, … ]
-                      </text>
-                      <line
-                        x1="130"
-                        y1="111"
-                        x2="130"
-                        y2="135"
-                        stroke="#555"
-                        stroke-width="2"
-                      />
-                      <polygon points="130,143 124,131 136,131" fill="#555" />
-                      <text
-                        x="138"
-                        y="129"
-                        font-family="Source Sans 3,Helvetica,sans-serif"
-                        font-size="14"
-                        fill="#555"
-                        font-weight="600"
-                      >
-                        spread
-                      </text>
-                      <rect
-                        x="10"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="51"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="92"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="133"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="174"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="215"
-                        y="148"
-                        width="35"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                    </svg>
-                  </div>
-                  <div
-                    class="spec-slide-query spec-slide-query--empty"
-                    aria-hidden="true"
-                  ></div>
-                </div>
-              </div>
+            <div class="viz-data-card">
+              <div><strong>year</strong><span>1931, 1932</span></div>
+              <div><strong>variety</strong><span>10 barley varieties</span></div>
+              <div><strong>site</strong><span>University Farm, Waseca, Morris, Crookston, Grand Rapids, Duluth</span></div>
+              <div><strong>yield</strong><span>bushels per acre</span></div>
             </div>
             <aside class="notes">
-              Step 2 of 3: .flow(). The spread operator places one slot per
-              lake. ~7 min mark.
+              Same GoFish idioms as the seafood examples, new dataset: Minnesota
+              barley trial yields, 1931-1932, ten varieties across six sites.
+              Start with fields before chart type.
             </aside>
           </section>
 
-          <!-- .mark() — complete spec -->
-          <section>
-            <h2>our first GoFish spec</h2>
-            <div class="spec-slide-layout">
-              <div class="spec-slide-main spec-slide-cols">
-                <div class="spec-slide-col spec-slide-col-left">
-                  <div class="spec-slide-code">
-                    <pre><code class="language-python" data-line-numbers="3">chart(seafood)
-    .flow(spread("lake", dir="x"))
-    .mark(rect(h="count"))</code></pre>
-                    <div
-                      class="callout"
-                      style="margin-top: 0.9rem; font-size: 0.82em"
-                    >
-                      <strong>.mark()</strong> — what <em>shape</em> to draw at
-                      each position, and what channels to encode
-                    </div>
-                  </div>
-                  <div class="spec-slide-chart-cell">
-                    <div
-                      id="chart-spec-bar-3"
-                      class="chart-container spec-slide-chart"
-                    ></div>
-                  </div>
-                </div>
-                <div class="spec-slide-col spec-slide-col-right">
-                  <div class="spec-slide-diagram">
-                    <svg
-                      viewBox="0 0 260 310"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        x="10"
-                        y="8"
-                        width="240"
-                        height="100"
-                        fill="#f6f8fa"
-                        stroke="#d0d7de"
-                        stroke-width="1"
-                        rx="6"
-                      />
-                      <text
-                        x="20"
-                        y="26"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        seafood = [
-                      </text>
-                      <text
-                        x="28"
-                        y="41"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        {
-                      </text>
-                      <text
-                        x="28"
-                        y="56"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">lake:</tspan>
-                        <tspan fill="#032f62">"Lake A"</tspan>
-                        <tspan fill="#24292e">,</tspan>
-                      </text>
-                      <text
-                        x="28"
-                        y="71"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">species:</tspan>
-                        <tspan fill="#032f62">"Bass"</tspan>
-                        <tspan fill="#24292e">,</tspan>
-                      </text>
-                      <text
-                        x="28"
-                        y="86"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                      >
-                        <tspan fill="#005cc5">count:</tspan>
-                        <tspan fill="#005cc5">23</tspan>
-                        <tspan fill="#6a737d">, …</tspan>
-                      </text>
-                      <text
-                        x="20"
-                        y="101"
-                        font-family="Fira Code,Consolas,monospace"
-                        font-size="11"
-                        fill="#24292e"
-                      >
-                        }, … ]
-                      </text>
-                      <line
-                        x1="130"
-                        y1="111"
-                        x2="130"
-                        y2="135"
-                        stroke="#555"
-                        stroke-width="2"
-                      />
-                      <polygon points="130,143 124,131 136,131" fill="#555" />
-                      <text
-                        x="138"
-                        y="129"
-                        font-family="Source Sans 3,Helvetica,sans-serif"
-                        font-size="14"
-                        fill="#555"
-                        font-weight="600"
-                      >
-                        spread
-                      </text>
-                      <rect
-                        x="10"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="51"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="92"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="133"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="174"
-                        y="148"
-                        width="36"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <rect
-                        x="215"
-                        y="148"
-                        width="35"
-                        height="60"
-                        fill="none"
-                        stroke="#c026d3"
-                        stroke-dasharray="5,3"
-                        stroke-width="2"
-                        rx="2"
-                      />
-                      <line
-                        x1="130"
-                        y1="212"
-                        x2="130"
-                        y2="234"
-                        stroke="#555"
-                        stroke-width="2"
-                      />
-                      <polygon points="130,242 124,230 136,230" fill="#555" />
-                      <text
-                        x="138"
-                        y="228"
-                        font-family="Source Sans 3,Helvetica,sans-serif"
-                        font-size="14"
-                        fill="#555"
-                        font-weight="600"
-                      >
-                        rect
-                      </text>
-                      <rect
-                        x="70"
-                        y="246"
-                        width="120"
-                        height="56"
-                        fill="#4e79a7"
-                        rx="3"
-                      />
-                    </svg>
-                  </div>
-                  <div class="spec-slide-query fragment">
-                    <p style="margin-bottom: 0.35rem">
-                      <strong>Queries:</strong>
-                    </p>
-                    <ul class="stack-queries-list">
-                      <li>greatest / least total catch across lakes</li>
-                      <li>pairwise comparison between any two lakes</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>place one slot per site</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>()
+  )</pre>
+              <p class="viz-step-copy">
+                The first operator creates a row of visual neighborhoods.
+              </p>
             </div>
-            <aside class="notes">
-              Step 3 of 3: .mark(). This chart has a structure — position and
-              length afford "which lake is largest?" But comparing species? Not
-              in this structure yet. Second build: afforded queries after the
-              rect spec + chart. ~7 min mark.
-            </aside>
-          </section>
-
-          <!-- <section>
-            <h2>Data schema</h2>
             <div
-              class="grammar-grid"
-              style="margin-top: 2rem; font-size: 0.95em"
-            >
-              <div class="grammar-term">key</div>
-              <div class="grammar-def">
-                <code>lake: discrete</code><br /><span
-                  style="font-size: 0.85em; color: #888"
-                  >used in <code>spread()</code></span
-                >
-              </div>
-              <div class="grammar-term">value</div>
-              <div class="grammar-def">
-                <code>count: continuous</code><br /><span
-                  style="font-size: 0.85em; color: #888"
-                  >mapped to height</span
-                >
-              </div>
-            </div>
+              id="chart-viz-site-slots"
+              class="chart-container viz-gofish-chart"
+            ></div>
             <aside class="notes">
-              lake is discrete because it drives a spread. count is continuous
-              because it's encoded as height. The spec makes this explicit.
-            </aside>
-          </section> -->
-
-          <!-- ─── TRANSITION: BAR → STACKED ────────────────────── -->
-
-          <section>
-            <h2>part-to-whole relationships</h2>
-            <div class="before-after">
-              <div id="chart-ba1-a" class="chart-container"></div>
-              <div class="ba-arrow">→</div>
-              <div id="chart-ba1-b" class="chart-container"></div>
-            </div>
-            <aside class="notes">
-              Same data. One new operator. The structure changes — and so does
-              what the chart affords.
+              Spread is an operator, so it uses the green color.
             </aside>
           </section>
 
-          <!-- ─── STEP 2: STACKED BAR ───────────────────────────── -->
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>make yield visible</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield" })
+  )</pre>
+              <p class="viz-step-copy">
+                The mark says what gets drawn; the channel says what property
+                carries the value.
+              </p>
+            </div>
+            <div
+              id="chart-viz-site-yield"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Rect is the mark. Height encodes yield.
+            </aside>
+          </section>
 
-          <section>
-            <!-- <div class="slide-subtitle">Part 1 · Step 2 — Stacked bar</div> -->
-            <h2><code>stack()</code></h2>
-            <div class="two-col">
-              <div class="col-code">
-                <div class="stack-code-swap">
-                  <pre
-                    class="stack-code-pre stack-code-bar"
-                  ><code class="language-python">chart(data).flow(
-    spread("lake",    dir="x"),
-).mark(
-    rect(h="count")
-)</code></pre>
-                  <pre
-                    class="fragment stack-code-pre stack-code-stacked stack-code-stacked-base"
-                  ><code class="language-python" data-line-numbers="3,7">chart(data).flow(
-    spread("lake",    dir="x"),
-    stack("species",  dir="y"),
-).mark(
-    rect(
-        h="count",
-        fill="species",
-    )
-)</code></pre>
-                  <pre
-                    class="fragment stack-code-pre stack-code-stacked stack-code-stacked-comment"
-                  ><code class="language-python" data-line-numbers="3,7">chart(data).flow( # operators can be chained!
-    spread("lake",    dir="x"),
-    stack("species",  dir="y"),
-).mark(
-    rect(
-        h="count",
-        fill="species",
-    )
-)</code></pre>
-                </div>
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>some transforms are implied</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield" })
+  )</pre>
+              <p class="viz-callout viz-transform">
+                aggregate yield by site
+              </p>
+            </div>
+            <div
+              id="chart-viz-site-yield-transform"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              The structure requires a data transform, so the transform is
+              named in blue.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>add a second grouping</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" }),
+    <span class="viz-op">spread</span>({ by: "variety", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield", fill: "variety" })
+  )</pre>
+            </div>
+            <div
+              id="chart-viz-site-variety"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Site nested by variety.
+            </aside>
+          </section>
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>nesting order changes the question</h2>
+            <div class="viz-compare">
+              <div class="viz-compare-card">
+                <h3>site → variety</h3>
+                <p>What are the trends across sites?</p>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>({ by: "site", dir: "x" })
+<span class="viz-op">spread</span>({ by: "variety", dir: "x" })</pre>
                 <div
-                  class="fragment"
-                  style="
-                    margin-top: 0.8rem;
-                    font-size: 0.72em;
-                    line-height: 1.85;
-                  "
-                >
-                  <p style="margin-bottom: 0.35rem">
-                    <strong>Queries:</strong>
-                  </p>
-                  <ul class="stack-queries-list">
-                    <li>greatest/least lake total</li>
-                    <li>pairwise lake comparisons</li>
-                    <li class="stack-query-highlight">
-                      part-to-whole species comparisons (e.g., what % of Lake A
-                      is Bass?)
-                    </li>
-                    <li class="stack-query-highlight">
-                      pairwise comparisons of the same species across lakes
-                    </li>
-                  </ul>
-                </div>
+                  id="chart-viz-site-variety-mini"
+                  class="chart-container viz-gofish-compare"
+                ></div>
               </div>
-              <div class="col-chart stack-slide-chart-col">
-                <div id="chart-stacked" class="chart-container"></div>
-                <div class="fragment stack-slide-kv-caption">
-                  <div class="stack-slide-kv-box">
-                    lake → species
-                    <span class="stack-slide-kv-aside">(part to whole)</span>
-                  </div>
-                </div>
+              <div class="viz-compare-card">
+                <h3>variety → site</h3>
+                <p>What is the most productive site for each variety?</p>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>({ by: "variety", dir: "x" })
+<span class="viz-op">spread</span>({ by: "site", dir: "x" })</pre>
+                <div
+                  id="chart-viz-variety-site-mini"
+                  class="chart-container viz-gofish-compare"
+                ></div>
               </div>
             </div>
             <aside class="notes">
-              One structural move. New affordances gained (part-to-whole), old
-              ones traded away (cross-category baseline comparison). ~9 min
-              mark.
+              Same data and same operators, different order, different
+              affordances.
             </aside>
           </section>
 
-          <!-- <section>
-            <h2>Data schema</h2>
-            <div
-              class="grammar-grid"
-              style="margin-top: 2rem; font-size: 0.95em"
-            >
-              <div class="grammar-term">key</div>
-              <div class="grammar-def">
-                <code>lake: discrete → species: discrete</code><br /><span
-                  style="font-size: 0.85em; color: #888"
-                  >part-to-whole within lake</span
-                >
-              </div>
-              <div class="grammar-term">value</div>
-              <div class="grammar-def">
-                <code>count: continuous</code><br /><code
-                  >species: discrete</code
-                >
-                <span style="font-size: 0.85em; color: #888"
-                  >(mapped to fill)</span
-                >
-              </div>
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2><code>stack()</code></h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
+    <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield", fill: "site" })
+  )</pre>
+              <p class="viz-step-copy">
+                Easier part-to-whole readings, while preserving direct variety
+                comparison.
+              </p>
             </div>
+            <div
+              id="chart-viz-stacked"
+              class="chart-container viz-gofish-chart"
+            ></div>
             <aside class="notes">
-              The key is now two-level: lake is the outer group, species is the
-              inner group within each lake. This is the structure that enables
-              part-to-whole queries.
+              Stack is a layout operator, green. One structural move buys
+              part-to-whole reading across sites within each variety.
             </aside>
-          </section> -->
+          </section>
 
           <!-- ─── KEY / VALUE STRUCTURE DIGRESSION ────────────── -->
 
@@ -1820,512 +1351,99 @@
             </aside>
           </section>
 
-          <!-- ─── TRANSITION: STACKED → SORTED ────────────────── -->
-
-          <section>
-            <h2>sorting keys</h2>
-            <div class="before-after">
-              <div id="chart-sort-before" class="chart-container"></div>
-              <div class="ba-arrow">→</div>
-              <div id="chart-sort-after" class="chart-container"></div>
-            </div>
-            <aside class="notes">
-              Same structure. One new operator: derive() sorts bars by count
-              within each stack before placing them. Small change, significant
-              effect on the ribbon that follows.
-            </aside>
-          </section>
-
-          <!-- ─── STEP 2b: SORT ─────────────────────────────────── -->
-
-          <section>
-            <h2><code>derive()</code> to sort</h2>
-            <div class="two-col">
-              <div class="col-code">
-                <pre><code class="language-python" data-line-numbers="3">chart(data).flow(
-    spread("lake",   dir="x"),
-    derive(lambda d: sorted(d, key="count")),
-    stack("species", dir="y"),
-).mark(
-    rect(h="count", fill="species")
-)</code></pre>
-                <div
-                  class="fragment"
-                  style="
-                    margin-top: 0.8rem;
-                    font-size: 0.72em;
-                    line-height: 1.85;
-                  "
-                >
-                  <p style="margin-bottom: 0.35rem">
-                    <strong>Queries:</strong>
-                  </p>
-                  <ul class="stack-queries-list">
-                    <li>greatest/least lake total</li>
-                    <li>pairwise lake comparisons</li>
-                    <li class="stack-query-highlight">
-                      greatest/least species total within lake
-                    </li>
-                    <li>
-                      part-to-whole species comparisons (e.g., what % of Lake A
-                      is Bass?)
-                    </li>
-                    <li>
-                      pairwise comparisons of the same species across lakes
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col-chart">
-                <div id="chart-sorted" class="chart-container"></div>
-              </div>
-            </div>
-            <aside class="notes">
-              Because we've separated our chart's construction into four steps
-              --- data, spread, stack, and rect --- we have a lot more control
-              over when and how data transforms happen than we typically do in
-              the GoG. As a result, we can just insert a special "derive"
-              operator into our flow, which will let us write any data
-              transformation we want after the spread but before the stacking.
-              So now I can pretty easily tell that trout is the most abundant in
-              Lake A, Catfish in Lake B, and Salmon in the rest. But it's harder
-              to tell how these values are changing over time.
-            </aside>
-          </section>
-
-          <!-- ─── TRANSITION: STACKED → RIBBON ─────────────────── -->
-
-          <section>
-            <h2>connect across groups</h2>
-            <div class="before-after">
-              <div id="chart-ba2-a" class="chart-container"></div>
-              <div class="ba-arrow">→</div>
-              <div id="chart-ba2-b" class="chart-container"></div>
-            </div>
-            <aside class="notes">
-              Same stacking structure. Adding area and group connects the bars
-              into a ribbon.
-            </aside>
-          </section>
-
-          <!-- ─── STEP 3: RIBBON (progressive build) ───────────── -->
-
-          <section>
-            <h2>connect the stacks into a continuous ribbon</h2>
-            <div class="two-col">
-              <!-- ── Code column: 8 stages ── -->
-              <div class="col-code" style="position: relative">
-                <!-- Step 0: sorted stacked bar (initial) -->
-                <div
-                  class="fragment fade-out"
-                  data-fragment-index="0"
-                  style="position: absolute; width: 100%"
-                >
-                  <pre><code class="language-python">chart(data).flow(
-    spread("lake",   dir="x"),
-    derive(lambda d: sorted(d, key="count")),
-    stack("species", dir="y"),
-).mark(
-    rect(h="count", fill="species")
-)</code></pre>
-                </div>
-
-                <!-- Step 1: + spacing=64 -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="0"
-                  style="position: absolute; width: 100%"
-                >
-                  <div class="fragment fade-out" data-fragment-index="1">
-                    <pre><code class="language-python" data-line-numbers="2">chart(data).flow(
-    spread("lake", dir="x", spacing=64),
-    derive(lambda d: sorted(d, key="count")),
-    stack("species", dir="y"),
-).mark(
-    rect(h="count", fill="species")
-)</code></pre>
-                  </div>
-                </div>
-
-                <!-- Step 2: + Layer([...]) -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="1"
-                  style="position: absolute; width: 100%"
-                >
-                  <div class="fragment fade-out" data-fragment-index="2">
-                    <pre><code class="language-python" data-line-numbers="1,9">Layer([
-  chart(data).flow(
-      spread("lake", dir="x", spacing=64),
-      derive(lambda d: sorted(d, key="count")),
-      stack("species", dir="y"),
-  ).mark(
-      rect(h="count", fill="species")
-  ),
-])</code></pre>
-                  </div>
-                </div>
-
-                <!-- Step 3: + .name("bars") -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="2"
-                  style="position: absolute; width: 100%"
-                >
-                  <div class="fragment fade-out" data-fragment-index="3">
-                    <pre><code class="language-python" data-line-numbers="7">Layer([
-  chart(data).flow(
-      spread("lake", dir="x", spacing=64),
-      derive(lambda d: sorted(d, key="count")),
-      stack("species", dir="y"),
-  ).mark(
-      rect(h="count", fill="species").name("bars")
-  ),
-])</code></pre>
-                  </div>
-                </div>
-
-                <!-- Step 4: + chart(???).flow(???).mark(???) -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="3"
-                  style="position: absolute; width: 100%"
-                >
-                  <div class="fragment fade-out" data-fragment-index="4">
-                    <pre><code class="language-python" data-line-numbers="9">Layer([
-  chart(data).flow(
-      spread("lake", dir="x", spacing=64),
-      derive(lambda d: sorted(d, key="count")),
-      stack("species", dir="y"),
-  ).mark(
-      rect(h="count", fill="species").name("bars")
-  ),
-  chart(???).flow(???).mark(???),
-])</code></pre>
-                  </div>
-                </div>
-
-                <!-- Step 5: select("bars") filled in -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="4"
-                  style="position: absolute; width: 100%"
-                >
-                  <div class="fragment fade-out" data-fragment-index="5">
-                    <pre><code class="language-python" data-line-numbers="9">Layer([
-  chart(data).flow(
-      spread("lake", dir="x", spacing=64),
-      derive(lambda d: sorted(d, key="count")),
-      stack("species", dir="y"),
-  ).mark(
-      rect(h="count", fill="species").name("bars")
-  ),
-  chart(select("bars")).flow(???).mark(???),
-])</code></pre>
-                  </div>
-                </div>
-
-                <!-- Step 6: group("species") filled in -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="5"
-                  style="position: absolute; width: 100%"
-                >
-                  <div class="fragment fade-out" data-fragment-index="6">
-                    <pre><code class="language-python" data-line-numbers="9">Layer([
-  chart(data).flow(
-      spread("lake", dir="x", spacing=64),
-      derive(lambda d: sorted(d, key="count")),
-      stack("species", dir="y"),
-  ).mark(
-      rect(h="count", fill="species").name("bars")
-  ),
-  chart(select("bars")).flow(group("species")).mark(???),
-])</code></pre>
-                  </div>
-                </div>
-
-                <!-- Step 7: area(opacity=0.8) filled in (final) -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="6"
-                  style="position: absolute; width: 100%"
-                >
-                  <pre><code class="language-python" data-line-numbers="9-11">Layer([
-  chart(data).flow(
-      spread("lake", dir="x", spacing=64),
-      derive(lambda d: sorted(d, key="count")),
-      stack("species", dir="y"),
-  ).mark(
-      rect(h="count", fill="species").name("bars")
-  ),
-  chart(select("bars"))
-    .flow(group("species"))
-    .mark(area(opacity=0.8)),
-])</code></pre>
-                </div>
-
-                <!-- Spacer to hold column height -->
-                <div style="visibility: hidden">
-                  <pre><code class="language-python">Layer([
-  chart(data).flow(
-      spread("lake", dir="x", spacing=64),
-      derive(lambda d: sorted(d, key="count")),
-      stack("species", dir="y"),
-  ).mark(
-      rect(h="count", fill="species").name("bars")
-  ),
-  chart(select("bars"))
-    .flow(group("species"))
-    .mark(area(opacity=0.8)),
-])</code></pre>
-                </div>
-
-                <!-- select("bars") data preview (appears at step 5) -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="4"
-                  style="
-                    margin-top: 0.5rem;
-                    font-family: &quot;Fira Code&quot;, monospace;
-                    font-size: 0.52em;
-                    background: #f5f5f5;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    padding: 0.5em 0.8em;
-                    color: #333;
-                    text-align: left;
-                    line-height: 1.6;
-                  "
-                >
-                  <span style="color: #888">select("bars") =</span><br />
-                  [<br />
-                  &nbsp;&nbsp;{ lake:
-                  <span style="color: #c41a16">"Lake A"</span>, species:
-                  <span style="color: #c41a16">"Trout"</span>, count:
-                  <span style="color: #1c00cf">31</span>, __ref:
-                  <span style="color: #888">&lt;GoFishMark&gt;</span> },<br />
-                  &nbsp;&nbsp;{ lake:
-                  <span style="color: #c41a16">"Lake A"</span>, species:
-                  <span style="color: #c41a16">"Bass"</span>,&nbsp; count:
-                  <span style="color: #1c00cf">23</span>, __ref:
-                  <span style="color: #888">&lt;GoFishMark&gt;</span> },<br />
-                  &nbsp;&nbsp;<span style="color: #888">...</span><br />
-                  ]
-                </div>
-              </div>
-
-              <!-- ── Chart column ── -->
-              <div class="col-chart" style="position: relative">
-                <!-- Sorted stacked (steps 0) -->
-                <div style="position: absolute; width: 100%">
-                  <div class="fragment fade-out" data-fragment-index="0">
-                    <div
-                      id="chart-ribbon-build-sorted"
-                      class="chart-container"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Wider-spaced sorted stacked (steps 1–3) -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="0"
-                  style="position: absolute; width: 100%"
-                >
-                  <div class="fragment fade-out" data-fragment-index="3">
-                    <div
-                      id="chart-ribbon-build-spaced"
-                      class="chart-container"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Ribbon (steps 4+) -->
-                <div
-                  class="fragment fade-in"
-                  data-fragment-index="3"
-                  style="position: absolute; width: 100%"
-                >
-                  <div
-                    id="chart-ribbon-build-ribbon"
-                    class="chart-container"
-                  ></div>
-                </div>
-
-                <!-- Spacer -->
-                <div style="visibility: hidden">
-                  <div class="chart-container"></div>
-                </div>
-              </div>
-            </div>
-            <aside class="notes">
-              Key: we didn't throw away the stacked structure. We added
-              continuity on top of it. The area mark connects the already-placed
-              rect nodes. select("bars") gives you the placed marks as a dataset
-              — each row has the original data plus a __ref to the rendered
-              mark. group("species") then groups them so area() can draw one
-              ribbon per species. ~11 min mark.
-            </aside>
-          </section>
-
-          <!-- <section>
-            <h2>Data schema</h2>
-            <div
-              class="grammar-grid"
-              style="margin-top: 2rem; font-size: 0.95em"
-            >
-              <div class="grammar-term">key</div>
-              <div class="grammar-def">
-                <code>lake: discrete → species: ordered</code><br /><span
-                  style="font-size: 0.85em; color: #888"
-                  >part-to-whole within lake; sorted by count</span
-                >
-              </div>
-              <div class="grammar-term">value</div>
-              <div class="grammar-def">
-                <code>count: continuous</code><br /><code
-                  >species: discrete</code
-                >
-                <span style="font-size: 0.85em; color: #888">(fill)</span>
-              </div>
-              <div class="grammar-term">+ connection</div>
-              <div class="grammar-def">
-                <code>species: contiguous</code><br /><span
-                  style="font-size: 0.85em; color: #888"
-                  ><code>area</code> links bars of the same species across
-                  lakes</span
-                >
-              </div>
-            </div>
-            <aside class="notes">
-              The key insight: adding area doesn't change the underlying stacked
-              structure — it adds a new relational dimension (contiguity across
-              lakes per species) on top of it.
-            </aside>
-          </section> -->
-
-          <!-- ─── TRANSITION: RIBBON → COLOR ───────────────────── -->
-
-          <section>
-            <h2>steering attention with color</h2>
-            <div class="before-after">
-              <div id="chart-ba3-a" class="chart-container"></div>
-              <div class="ba-arrow">→</div>
-              <div id="chart-ba3-b" class="chart-container"></div>
-            </div>
-            <aside class="notes">
-              Same structure, same data. Only the color encoding changes. But
-              the afforded queries are completely different.
-            </aside>
-          </section>
-
-          <!-- ─── STEP 4: COLOR + POLAR ─────────────────────────── -->
-
-          <section>
-            <!-- <div class="slide-subtitle">Part 1 · Step 4 — Highlighted ribbon</div> -->
-            <h2><code>palette()</code> for discrete colors</h2>
-            <div class="two-col">
-              <div class="col-code">
-                <pre><code class="language-python" data-line-numbers="2-5">Layer([
-  Chart(data, color=palette({
-      "Salmon": "#e15759",
-      "Trout":  "#4e79a7",
-  })).flow(
-    spread("lake", dir="x", spacing=64),
-    derive(lambda d: sorted(d, key="count")),
-    stack("species", dir="y"),
-  ).mark(
-    rect(h="count", fill="species").name("bars")
-  ),
-  chart(select("bars"))
-    .flow(group("species"))
-    .mark(area(opacity=0.6)),
-])</code></pre>
-                <p
-                  class="fragment"
-                  style="
-                    margin-top: 0.65rem;
-                    font-size: 0.78em;
-                    line-height: 1.55;
-                    color: #444;
-                    max-width: 36rem;
-                  "
-                >
-                  Color can promote and demote queries very precisely.
-
-                  <br /><br />
-
-                  Salmon and Trout read as the main story across lakes. Queries
-                  about grayed-out species are de-emphasized. Some queries
-                  become impossible!
-                </p>
-              </div>
-              <div class="col-chart">
-                <div id="chart-ribbon-highlight" class="chart-container"></div>
-              </div>
-            </div>
-            <aside class="notes">
-              One new argument. The color palette promotes Salmon and Trout;
-              everything else grays out. Same structure, same data — only the
-              color encoding changed. The set of easily-answered queries is now
-              completely different. Color is a rhetorical choice on top of the
-              structural choice: you have decided what the chart can show; now
-              you decide what it says first. Pointing at Salmon and Trout makes
-              their cross-lake trajectory the primary visual story — the rest
-              becomes context. ~15 min mark.
-            </aside>
-          </section>
-
-          <section>
-            <!-- <div class="slide-subtitle">Part 1 · Step 4 — Polar ribbon</div> -->
-            <h2>wrap into polar coordinates</h2>
-            <div class="two-col">
-              <div class="col-code">
-                <pre><code class="language-python" data-line-numbers="1">Layer({"coord": clock()}, [   # ← one change
-  Chart(data, color=palette({
-      "Salmon": "#e15759",
-      "Trout":  "#4e79a7",
-  })).flow(
-    spread("lake", dir="x",
-           spacing=2π/6, mode="center"),
-    derive(lambda d: sorted(d, key="count")),
-    stack("species", dir="y"),
-  ).mark(
-    rect(w=0.1, h="count", fill="species").name("bars")
-  ),
-  chart(select("bars"))
-    .flow(group("species"))
-    .mark(area(opacity=0.6)),
-])</code></pre>
-              </div>
-              <div class="col-chart">
-                <div id="chart-polar-highlight" class="chart-container"></div>
-              </div>
-            </div>
-            <div
-              class="fragment"
-              style="
-                margin-top: 0.75rem;
-                font-size: 0.78em;
-                line-height: 1.85;
-                max-width: 56rem;
-                text-align: left;
-              "
-            >
-              <p>
-                This use of polar space makes many queries very hard. Only a few
-                queries are afforded, like Trout starting high, crossing,
-                Salmon, and ending low. Vice versa for Salmon.
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2><code>derive()</code> to sort</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
+    <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 4 }),
+    <span class="viz-transform">derive</span>(d =&gt; orderBy(d, "yield", "asc")),
+    <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield", fill: "site" })
+  )</pre>
+              <p class="viz-step-copy">
+                Add year as a second grouping, then sort each stack by yield
+                before placing it.
               </p>
             </div>
+            <div
+              id="chart-viz-year-sorted"
+              class="chart-container viz-gofish-chart"
+            ></div>
             <aside class="notes">
-              Pause here. We've gone bar → stacked bar → ribbon → color → polar.
-              A typology treats these as separate chart types. We got between
-              them through structural moves. The chart type labels are just
-              snapshots along the way. Same chart, same data, same structure —
-              only color encoding and coordinate system changed. The set of
-              easily-answered queries is now completely different. ~13 min mark.
+              Derive is a data transform, blue. Because construction is split
+              into explicit steps, we can insert a sort between spreading and
+              stacking.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>connect related bars</h2>
+              <pre class="viz-code">Layer([
+  chart(barley)
+    .<span class="viz-op">flow</span>(
+      <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 38 }),
+      <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 8 }),
+      <span class="viz-transform">derive</span>(d =&gt; orderBy(d, "yield", "asc")),
+      <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+    )
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 16, h: "yield", fill: "site" }).name("bars")),
+  chart(selectAll("bars"))
+    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.5 }))
+])</pre>
+            </div>
+            <div
+              id="chart-viz-ribbon"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              The bars remain available as named structure; the second layer
+              connects across them. Key: we didn't throw away the stacked
+              structure, we added continuity on top of it.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>style is downstream of structure</h2>
+              <pre class="viz-code">Layer([
+  chart(barley, {
+    color: palette({
+      Waseca: "#d7dadd", Morris: "#49a66a",
+      "Grand Rapids": "#d7dadd",
+      Crookston: "#d7dadd", Duluth: "#d7dadd",
+    }),
+  })
+    .<span class="viz-op">flow</span>(
+      <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 38 }),
+      <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 8 }),
+      <span class="viz-transform">derive</span>(d =&gt; orderBy(d, "yield", "asc")),
+      <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+    )
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 16, h: "yield", fill: "site" }).name("bars")),
+  chart(selectAll("bars"))
+    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.78 }))
+])</pre>
+              <p class="viz-step-copy">
+                Once the structure is right, palette becomes an attention
+                decision instead of a chart-type decision.
+              </p>
+            </div>
+            <div
+              id="chart-viz-ribbon-highlight"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Highlight Morris, Grand Rapids after the structural moves are in
+              place. Same structure, same data — only the color encoding
+              changed, and the set of easily-answered queries is now
+              completely different.
             </aside>
           </section>
 
@@ -2591,40 +1709,98 @@
             </aside>
           </section>
 
-          <!-- <section>
-            <h2>Data schema</h2>
-            <div
-              class="grammar-grid"
-              style="margin-top: 2rem; font-size: 0.95em"
-            >
-              <div class="grammar-term">outer key</div>
-              <div class="grammar-def">
-                <code>lake: discrete</code><br />
-                <span style="font-size: 0.85em; color: #888"
-                  >scatter positions each lake at geographic (x, y)</span
+          <!-- ─── BARLEY SCATTER PIE: 1931 vs 1932 ───────────────── -->
+
+          <section>
+            <h2>same glyph, new dataset — barley, two years</h2>
+            <div class="two-col">
+              <div class="col-code">
+                <pre><code class="language-typescript">chart(barleyScatterByYear(1931))
+  .flow(scatter("site", { x: "x" }))
+  .mark((data) => {
+    const totalYield = totalYieldFor(1931, data[0].site);
+    return chart(data[0].collection, { coord: clock() })
+      .flow(
+        stack("variety", {
+          dir: "x",
+          h: pieRadius(totalYield),
+        })
+      )
+      .mark(rect({ w: "yield", fill: "variety" }));
+  })</code></pre>
+                <div
+                  style="
+                    margin-top: 0.8rem;
+                    font-size: 0.72em;
+                    line-height: 1.8;
+                  "
                 >
+                  <p>
+                    Same construction as the lake scatter-pie: sites spread in
+                    a row stand in for geography, each glyph is a pie of that
+                    site's variety mix.
+                  </p>
+                  <p>
+                    <strong>New move:</strong> pie radius (<code>h</code>)
+                    scales with each site's <em>total</em> yield that year, on
+                    a shared scale across both charts.
+                  </p>
+                  <div
+                    class="spec-slide-query fragment"
+                    style="margin-top: 0.65rem"
+                  >
+                    <p style="margin-bottom: 0.35rem">
+                      <strong>Watch Morris:</strong>
+                    </p>
+                    <ul class="stack-queries-list">
+                      <li>
+                        every other site's pie shrinks from 1931 → 1932 —
+                        Morris's grows
+                      </li>
+                      <li>
+                        radius affords the magnitude query the seafood
+                        version couldn't; angle still affords the mix query
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-              <div class="grammar-term">inner key</div>
-              <div class="grammar-def">
-                <code>species: discrete → proportion</code><br />
-                <span style="font-size: 0.85em; color: #888"
-                  >clock() + stack() maps each species to an arc width</span
-                >
-              </div>
-              <div class="grammar-term">value</div>
-              <div class="grammar-def">
-                <code>count: continuous → arc width</code><br />
-                <span style="font-size: 0.85em; color: #888"
-                  >normalized to proportion within each lake</span
-                >
+              <div class="col-chart" style="flex-direction: column; gap: 0.6rem">
+                <div style="display: flex; gap: 0.8rem; width: 100%">
+                  <div style="flex: 1; text-align: center">
+                    <div
+                      id="chart-viz-barley-pie-1931"
+                      class="chart-container viz-gofish-chart"
+                      style="height: 300px"
+                    ></div>
+                    <p style="margin-top: 0.3rem; font-size: 0.6em; color: #666">
+                      1931
+                    </p>
+                  </div>
+                  <div style="flex: 1; text-align: center">
+                    <div
+                      id="chart-viz-barley-pie-1932"
+                      class="chart-container viz-gofish-chart"
+                      style="height: 300px"
+                    ></div>
+                    <p style="margin-top: 0.3rem; font-size: 0.6em; color: #666">
+                      1932
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
             <aside class="notes">
-              Two-level key structure — lake is the outer, species is the inner.
-              The pie normalizes counts to proportions, so absolute magnitude is
-              lost.
+              This is the famous Minnesota barley anomaly (Fisher/Immer data,
+              popularized by Cleveland &amp; via the trellis-display
+              literature): nearly every site's yield fell from 1931 to 1932,
+              except Morris, which rose. Encoding total yield as pie radius
+              (instead of a fixed radius, as in the lake version) makes that
+              flip visible at a glance without giving up the proportion read
+              inside each pie. Same outer/inner grammar as the seafood
+              scatter-pie — only the radius channel is new.
             </aside>
-          </section> -->
+          </section>
 
           <!-- ─── FLOWER CHART ──────────────────────────────────── -->
 
