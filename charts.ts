@@ -28,6 +28,7 @@ import {
   gradient,
 } from "gofish-graphics";
 import _ from "lodash";
+import chroma from "chroma-js";
 import {
   seafood,
   catchLocations,
@@ -368,6 +369,97 @@ function renderVizRibbon(id = "chart-viz-ribbon", highlight = false) {
   ]).render(el, VIZ_RENDER_OPTIONS);
 }
 
+// ── Closing beat: the Morris sentence, compiled ────────────────────────────
+// Two structures for the same takeaway ("every variety fell at every site
+// except Morris, where every variety rose"): Trellis-style slope panels
+// (magnitude-precise, reader aggregates sign per panel) and a Δ heatmap
+// (sign-precise via one preattentive scan, magnitude imprecise).
+
+const SLOPE_W = 940;
+const SLOPE_H = 220;
+
+// One line per variety per site, connecting its 1931 -> 1932 yield. Facets
+// by site with the mark-as-function pattern (see FacetedChart.stories.tsx);
+// within each site's facet, points are named then re-selected and grouped by
+// variety to draw the connecting line — the same "name it, select it, group
+// it, connect it" idiom as the ribbon (renderVizRibbon above), just with
+// `line` standing in for `area`. The installed `gofish-graphics` build's
+// `markLayer` mark-combinator form does NOT give each facet call its own
+// local name registry — it inherits the enclosing chart's `layerContext`, so
+// a single literal name like "slope-pts" would collide across all six site
+// facets (each `selectAll` picking up all 6 sites' points, not just its own
+// panel's). Naming the points per site (`slope-pts-${site}`) keeps each
+// panel's connecting line scoped to that panel even though the registry
+// itself is effectively global.
+function renderVizBarleySlopePanels(id = "chart-viz-barley-slope") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(spread("site", { dir: "x", spacing: 20 }))
+    .mark((data) => {
+      const pointName = `slope-pts-${(data as BarleyRow[])[0].site}`;
+      return markLayer([
+        Chart(data, vizChartOptions)
+          .flow(group("variety"), scatter({ x: "year", y: "yield" }))
+          .mark(rect({ w: 0, h: 0, fill: "variety" }).name(pointName)),
+        Chart(select(pointName), vizChartOptions)
+          .flow(group("variety"))
+          .mark(line({ strokeWidth: 2 })),
+      ]);
+    })
+    .render(el, { w: SLOPE_W, h: SLOPE_H, axes: true, legend: false });
+}
+
+// Δyield(site, variety) = yield(1932) - yield(1931), then a diverging color
+// for it. `gradient()` only interpolates a config over its data's actual
+// min/max (see createGradientScale in colorSchemes.ts) — there's no domain
+// override, so it can't be recentered at 0 for an asymmetric spread of
+// deltas. The diverging scale is built by hand instead (chroma, domain
+// [-maxAbs, 0, maxAbs], anchored on Morris green) and baked into a literal
+// hex-string field. Because no chart-level `color` config is passed, the
+// "no colorConfig" resolution path treats each row's literal `#`-prefixed
+// value as a pass-through color rather than a categorical key to cycle
+// through color6 (see the isLiteralColor check in _node.ts) — the same
+// literal-vs-scaled distinction the barley-pie legend-stripping comment
+// above relies on.
+const barleyDeltaMaxAbs = _.max(
+  Object.values(_.groupBy(barley, (d) => `${d.site}|${d.variety}`)).map(
+    (pair) =>
+      Math.abs(
+        pair.find((r) => r.year === 1932)!.yield -
+          pair.find((r) => r.year === 1931)!.yield
+      )
+  )
+) as number;
+const barleyDeltaScale = chroma
+  .scale(["#c0503f", "#f7f2e8", "#49a66a"])
+  .domain([-barleyDeltaMaxAbs, 0, barleyDeltaMaxAbs]);
+
+function pairYears(rows: BarleyRow[]) {
+  return Object.values(_.groupBy(rows, (d) => `${d.site}|${d.variety}`)).map(
+    (pair) => {
+      const delta =
+        pair.find((r) => r.year === 1932)!.yield -
+        pair.find((r) => r.year === 1931)!.yield;
+      return {
+        site: pair[0].site,
+        variety: pair[0].variety,
+        delta,
+        deltaColor: barleyDeltaScale(delta).hex(),
+      };
+    }
+  );
+}
+
+function renderVizBarleyDeltaHeatmap(id = "chart-viz-barley-delta") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley)
+    .flow(derive(pairYears), table("variety", "site", { spacing: 4 }))
+    .mark(rect({ fill: "deltaColor" }))
+    .render(el, { w: 960, h: 300, axes: true, legend: false });
+}
+
 // ── Part 2: Scatter pie ───────────────────────────────────────────────────
 const scatterByLake = _(seafood)
   .groupBy("lake")
@@ -650,6 +742,8 @@ export function renderCharts() {
   renderScatterPieChart();
   renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931");
   renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932");
+  renderVizBarleySlopePanels();
+  renderVizBarleyDeltaHeatmap();
   renderFlowerChart();
   renderBalloonChart();
 }
@@ -676,6 +770,8 @@ export const chartRenderers: Record<string, () => void> = {
     renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931"),
   "chart-viz-barley-pie-1932": () =>
     renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932"),
+  "chart-viz-barley-slope": renderVizBarleySlopePanels,
+  "chart-viz-barley-delta": renderVizBarleyDeltaHeatmap,
   "chart-franconeri-a": renderFranconeriA,
   "chart-franconeri-a-color": renderFranconeriAColor,
   "chart-franconeri-a-color-key": renderFranconeriAColorKey,

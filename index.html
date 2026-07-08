@@ -1807,6 +1807,101 @@ chart(barleyScatterByYear(1931))
             </aside>
           </section>
 
+          <!-- ─── SLOPE PANELS: THE TAKEAWAY IS A SENTENCE ────────── -->
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>the takeaway is a sentence</h2>
+            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
+              "Every variety decreased at every site — except Morris, where
+              every variety increased."
+            </p>
+            <pre class="viz-code compact">chart(barley)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>({ by: "site", dir: "x", spacing: 20 }))
+  .<span class="viz-mark">mark</span>((data) =&gt; {
+    const pointName = `slope-pts-${data[0].site}`;
+    return layer([
+      chart(data)
+        .<span class="viz-op">flow</span>(
+          <span class="viz-op">group</span>({ by: "variety" }),
+          <span class="viz-op">scatter</span>({ x: "year", y: "yield" })
+        )
+        .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 0, h: 0, fill: "variety" }).name(pointName)),
+      chart(selectAll(pointName))
+        .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }))
+        .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>({ strokeWidth: 2 })),
+    ]);
+  })</pre>
+            <div
+              id="chart-viz-barley-slope"
+              class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
+            ></div>
+            <p class="viz-step-copy" style="font-size: 0.56em">
+              Six site panels, ten variety-lines each. Morris tilts up
+              across the board; every other panel tilts down, save one
+              stray line apiece in University Farm and Grand Rapids.
+            </p>
+            <aside class="notes">
+              Facets by site with the mark-as-function pattern (same idiom as
+              FacetedChart.stories.tsx): the outer spread makes six scopes,
+              and each scope's mark function draws its own little chart. The
+              connecting line reuses the exact "name it, select it, group it,
+              connect it" idiom the ribbon slide already taught — swap
+              `area` for `line`. One quantifier (site) is a scan across
+              panels; the other (variety) is a scan down each panel's ten
+              lines; the sign predicate is read off each line's slope, one
+              at a time. This is Trellis-style: Becker &amp; Cleveland's own
+              display for this dataset. It's precise on magnitude — you can
+              read off exactly how much each variety fell or rose — but the
+              reader still has to aggregate ten slope signs per panel to
+              recover the sentence. Compare to the next slide's heatmap,
+              which gives up magnitude precision to make the sign read as a
+              single glance.
+            </aside>
+          </section>
+
+          <!-- ─── Δ HEATMAP: COMPILE THE SENTENCE ─────────────────── -->
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>compile the sentence</h2>
+            <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-transform">derive</span>(pairYears),
+    <span class="viz-op">table</span>({ by: { x: "variety", y: "site" }, spacing: 4 })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ fill: "deltaColor" })
+  )</pre>
+            <div
+              id="chart-viz-barley-delta"
+              class="chart-container viz-gofish-chart"
+              style="height: 380px"
+            ></div>
+            <p class="viz-step-copy" style="font-size: 0.56em">
+              <code>derive</code> computes the compared term — Δyield per
+              (site, variety). <code>table</code> crosses the sentence's two
+              quantifiers, variety and site, into a grid where neither is
+              privileged. The fill is the predicate: sign of Δ, on a
+              diverging scale centered at zero, anchored on Morris green.
+              One green row; the rest, red.
+            </p>
+            <aside class="notes">
+              One green row (Morris) in an otherwise red matrix. Two other
+              cells buck their row's sign — University Farm/No. 475 and
+              Grand Rapids/Velvet both tick faintly positive — real noise in
+              the data, not a chart bug; they just aren't uniform the way
+              Morris's whole row is. `derive` is term-level computation:
+              gofish-graphics's built-in `gradient()` color scale always
+              spans the field's actual min/max, so it can't be recentered at
+              0 for an asymmetric spread of deltas — the diverging scale
+              here is hand-built with chroma and baked into a literal
+              per-row hex field instead. `table` is quantifier structure —
+              crossed spreads, neither privileged. `rect`'s fill is
+              predicate evaluation. Choosing a chart is compiling the
+              sentence.
+            </aside>
+          </section>
+
           <!-- ─── FLOWER CHART ──────────────────────────────────── -->
 
           <section class="flower-slide">
