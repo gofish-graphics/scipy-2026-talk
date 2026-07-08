@@ -395,22 +395,30 @@ function renderScatterPieChart() {
     .render(el, { w: CHART_W, h: CHART_H, axes: true });
 }
 
-// Barley analog of scatterByLake: one glyph per site, per year. Sites are
-// spread evenly along x (there's no natural geography here, so we lay them
-// out in a row, mirroring the lake scatter's "one point per group" shape).
+// Barley analog of scatterByLake: one glyph per site, per year, placed at the
+// site's real Minnesota geography (approximate lon/lat scaled to chart
+// units) — the same "pies on a 2D map" shape as the seafood scatter-pie.
 // Pie radius (h) is scaled by each site's total yield that year — using a
 // shared min/max across both years so 1931 and 1932 read on the same scale.
 // That radius encoding is what makes the Morris anomaly visible: Morris is
 // the only site whose total yield *rises* from 1931 to 1932 while every
 // other site's total falls, so its pie visibly grows while the rest shrink.
-const barleySiteOrder = [
-  "University Farm",
-  "Waseca",
-  "Morris",
-  "Crookston",
-  "Grand Rapids",
-  "Duluth",
-];
+//
+// Approximate coordinates of the Minnesota trial sites:
+//   University Farm (St. Paul)  44.98 N,  93.18 W
+//   Waseca                      44.08 N,  93.51 W
+//   Morris                      45.59 N,  95.90 W
+//   Crookston                   47.77 N,  96.61 W
+//   Grand Rapids                47.24 N,  93.53 W
+//   Duluth                      46.79 N,  92.10 W
+const barleySiteGeo: Record<string, { lon: number; lat: number }> = {
+  "University Farm": { lon: -93.18, lat: 44.98 },
+  Waseca: { lon: -93.51, lat: 44.08 },
+  Morris: { lon: -95.9, lat: 45.59 },
+  Crookston: { lon: -96.61, lat: 47.77 },
+  "Grand Rapids": { lon: -93.53, lat: 47.24 },
+  Duluth: { lon: -92.1, lat: 46.79 },
+};
 
 function barleyScatterByYear(year: 1931 | 1932) {
   return _(barley)
@@ -418,7 +426,13 @@ function barleyScatterByYear(year: 1931 | 1932) {
     .groupBy("site")
     .map((siteData, site) => ({
       site,
-      x: barleySiteOrder.indexOf(site) * 60,
+      // Scale degrees to chart units (1 degree ~ 60 units). Longitude is
+      // negative (west of Greenwich), so offset it positive. At ~46 N one
+      // degree of longitude covers ~0.7x the ground distance of a degree of
+      // latitude, so squash x by that factor to keep the map's aspect
+      // roughly honest.
+      x: (barleySiteGeo[site].lon + 97) * 60 * 0.7,
+      y: (barleySiteGeo[site].lat - 43.5) * 60,
       collection: siteData.map((item) => ({
         variety: item.variety,
         yield: item.yield,
@@ -452,7 +466,7 @@ async function renderBarleyScatterPie(year: 1931 | 1932, id: string) {
     legend: false,
     axes: false,
   })
-    .flow(scatter("site", { x: "x" }))
+    .flow(scatter("site", { x: "x", y: "y" }))
     .mark((data) => {
       const site = data[0].site as string;
       const totalYield = barleySiteYearTotalYield[`${year}|${site}`];
@@ -465,7 +479,7 @@ async function renderBarleyScatterPie(year: 1931 | 1932, id: string) {
         .flow(stack("variety", { dir: "x", h: barleyPieRadius(totalYield) }))
         .mark(rect({ w: "yield", fill: "variety" }));
     })
-    .render(el, { w: VIZ_COMPARE_W, h: VIZ_COMPARE_H, axes: false, legend: false });
+    .render(el, { w: 230, h: 230, axes: false, legend: false });
 
   // GoFish auto-seats a color legend the first time a nested chart-as-glyph
   // mark (like these pies) introduces a given categorical domain in the

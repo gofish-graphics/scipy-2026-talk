@@ -1715,8 +1715,9 @@
             <h2>same glyph, new dataset — barley, two years</h2>
             <div class="two-col">
               <div class="col-code">
-                <pre><code class="language-typescript">chart(barleyScatterByYear(1931))
-  .flow(scatter("site", { x: "x" }))
+                <pre><code class="language-typescript">// x, y: each site's Minnesota lon/lat
+chart(barleyScatterByYear(1931))
+  .flow(scatter("site", { x: "x", y: "y" }))
   .mark((data) => {
     const totalYield = totalYieldFor(1931, data[0].site);
     return chart(data[0].collection, { coord: clock() })
@@ -1736,9 +1737,9 @@
                   "
                 >
                   <p>
-                    Same construction as the lake scatter-pie: sites spread in
-                    a row stand in for geography, each glyph is a pie of that
-                    site's variety mix.
+                    Same construction as the lake scatter-pie: each trial site
+                    sits at its real Minnesota location, and each glyph is a
+                    pie of that site's variety mix.
                   </p>
                   <p>
                     <strong>New move:</strong> pie radius (<code>h</code>)
@@ -1794,11 +1795,15 @@
               This is the famous Minnesota barley anomaly (Fisher/Immer data,
               popularized by Cleveland &amp; via the trellis-display
               literature): nearly every site's yield fell from 1931 to 1932,
-              except Morris, which rose. Encoding total yield as pie radius
-              (instead of a fixed radius, as in the lake version) makes that
-              flip visible at a glance without giving up the proportion read
-              inside each pie. Same outer/inner grammar as the seafood
-              scatter-pie — only the radius channel is new.
+              except Morris, which rose. The pies sit at each site's actual
+              geography — Crookston in the far northwest, Duluth on Lake
+              Superior in the northeast, Waseca in the south, Morris
+              mid-west — so the chart doubles as a map of Minnesota.
+              Encoding total yield as pie radius (instead of a fixed radius,
+              as in the lake version) makes the flip visible at a glance
+              without giving up the proportion read inside each pie. Same
+              outer/inner grammar as the seafood scatter-pie — only the
+              radius channel is new.
             </aside>
           </section>
 
