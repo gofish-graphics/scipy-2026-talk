@@ -1078,6 +1078,71 @@
   margin-top: 0.75em !important;
 }
 
+/* Live chart tiles in the "stranger structures" montage: no card chrome,
+   natural SVG size scaled per-tile via an inline zoom to fit the grid. */
+.chart-container.viz-ex-tile {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  height: auto;
+  overflow: visible;
+  display: inline-flex;
+  width: auto;
+}
+
+/* Captions under the "stranger structures" montage tiles */
+.viz-ex-caption {
+  color: #403c37;
+  font-size: 0.5em !important;
+  line-height: 1.3 !important;
+  margin: 0.35em 0 0 !important;
+  font-family: "Shantell Sans", sans-serif;
+}
+
+.viz-ex-caption .viz-ex-ops {
+  display: block;
+  color: #777;
+}
+
+.viz-ex-caption .viz-ex-ops code {
+  font-size: 0.92em;
+}
+
+/* Overlay labels on the pre-rendered Titanic mosaic SVG */
+.mosaic-row-label {
+  position: absolute;
+  left: 7.5%;
+  transform: translateY(-50%);
+  font-family: "Shantell Sans", sans-serif;
+  font-size: 0.44em;
+  color: #2b2b2b;
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, 0.9),
+    0 0 6px rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+
+.mosaic-col-label {
+  position: absolute;
+  bottom: 4.5%;
+  transform: translate(-50%, 100%);
+  font-family: "Shantell Sans", sans-serif;
+  font-size: 0.44em;
+  color: #555;
+  pointer-events: none;
+}
+
+/* Endpoint labels under the axis-free bars-vs-line chart */
+.conn-line-label {
+  position: absolute;
+  bottom: 0;
+  transform: translate(-50%, 100%);
+  font-size: 0.52em;
+  color: #555;
+  pointer-events: none;
+}
+
 .viz-data-card,
 .viz-compare-card {
   background: #fffdf8;

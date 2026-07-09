@@ -16,7 +16,8 @@ import {
   polar,
   linear,
   Constraint,
-  area,
+  ribbon,
+  project,
   group as gofishGroup,
   layer as markLayer,
   Frame,
@@ -26,6 +27,17 @@ import {
   wavy,
   palette,
   gradient,
+  gray,
+  neutral,
+  stackY,
+  spreadX,
+  spreadY,
+  For,
+  ref,
+  paint,
+  image,
+  text,
+  v,
 } from "gofish-graphics";
 import _ from "lodash";
 import chroma from "chroma-js";
@@ -33,7 +45,10 @@ import {
   seafood,
   catchLocations,
 } from "@gofish-data/catch";
+import { titanic } from "@gofish-data/titanic";
+import { nightingale } from "@gofish-data/nightingale";
 import barleyRaw from "./data/barley.json";
+import bottlePng from "./source-images/wilsonblanco.png";
 
 const CHART_W = 480;
 const CHART_H = 320;
@@ -108,6 +123,28 @@ type BarleyRow = {
 };
 
 const barley = barleyRaw as BarleyRow[];
+
+// Anonymized aggregate for the Boger/Franconeri opening ONLY, so the audience's
+// first read of the grouping swap isn't primed by recognizing the barley
+// dataset. Same numbers as barley (total yield per site per year), just
+// relabeled to cities / years / "sales". Everything after the intro uses the
+// real barley data.
+const OPENING_CITY: Record<string, string> = {
+  "University Farm": "Raleigh",
+  Waseca: "Fresno",
+  Morris: "Boulder",
+  Crookston: "Portland",
+  "Grand Rapids": "Austin",
+  Duluth: "Denver",
+};
+const OPENING_YEAR: Record<number, number> = { 1931: 2018, 1932: 2019 };
+const cityYearData = Object.values(
+  _.groupBy(barley, (r) => `${r.site}|${r.year}`)
+).map((rows) => ({
+  city: OPENING_CITY[rows[0].site],
+  year: OPENING_YEAR[rows[0].year],
+  sales: _.sumBy(rows, "yield"),
+}));
 
 function getContainer(id: string): HTMLElement | null {
   return document.getElementById(id);
@@ -222,6 +259,58 @@ function renderFranconeriC() {
   ]).render(el, { w: CHART_W, h: CHART_H, axes: true });
 }
 
+// Opening swap: total yield per site by year (height auto-sums over variety).
+// site -> year makes each site's change two adjacent bars (Morris rises while
+// the other five fall); year -> site scatters the change across two year blocks.
+function renderAggSiteYear(id = "chart-viz-agg-site-year", w = CHART_W, h = CHART_H) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(cityYearData)
+    .flow(
+      spread("city", { dir: "x", spacing: 24 }),
+      spread("year", { dir: "x", spacing: 6 })
+    )
+    .mark(rect({ h: "sales", fill: "city" }))
+    .render(el, { w, h, axes: true, legend: false });
+}
+function renderAggYearSite(id = "chart-viz-agg-year-site", w = CHART_W, h = CHART_H) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(cityYearData)
+    .flow(
+      spread("year", { dir: "x", spacing: 24 }),
+      spread("city", { dir: "x", spacing: 6 })
+    )
+    .mark(rect({ h: "sales", fill: "city" }))
+    .render(el, { w, h, axes: true, legend: false });
+}
+
+// Data-shape reveal: the opening's grouped bars re-shown with the anonymized
+// city/sales labels, then swapped to the real barley site/yield labels. Same
+// numbers, same layout, neutral fill, so only the labels change.
+function renderRevealChart(id: string, real: boolean) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  const opts = { w: CHART_W, h: CHART_H, axes: true, legend: false };
+  if (real) {
+    Chart(barley)
+      .flow(
+        spread("site", { dir: "x", spacing: 24 }),
+        spread("year", { dir: "x", spacing: 6 })
+      )
+      .mark(rect({ h: "yield", fill: FRANCONERI_BAR_COLOR }))
+      .render(el, opts);
+  } else {
+    Chart(cityYearData)
+      .flow(
+        spread("city", { dir: "x", spacing: 24 }),
+        spread("year", { dir: "x", spacing: 6 })
+      )
+      .mark(rect({ h: "sales", fill: FRANCONERI_BAR_COLOR }))
+      .render(el, opts);
+  }
+}
+
 function renderFranconeriB() {
   const el = getContainer("chart-franconeri-b");
   if (!el || el.children.length > 0) return;
@@ -280,15 +369,15 @@ function renderVizSiteYield(id = "chart-viz-site-yield") {
     .render(el, VIZ_RENDER_OPTIONS);
 }
 
-function renderVizSiteVariety(id = "chart-viz-site-variety") {
+function renderVizSiteYear(id = "chart-viz-site-year") {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley, vizChartOptions)
     .flow(
       spread("site", { dir: "x", spacing: 24 }),
-      spread("variety", { dir: "x", spacing: 4 })
+      spread("year", { dir: "x", spacing: 4 })
     )
-    .mark(rect({ h: "yield", fill: "variety" }))
+    .mark(rect({ h: "yield", fill: "site" }))
     .render(el, VIZ_RENDER_OPTIONS);
 }
 
@@ -316,13 +405,52 @@ function renderVizVarietySiteMini() {
     .render(el, VIZ_COMPARE_RENDER_OPTIONS);
 }
 
-function renderVizStacked(id = "chart-viz-stacked") {
+// One renderer for the stack -> sort -> connect progression. `sort` orders each
+// stack by yield; `connect` adds the ribbon (with Morris drawn on top); the plain
+// stack is the same variety x year x site structure with neither.
+function renderVizStackChart(
+  id: string,
+  {
+    sort = false,
+    connect = false,
+    highlight = false,
+  }: { sort?: boolean; connect?: boolean; highlight?: boolean } = {}
+) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(barley, vizChartOptions)
-    .flow(spread("variety", { dir: "x" }), stack("site", { dir: "y" }))
-    .mark(rect({ h: "yield", fill: "site" }))
-    .render(el, VIZ_RENDER_OPTIONS);
+  const chartOptions = highlight
+    ? { color: palette({ Morris: "#e08214" }), legend: false }
+    : vizChartOptions;
+  const barsFlow: any[] = [
+    spread("variety", { dir: "x", spacing: 24 }),
+    spread("year", { dir: "x", spacing: 16 }),
+    ...(sort ? [derive((d: BarleyRow[]) => _.orderBy(d, "yield", "asc"))] : []),
+    stack("site", { dir: "y" }),
+  ];
+  const layers: any[] = [
+    Chart(barley, chartOptions)
+      .flow(...barsFlow)
+      .mark(rect({ w: 8, h: "yield", fill: "site" }).name("bars")),
+  ];
+  if (connect) {
+    layers.push(
+      Chart(select("bars"))
+        .flow(group("variety"), group("site"))
+        .mark(
+          ribbon({ opacity: highlight ? 0.78 : 0.5 }).zOrder((a: any) =>
+            project(a, "site") === "Morris" ? 1 : 0
+          )
+        )
+    );
+  }
+  Layer(layers).render(el, VIZ_RENDER_OPTIONS);
+}
+
+function renderVizStacked(id = "chart-viz-stacked") {
+  renderVizStackChart(id, {});
+}
+function renderVizStackedSorted(id = "chart-viz-stacked-sorted") {
+  renderVizStackChart(id, { sort: true });
 }
 
 function renderVizYearSorted() {
@@ -340,33 +468,7 @@ function renderVizYearSorted() {
 }
 
 function renderVizRibbon(id = "chart-viz-ribbon", highlight = false) {
-  const el = getContainer(id);
-  if (!el || el.children.length > 0) return;
-  const chartOptions = highlight
-    ? {
-        color: palette({
-          Waseca: "#d7dadd",
-          Morris: "#49a66a",
-          "Grand Rapids": "#d7dadd",
-          Crookston: "#d7dadd",
-          Duluth: "#d7dadd",
-        }),
-        legend: false,
-      }
-    : vizChartOptions;
-  Layer([
-    Chart(barley, chartOptions)
-      .flow(
-        spread("variety", { dir: "x", spacing: 38 }),
-        spread("year", { dir: "x", spacing: 8 }),
-        derive((d) => _.orderBy(d, "yield", "asc")),
-        stack("site", { dir: "y" })
-      )
-      .mark(rect({ w: 16, h: "yield", fill: "site" }).name("bars")),
-    Chart(select("bars"))
-      .flow(group("variety"), group("site"))
-      .mark(area({ opacity: highlight ? 0.78 : 0.5 })),
-  ]).render(el, VIZ_RENDER_OPTIONS);
+  renderVizStackChart(id, { sort: true, connect: true, highlight });
 }
 
 // ── Closing beat: the Morris sentence, compiled ────────────────────────────
@@ -391,23 +493,37 @@ const SLOPE_H = 220;
 // panel's). Naming the points per site (`slope-pts-${site}`) keeps each
 // panel's connecting line scoped to that panel even though the registry
 // itself is effectively global.
-function renderVizBarleySlopePanels(id = "chart-viz-barley-slope") {
+function renderVizBarleySlopePanels(
+  id = "chart-viz-barley-slope",
+  highlight = false,
+  w = SLOPE_W,
+  h = SLOPE_H
+) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley, vizChartOptions)
     .flow(spread("site", { dir: "x", spacing: 20 }))
     .mark((data) => {
-      const pointName = `slope-pts-${(data as BarleyRow[])[0].site}`;
+      const site = (data as BarleyRow[])[0].site;
+      const pointName = `slope-pts-${site}${highlight ? "-hl" : ""}`;
+      // Lines inherit their color from the point rects. Highlight colors each
+      // panel's points by its site with the Morris-green palette from the ribbon
+      // (Morris green, every other site gray); default colors by variety.
+      const pointFill = highlight
+        ? site === "Morris"
+          ? "#e08214"
+          : "#d7dadd"
+        : "variety";
       return markLayer([
         Chart(data, vizChartOptions)
           .flow(group("variety"), scatter({ x: "year", y: "yield" }))
-          .mark(rect({ w: 0, h: 0, fill: "variety" }).name(pointName)),
+          .mark(rect({ w: 0, h: 0, fill: pointFill }).name(pointName)),
         Chart(select(pointName), vizChartOptions)
           .flow(group("variety"))
           .mark(line({ strokeWidth: 2 })),
       ]);
     })
-    .render(el, { w: SLOPE_W, h: SLOPE_H, axes: true, legend: false });
+    .render(el, { w, h, axes: true, legend: false });
 }
 
 // Δyield(site, variety) = yield(1932) - yield(1931), then a diverging color
@@ -432,7 +548,7 @@ const barleyDeltaMaxAbs = _.max(
   )
 ) as number;
 const barleyDeltaScale = chroma
-  .scale(["#c0503f", "#f7f2e8", "#49a66a"])
+  .scale(["#2c7bb6", "#f7f2e8", "#e08214"])
   .domain([-barleyDeltaMaxAbs, 0, barleyDeltaMaxAbs]);
 
 function pairYears(rows: BarleyRow[]) {
@@ -451,13 +567,13 @@ function pairYears(rows: BarleyRow[]) {
   );
 }
 
-function renderVizBarleyDeltaHeatmap(id = "chart-viz-barley-delta") {
+function renderVizBarleyDeltaHeatmap(id = "chart-viz-barley-delta", w = 960, h = 300) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley)
     .flow(derive(pairYears), table("variety", "site", { spacing: 4 }))
     .mark(rect({ fill: "deltaColor" }))
-    .render(el, { w: 960, h: 300, axes: true, legend: false });
+    .render(el, { w, h, axes: true, legend: false });
 }
 
 // ── Part 2: Scatter pie ───────────────────────────────────────────────────
@@ -720,9 +836,243 @@ function renderBalloonChart() {
   ).render(el, { w: CHART_W, h: CHART_H, axes: false });
 }
 
+// ── Titanic mosaic (nested stack, alternating axes, normalized) ───────────
+// The Titanic mosaic (NestedMosaicChart.stories.tsx) is NOT rendered live:
+// its spec depends on gofish #675 (normalize space-filling spines), which the
+// installed npm nightly predates — live it degenerates into skinny bars. It is
+// pre-rendered from the checkout source via scripts/scipy-titanic-mosaic into
+// gallery-images/titanic-mosaic.svg, same pipeline as the gotree montage SVGs.
+
+// ── Sankey tree (v1 layer/spreadX/stackY/spreadY tree API) ────────────────
+// Ported from SankeyTree.stories.tsx: three tiers (class, then sex, then
+// survived) laid out as tapering bands with `ribbon`s connecting each named
+// source/target pair across tiers.
+function renderSankeyTree(id = "chart-viz-ex-sankey", w = 340, h = 230) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  const classColor: Record<string, string> = {
+    First: color6[0],
+    Second: color6[1],
+    Third: color6[2],
+    Crew: color6[3],
+  };
+  const layerSpacing = 64;
+  const internalSpacing = 2;
+  markLayer([
+    spreadX({ spacing: layerSpacing, alignment: "middle" }, [
+      stackY(
+        { spacing: 0, alignment: "middle", reverse: true },
+        For(_.groupBy(titanic, "class"), (items, cls) =>
+          rect({
+            w: 40,
+            h: _.sumBy(items, "count") / 10,
+            fill: neutral,
+          }).name(`${cls}-src`)
+        )
+      ),
+      spreadY(
+        { spacing: internalSpacing, alignment: "middle", reverse: true },
+        For(_.groupBy(titanic, "class"), (items, cls) =>
+          spreadX({ spacing: layerSpacing, alignment: "middle" }, [
+            stackY(
+              { spacing: 0, alignment: "middle", reverse: true },
+              For(_.groupBy(items, "sex"), (items, sex) =>
+                rect({
+                  w: 40,
+                  h: _.sumBy(items, "count") / 10,
+                  fill: classColor[cls],
+                }).name(`${cls}-${sex}-src`)
+              )
+            ).name(`${cls}-tgt`),
+            spreadY(
+              {
+                h: _.sumBy(items, "count") / 10,
+                spacing: internalSpacing * 2,
+                alignment: "middle",
+                reverse: true,
+              },
+              For(_.groupBy(items, "sex"), (items, sex) =>
+                spreadX({ spacing: layerSpacing, alignment: "middle" }, [
+                  stackY(
+                    { spacing: 0, alignment: "middle", reverse: true },
+                    For(_.groupBy(items, "survived"), (survivedItems, survived) =>
+                      rect({
+                        w: 40,
+                        h: _.sumBy(survivedItems, "count") / 10,
+                        fill: sex === "Female" ? color6[4] : color6[5],
+                      }).name(`${cls}-${sex}-${survived}-src`)
+                    )
+                  ).name(`${cls}-${sex}-tgt`),
+                  spreadY(
+                    {
+                      w: 40,
+                      spacing: internalSpacing * 4,
+                      alignment: "middle",
+                      reverse: true,
+                    },
+                    For(_.groupBy(items, "survived"), (survivedItems, survived) =>
+                      rect({
+                        h: _.sumBy(survivedItems, "count") / 10,
+                        fill:
+                          sex === "Female"
+                            ? survived === "No"
+                              ? gray
+                              : color6[4]
+                            : survived === "No"
+                              ? gray
+                              : color6[5],
+                      }).name(`${cls}-${sex}-${survived}-tgt`)
+                    )
+                  ),
+                ])
+              )
+            ),
+          ])
+        )
+      ),
+    ]),
+    For(_.groupBy(titanic, "class"), (items, cls) => [
+      ribbon(
+        {
+          dir: "x",
+          fill: classColor[cls],
+          curve: "bezier",
+          opacity: 0.7,
+          mixBlendMode: "multiply",
+        },
+        [ref(`${cls}-src`), ref(`${cls}-tgt`)]
+      ),
+      For(_.groupBy(items, "sex"), (sexItems, sex) => [
+        ribbon(
+          {
+            dir: "x",
+            fill: sex === "Female" ? color6[4] : color6[5],
+            curve: "bezier",
+            opacity: 0.7,
+            mixBlendMode: "multiply",
+          },
+          [ref(`${cls}-${sex}-src`), ref(`${cls}-${sex}-tgt`)]
+        ),
+        For(_.groupBy(sexItems, "survived"), (survivedItems, survived) =>
+          ribbon(
+            {
+              dir: "x",
+              fill:
+                sex === "Female"
+                  ? survived === "No"
+                    ? gray
+                    : color6[4]
+                  : survived === "No"
+                    ? gray
+                    : color6[5],
+              curve: "bezier",
+              opacity: 0.7,
+              mixBlendMode: "multiply",
+            },
+            [ref(`${cls}-${sex}-${survived}-src`), ref(`${cls}-${sex}-${survived}-tgt`)]
+          )
+        ),
+      ]),
+    ]),
+  ]).render(el, { w, h, axes: false });
+}
+
+// ── Nightingale rose (polar-area diagram, coord: clock()) ──────────────────
+// Ported from the "Rose" story in forwardsyntax/Pie.stories.tsx: months
+// spread around the clock, cause-of-death stacked radially, magnitude
+// square-rooted so wedge area (not radius) encodes death count.
+function renderNightingaleRose(id = "chart-viz-ex-rose", w = 230, h = 230) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(nightingale, { coord: clock() })
+    .flow(
+      spread("Month", { dir: "x", spacing: 0, axes: { x: false, y: true } }),
+      stack("Type", { dir: "y" }),
+      derive((d: any[]) => d.map((d) => ({ ...d, Death: Math.sqrt(d.Death) })))
+    )
+    .mark(rect({ w: (Math.PI * 2) / 12, emX: true, h: "Death", fill: "Type" }))
+    .render(el, { w, h });
+}
+
+// ── Bottle pictorial (paint compositing over an image, constrained label) ──
+// Ported from piccl/Bottle.stories.tsx: a row of bottles filled to a
+// percentage, the fill rect composited onto the bottle image with a "color"
+// blend mode, a fill-line rect and a percent label constrained to align with
+// it.
+const bottleData = [
+  { category: "a", amount: 30 },
+  { category: "d", amount: 60 },
+  { category: "b", amount: 75 },
+  { category: "c", amount: 100 },
+];
+
+function renderBottleChart(id = "chart-viz-ex-bottle", w = 380, h = 210) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(bottleData, { axes: false })
+    .flow(spread("category", { dir: "x", spacing: 20, axes: { x: false } }))
+    .mark(
+      markLayer([
+        paint({ blendMode: "color" }, [
+          image({ href: bottlePng, h: v(100) }),
+          rect({ h: "amount", w: 175, fill: "#00ff00" }),
+        ]).name("bottle"),
+        rect({ h: 1, fill: "#666", w: 175, y: "amount" }).name("line"),
+        text({ fontSize: 35, fill: "#666", text: (d: any) => `${d.amount}%` }).name(
+          "label"
+        ),
+      ]).constrain(({ line, label, bottle }: any) => [
+        Constraint.align({ x: "start" }, [bottle, line]),
+        Constraint.distribute({ dir: "y", spacing: 0 }, [line, label]),
+        Constraint.align({ x: "end" }, [label, line]),
+      ])
+    )
+    .render(el, { w, h });
+}
+
+// ── Bars vs. line (Zacks & Tversky) ─────────────────────────────────────────
+// Same two-datum dataset (average adult height by sex, cm) shown as a plain
+// bar chart and as a two-point line chart, for the connection-vs-comparison
+// framing.
+const connHeights = [
+  { sex: "female", height: 162 },
+  { sex: "male", height: 175 },
+];
+
+function renderConnBars(id = "chart-conn-bars", w = 380, h = 280) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(connHeights)
+    .flow(spread("sex", { dir: "x", spacing: 32 }))
+    .mark(rect({ h: "height", fill: FRANCONERI_BAR_COLOR }))
+    .render(el, { w, h, axes: true });
+}
+
+function renderConnLine(id = "chart-conn-line", w = 380, h = 280) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  // Same two data points as chart-conn-bars, scattered by an index (scatter
+  // needs a numeric x for the categorical position) and joined by `.connect`
+  // — the LineChart.stories.tsx idiom (`.mark(blank()).connect(line())`).
+  // Axes off: the numeric index axis would read "xIndex 0..1"; the slide
+  // overlays female/male labels under the endpoints instead.
+  const indexed = connHeights.map((d, i) => ({ ...d, xIndex: i }));
+  Chart(indexed, { axes: false })
+    .flow(scatter("xIndex", { x: "xIndex", y: "height" }))
+    .mark(scaffold())
+    .connect(line({ strokeWidth: 2.5, stroke: FRANCONERI_BAR_COLOR }))
+    .render(el, { w, h: h - 40, axes: false });
+}
+
 // ── Public API ────────────────────────────────────────────────────────────
 export function renderCharts() {
   renderFranconeriA();
+  renderAggSiteYear();
+  renderAggYearSite();
+  renderRevealChart("chart-viz-reveal-anon", false);
+  renderRevealChart("chart-viz-reveal-real", true);
+  renderAggSiteYear("chart-viz-agg-site-year-mini", 300, 210);
+  renderAggYearSite("chart-viz-agg-year-site-mini", 300, 210);
   renderFranconeriAColor();
   renderFranconeriAColorKey();
   renderFranconeriB();
@@ -732,20 +1082,30 @@ export function renderCharts() {
   renderVizSiteSlots();
   renderVizSiteYield();
   renderVizSiteYield("chart-viz-site-yield-transform");
-  renderVizSiteVariety();
+  renderVizSiteYear();
   renderVizSiteVarietyMini();
   renderVizVarietySiteMini();
   renderVizStacked();
+  renderVizStackedSorted();
   renderVizYearSorted();
   renderVizRibbon();
   renderVizRibbon("chart-viz-ribbon-highlight", true);
+  renderVizRibbon("chart-viz-ribbon-annotated", true);
   renderScatterPieChart();
   renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931");
   renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932");
   renderVizBarleySlopePanels();
+  renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true);
   renderVizBarleyDeltaHeatmap();
+  renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180);
+  renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230);
   renderFlowerChart();
   renderBalloonChart();
+  renderSankeyTree();
+  renderNightingaleRose();
+  renderBottleChart();
+  renderConnBars();
+  renderConnLine();
 }
 
 function renderChartById(id: string) {
@@ -758,21 +1118,38 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-site-yield": () => renderVizSiteYield(),
   "chart-viz-site-yield-transform": () =>
     renderVizSiteYield("chart-viz-site-yield-transform"),
-  "chart-viz-site-variety": () => renderVizSiteVariety(),
+  "chart-viz-site-year": () => renderVizSiteYear(),
   "chart-viz-site-variety-mini": renderVizSiteVarietyMini,
   "chart-viz-variety-site-mini": renderVizVarietySiteMini,
   "chart-viz-stacked": () => renderVizStacked(),
+  "chart-viz-stacked-sorted": () => renderVizStackedSorted(),
   "chart-viz-year-sorted": renderVizYearSorted,
   "chart-viz-ribbon": () => renderVizRibbon(),
   "chart-viz-ribbon-highlight": () =>
     renderVizRibbon("chart-viz-ribbon-highlight", true),
+  "chart-viz-ribbon-annotated": () =>
+    renderVizRibbon("chart-viz-ribbon-annotated", true),
   "chart-viz-barley-pie-1931": () =>
     renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931"),
   "chart-viz-barley-pie-1932": () =>
     renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932"),
   "chart-viz-barley-slope": renderVizBarleySlopePanels,
+  "chart-viz-barley-slope-highlight": () =>
+    renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true),
   "chart-viz-barley-delta": renderVizBarleyDeltaHeatmap,
+  "chart-viz-barley-slope-cmp": () =>
+    renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180),
+  "chart-viz-barley-delta-cmp": () =>
+    renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230),
   "chart-franconeri-a": renderFranconeriA,
+  "chart-viz-agg-site-year": renderAggSiteYear,
+  "chart-viz-agg-year-site": renderAggYearSite,
+  "chart-viz-reveal-anon": () => renderRevealChart("chart-viz-reveal-anon", false),
+  "chart-viz-reveal-real": () => renderRevealChart("chart-viz-reveal-real", true),
+  "chart-viz-agg-site-year-mini": () =>
+    renderAggSiteYear("chart-viz-agg-site-year-mini", 300, 210),
+  "chart-viz-agg-year-site-mini": () =>
+    renderAggYearSite("chart-viz-agg-year-site-mini", 300, 210),
   "chart-franconeri-a-color": renderFranconeriAColor,
   "chart-franconeri-a-color-key": renderFranconeriAColorKey,
   "chart-franconeri-a-key-2": () => {
@@ -886,6 +1263,69 @@ export const chartRenderers: Record<string, () => void> = {
       .mark(rect({ h: "count", fill: "species" }))
       .render(el, { w: 280, h: 220, axes: true });
   },
+  "chart-viz-nest-stacked": () => {
+    const el = getContainer("chart-viz-nest-stacked");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, vizChartOptions)
+      .flow(spread("variety", { dir: "x" }), stack("site", { dir: "y" }))
+      .mark(rect({ h: "yield", fill: "site" }))
+      .render(el, { w: 280, h: 220, axes: true, legend: false });
+  },
+  "chart-viz-nest-grouped": () => {
+    const el = getContainer("chart-viz-nest-grouped");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, vizChartOptions)
+      .flow(
+        spread("year", { dir: "x" }),
+        spread("site", { dir: "x", spacing: 2 })
+      )
+      .mark(rect({ h: "yield", fill: "site" }))
+      .render(el, { w: 280, h: 220, axes: true, legend: false });
+  },
+  "chart-viz-nest-grouped-r": () => {
+    const el = getContainer("chart-viz-nest-grouped-r");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, vizChartOptions)
+      .flow(
+        spread("site", { dir: "x" }),
+        spread("year", { dir: "x", spacing: 2 })
+      )
+      .mark(rect({ h: "yield", fill: "site" }))
+      .render(el, { w: 280, h: 220, axes: true, legend: false });
+  },
+  "chart-viz-nest-heatmap": () => {
+    const el = getContainer("chart-viz-nest-heatmap");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, { color: gradient(["#e8f4f8", "#1a5276"]) })
+      .flow(table("site", "year", { spacing: 4 }))
+      .mark(rect({ fill: "yield" }))
+      .render(el, { w: 280, h: 220, axes: true, legend: false });
+  },
+  // Larger solo instances for the one-at-a-time build-up before the 3-panel slide
+  "chart-viz-nest-grouped-r-solo": () => {
+    const el = getContainer("chart-viz-nest-grouped-r-solo");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, vizChartOptions)
+      .flow(spread("site", { dir: "x" }), spread("year", { dir: "x", spacing: 2 }))
+      .mark(rect({ h: "yield", fill: "site" }))
+      .render(el, { w: 560, h: 360, axes: true, legend: false });
+  },
+  "chart-viz-nest-grouped-solo": () => {
+    const el = getContainer("chart-viz-nest-grouped-solo");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, vizChartOptions)
+      .flow(spread("year", { dir: "x" }), spread("site", { dir: "x", spacing: 2 }))
+      .mark(rect({ h: "yield", fill: "site" }))
+      .render(el, { w: 560, h: 360, axes: true, legend: false });
+  },
+  "chart-viz-nest-heatmap-solo": () => {
+    const el = getContainer("chart-viz-nest-heatmap-solo");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, { color: gradient(["#e8f4f8", "#1a5276"]) })
+      .flow(table("site", "year", { spacing: 4 }))
+      .mark(rect({ fill: "yield" }))
+      .render(el, { w: 560, h: 360, axes: true, legend: false });
+  },
   "chart-kv-heatmap": () => {
     const el = getContainer("chart-kv-heatmap");
     if (!el || el.children.length > 0) return;
@@ -897,4 +1337,9 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-scatter-pie": renderScatterPieChart,
   "chart-flower": renderFlowerChart,
   "chart-balloon": renderBalloonChart,
+  "chart-viz-ex-sankey": () => renderSankeyTree(),
+  "chart-viz-ex-rose": () => renderNightingaleRose(),
+  "chart-viz-ex-bottle": () => renderBottleChart(),
+  "chart-conn-bars": () => renderConnBars(),
+  "chart-conn-line": () => renderConnLine(),
 };

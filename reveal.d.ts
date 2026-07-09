@@ -29,6 +29,16 @@ declare module "reveal.js/plugin/highlight/highlight" {
   export default RevealHighlight;
 }
 
+declare module "*.html?raw" {
+  const content: string;
+  export default content;
+}
+
 declare module "reveal.js/dist/reveal.css" {}
 declare module "reveal.js/dist/theme/white.css" {}
 declare module "./hljs-github-light.css" {}
+
+declare module "*.png" {
+  const src: string;
+  export default src;
+}

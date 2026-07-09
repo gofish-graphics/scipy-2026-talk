@@ -1,0 +1,447 @@
+        <!-- ═══ COLUMN 5: CLOSE ══════════════════════════════════ -->
+        <section>
+          <!-- ══════════════════════════════════════════════════════
+             CLOSE
+             ══════════════════════════════════════════════════════ -->
+
+          <!-- Capstone: three stacks make a mosaic. Spec must stay verbatim
+               with scripts/scipy-titanic-mosaic/main.ts (modulo elided
+               cosmetics), which generates gallery-images/titanic-mosaic.svg.
+               Pre-rendered from the gofish checkout because the deck's npm
+               nightly predates #675 (normalize space-filling spines). -->
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>three stacks make a mosaic</h2>
+              <pre class="viz-code">chart(titanic)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">stack</span>({ by: "class", dir: "y", normalize: true }),
+    <span class="viz-op">stack</span>({ by: "sex", dir: "x", h: "count", normalize: true }),
+    <span class="viz-op">stack</span>({ by: "survived", dir: "y", w: "count", normalize: true })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "count", fill: "survived" })
+  )</pre>
+              <p class="viz-step-copy">
+                No new operators — just <code>stack</code> three deep. Cell
+                area is the joint count; the blue fraction is the survival
+                rate. And the nesting order decides which comparison you read
+                first — the same choice as the grouped bars that opened the
+                talk.
+              </p>
+            </div>
+            <div style="position: relative; display: inline-block">
+              <img
+                src="gallery-images/titanic-mosaic.svg"
+                alt="Titanic survival mosaic: class rows, sex columns within each row, survival fraction in blue"
+                style="width: 480px; display: block"
+              />
+              <!-- row labels; tops/centers measured from the SVG cell geometry -->
+              <div class="mosaic-row-label" style="top: 24.9%">Crew</div>
+              <div class="mosaic-row-label" style="top: 55.3%">Third</div>
+              <div class="mosaic-row-label" style="top: 74.2%">Second</div>
+              <div class="mosaic-row-label" style="top: 85.8%">First</div>
+              <!-- sex labels under the bottom (First-class) row's split -->
+              <div class="mosaic-col-label" style="left: 23.9%">women</div>
+              <div class="mosaic-col-label" style="left: 63.8%">men</div>
+            </div>
+            <aside class="notes">
+              Titanic passengers: class, sex, survived. Three stacks, nested,
+              alternating direction, each normalized within its parent scope.
+              Read it: within every class, women survived at higher rates —
+              "women and children first" as one uniform visual sentence — and
+              survival falls from first class to third within each sex. Note
+              this is the Charlie-and-River move again: swapping the nesting
+              order changes whether you read "survival by sex, within each
+              class" or "survival by class, within each sex." A mosaic isn't in
+              the chart-type dropdown of most tools; here it's the operator we
+              already know, composed one level deeper.
+            </aside>
+          </section>
+
+          <!-- Beyond taxonomies: same principles, stranger structures.
+               Live renders (mosaic, sankey, rose, bottle) + gotree SVGs
+               (sunburst, orthogonal tree). Polar coverage: rose + sunburst. -->
+          <section data-background-color="#f7f2e8">
+            <h2>the same moves, stranger structures</h2>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 0.4rem 0.8rem;
+                margin-top: 0.6rem;
+                justify-items: center;
+                align-items: center;
+              "
+            >
+              <div style="text-align: center">
+                <img
+                  src="gallery-images/titanic-mosaic.svg"
+                  alt="Titanic survival mosaic"
+                  style="max-height: 200px; max-width: 100%"
+                />
+                <p class="viz-ex-caption">
+                  mosaic
+                  <span class="fragment viz-ex-ops" data-fragment-index="1"
+                    ><code>stack ∘ stack ∘ stack</code></span
+                  >
+                </p>
+              </div>
+              <div style="text-align: center">
+                <div
+                  id="chart-viz-ex-sankey"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.6"
+                ></div>
+                <p class="viz-ex-caption">
+                  sankey tree
+                  <span class="fragment viz-ex-ops" data-fragment-index="1"
+                    ><code>spread + stack + ribbon</code></span
+                  >
+                </p>
+              </div>
+              <div style="text-align: center">
+                <div
+                  id="chart-viz-ex-rose"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.68"
+                ></div>
+                <p class="viz-ex-caption">
+                  rose
+                  <span class="fragment viz-ex-ops" data-fragment-index="1"
+                    ><code>stack, in clock() coords</code></span
+                  >
+                </p>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="gallery-images/gotree-sunburst.svg"
+                  alt="Sunburst chart rendered with gofish-gotree"
+                  style="max-height: 200px; max-width: 100%"
+                />
+                <p class="viz-ex-caption">
+                  sunburst
+                  <span class="fragment viz-ex-ops" data-fragment-index="1"
+                    ><code>tree(...), in polar() coords</code></span
+                  >
+                </p>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="gallery-images/gotree-orthogonal.svg"
+                  alt="Orthogonal node-link tree rendered with gofish-gotree"
+                  style="max-height: 200px; max-width: 100%"
+                />
+                <p class="viz-ex-caption">
+                  orthogonal tree
+                  <span class="fragment viz-ex-ops" data-fragment-index="1"
+                    ><code>tree(...) with elbow links</code></span
+                  >
+                </p>
+              </div>
+              <div style="text-align: center">
+                <div
+                  id="chart-viz-ex-bottle"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.47"
+                ></div>
+                <p class="viz-ex-caption">
+                  bottle pictorial
+                  <span class="fragment viz-ex-ops" data-fragment-index="1"
+                    ><code>layer + paint + constraints</code></span
+                  >
+                </p>
+              </div>
+            </div>
+            <p
+              class="viz-step-copy fragment"
+              data-fragment-index="1"
+              style="margin-top: 0.5rem"
+            >
+              None of these is a "chart type." You already know every move on
+              this screen.
+            </p>
+            <aside class="notes">
+              The same structural moves that took us from bars to a heatmap
+              also build mosaics, sankeys, trees, and pictorials — forms no
+              chart-type menu contains. [advance] And the operator captions are
+              the point: the mosaic is three stacks; the sankey is spreads and
+              stacks with ribbons connecting named tiers; the rose is the
+              stacked bar wrapped into clock coordinates — polar is a
+              coordinate change on structure we already built, not a new chart
+              family. The sunburst and the orthogonal tree come from GoTree, a
+              tree-layout grammar embedded in GoFish; the bottle composites an
+              image with a fill bar through a paint blend mode and aligns its
+              label with constraints. Structure, not taxonomy, is the
+              through-line.
+            </aside>
+          </section>
+
+          <!-- Why "more": other grammars are subsets / neighbors -->
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <p class="part">Why "more"</p>
+            <h2>a grammar of <em>more</em> graphics</h2>
+            <p class="big-claim">
+              The Grammar of Graphics fits inside GoFish — and so do grammars
+              beyond it.
+            </p>
+            <div
+              style="
+                margin-top: 0.9rem;
+                font-size: 0.72em;
+                line-height: 1.9;
+                text-align: left;
+                max-width: 44rem;
+                margin-left: auto;
+                margin-right: auto;
+              "
+            >
+              <p>
+                GoFish's own test gallery reimplements, example by example:
+              </p>
+              <ul style="margin-top: 0.3rem">
+                <li>
+                  <strong>vega-lite</strong> — the grammar underneath Altair
+                </li>
+                <li><strong>Atom</strong> — unit &amp; dot-plot charts</li>
+                <li>
+                  <strong>PiCCL</strong> — pictorial charts (the bottle)
+                </li>
+                <li>
+                  <strong>GoTree</strong> — a tree-layout grammar, 46 gallery
+                  examples
+                </li>
+                <li>
+                  <strong>seaborn</strong>-style jointplots, and
+                  <strong>Bluefish</strong> diagrams
+                </li>
+              </ul>
+            </div>
+            <aside class="notes">
+              This is the sense of "more." These aren't screenshots of other
+              tools — each of these grammars exists as a folder of working
+              examples in GoFish's own test suite. The vega-lite gallery is
+              the engine underneath Altair, so the charts Altair makes easy
+              stay easy. And the grammars Altair and matplotlib can't reach —
+              unit charts, pictorials, tree layouts, diagrams — are the same
+              operators composing further, not custom SVG code. The standard
+              grammar is a subset; the composition keeps going where the
+              chart-type menu stops.
+            </aside>
+          </section>
+
+          <section>
+            <!-- <div class="slide-subtitle">Close</div> -->
+            <h2 style="line-height: 1.5">takeaways</h2>
+            <div
+              style="
+                margin-top: 1.5rem;
+                font-size: 0.88em;
+                line-height: 1.9;
+                text-align: left;
+              "
+            >
+              <p class="fragment">
+                <strong>1.</strong> Chart types are great shortcuts, but
+                graphics are really sophisticated visual structures.
+              </p>
+              <p class="fragment" style="margin-top: 0.8rem">
+                <strong>2.</strong> Changing this structure changes what your
+                reader can <em>and can't</em> see in (probably) predictable
+                ways.
+              </p>
+              <p class="fragment" style="margin-top: 0.8rem">
+                <strong>3.</strong> Thinking structurally helps us move beyond
+                familiar charts and rigid rules to designs that might better fit
+                our data or task.
+              </p>
+              <!-- <p class="fragment" style="margin-top: 1.2rem; color: #555">
+                GoFish is one attempt. I'd love to hear — in Q&amp;A, in the
+                hallway, on GitHub —
+                <strong
+                  >where this does and doesn't match problems you actually
+                  have.</strong
+                >
+              </p> -->
+            </div>
+            <aside class="notes">
+              Land all three explicitly. 1: the Part 1 journey — bar, stacked,
+              sorted, ribbon, polar — weren't different chart types, they were
+              structural moves. 2: affordances thread — every move opens some
+              queries and closes others. 3: the composition payoff —
+              scatter-pie, flower, balloon weren't in any dropdown. Then the
+              honest close: GoFish is one attempt, Q&A is needfinding. ~27 min
+              mark.
+            </aside>
+          </section>
+
+          <section data-background-color="#fff">
+            <!-- <div class="slide-subtitle">27:30</div> -->
+            <div class="close-slide-two-boxes">
+              <div class="close-slide-logo-frame">
+                <div
+                  class="close-slide-logo-border-end close-slide-logo-border-end--top"
+                  aria-hidden="true"
+                ></div>
+                <div class="close-slide-frame-mid">
+                  <div
+                    class="close-slide-logo-border-side close-slide-logo-border-side--left"
+                    aria-hidden="true"
+                  ></div>
+                  <div class="close-slide-box-content">
+                    <h2 style="margin-top: 0; margin-bottom: 1rem">Try it</h2>
+                    <div style="text-align: center">
+                      <div class="install-block">
+                        <span class="prompt">$</span>pip install gofish-graphics
+                      </div>
+                    </div>
+                    <p
+                      style="
+                        margin: 0.65rem 0 0 0;
+                        color: #666;
+                        font-size: 0.9em;
+                        font-weight: normal;
+                        text-align: center;
+                      "
+                    >
+                      Python alpha release coming soon!
+                    </p>
+                    <div
+                      style="
+                        margin-top: 1.25rem;
+                        font-size: 0.85em;
+                        line-height: 2.4;
+                        text-align: left;
+                      "
+                    >
+                      <p>
+                        🌐 <strong>Docs:</strong>
+                        <a
+                          href="https://gofish.graphics"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><code>gofish.graphics</code></a
+                        >
+                      </p>
+                      <p>
+                        🐙 <strong>GitHub:</strong>
+                        <a
+                          href="https://github.com/gofish-graphics/gofish-graphics"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><code>gofish-graphics/gofish-graphics</code></a
+                        >
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="close-slide-logo-border-side close-slide-logo-border-side--right"
+                    aria-hidden="true"
+                  ></div>
+                </div>
+                <div
+                  class="close-slide-logo-border-end close-slide-logo-border-end--bottom"
+                  aria-hidden="true"
+                ></div>
+              </div>
+              <div class="close-slide-logo-frame">
+                <div
+                  class="close-slide-logo-border-end close-slide-logo-border-end--top"
+                  aria-hidden="true"
+                ></div>
+                <div class="close-slide-frame-mid">
+                  <div
+                    class="close-slide-logo-border-side close-slide-logo-border-side--left"
+                    aria-hidden="true"
+                  ></div>
+                  <div class="close-slide-box-content">
+                    <h2 style="margin-top: 0; margin-bottom: 1.4rem">
+                      stay in the loop
+                    </h2>
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-start;
+                        gap: 1.5rem;
+                        flex-wrap: wrap;
+                      "
+                    >
+                      <img
+                        src="qr-code.png"
+                        alt="QR code for buttondown.com/jopo"
+                        style="width: 200px; height: 200px; display: block"
+                      />
+                      <div
+                        style="
+                          text-align: left;
+                          font-size: 0.85em;
+                          line-height: 2;
+                        "
+                      >
+                        <p
+                          style="
+                            font-size: 1.05em;
+                            font-weight: 600;
+                            margin-bottom: 0.4rem;
+                          "
+                        >
+                          <a
+                            href="https://buttondown.com/jopo"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style="color: inherit; text-decoration: underline"
+                            >buttondown.com/jopo</a
+                          >
+                        </p>
+                        <p
+                          style="
+                            color: #555;
+                            font-size: 0.9em;
+                            line-height: 1.7;
+                            max-width: 26ch;
+                          "
+                        >
+                          GoFish updates &amp; new features<br />
+                          (~weekly)<br /><br />
+                          Sneak peeks from the book on<br />
+                          designing better graphics<br />
+                          (longer cycles)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="close-slide-logo-border-side close-slide-logo-border-side--right"
+                    aria-hidden="true"
+                  ></div>
+                </div>
+                <div
+                  class="close-slide-logo-border-end close-slide-logo-border-end--bottom"
+                  aria-hidden="true"
+                ></div>
+              </div>
+            </div>
+            <aside class="notes">
+              Quick pip install, docs, and GitHub. Newsletter plug — scan or
+              type buttondown.com/jopo. Weekly cadence for GoFish updates,
+              slower cadence for book chapters. ~28 min mark.
+            </aside>
+          </section>
+
+          <!-- <section>
+            <div class="title-slide" style="padding-top: 3rem">
+              <h2>Questions?</h2>
+              <p class="subtitle" style="margin-top: 1rem; font-size: 0.9em">
+                github.com/starfish-graphics/gofish-graphics
+              </p>
+            </div>
+            <aside class="notes">
+              15 min Q&amp;A — use it as needfinding. "Can it do X?" → unmet
+              needs, write them down. "Why not just use Y?" → positioning isn't
+              landing, probe why. "How does it handle Z?" → evaluating against
+              real workflows. "Oh cool" + silence → the need isn't felt. That's
+              data too.
+            </aside>
+          </section> -->
+        </section>
+        <!-- /COLUMN 4 -->

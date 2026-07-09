@@ -1,0 +1,994 @@
+        <!-- ═══ COLUMN 1: OPENING ═══════════════════════════════ -->
+        <section>
+          <!-- ══════════════════════════════════════════════════════
+             TITLE
+             ══════════════════════════════════════════════════════ -->
+          <section data-background-color="#f7f2e8" class="scipy-title-slide">
+            <p class="eyebrow">SciPy draft</p>
+            <h1>Seeing Graphics Clearly</h1>
+            <p class="subtitle">
+              Direct perception, graphical structure, and better judgment calls
+              for scientific figures
+            </p>
+            <p class="meta">Josh M. Pollock · adapted from PyData 2026</p>
+            <aside class="notes">
+              Today I want to talk about two things. First is a way to see what
+              a graphic is doing before judging it by chart type. The second is
+              GoFish, a tool for building graphics out of those visible
+              relationships.
+            </aside>
+          </section>
+
+
+          <section class="split lake-slide" data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN: the seafood dataset is no longer used -->
+            <div>
+              <h2>start with the lakes</h2>
+              <p class="big-claim">
+                The examples use fishery data: lakes, species, catch amounts,
+                and locations.
+              </p>
+              <p class="tight-copy">
+                That matters because the data are naturally relational. We care
+                about parts and wholes, where things happened, and how the same
+                species moves through several views.
+              </p>
+            </div>
+            <svg
+              class="lake-map"
+              viewBox="0 0 680 430"
+              role="img"
+              aria-label="Sketch of lakes connected to catch records and species"
+            >
+              <path
+                class="water"
+                d="M76 111 C120 54 213 70 230 137 C247 203 159 249 96 217 C47 192 44 151 76 111 Z"
+              />
+              <path
+                class="water"
+                d="M398 80 C459 43 548 69 576 135 C609 214 539 281 453 249 C378 221 337 117 398 80 Z"
+              />
+              <path
+                class="water"
+                d="M237 256 C290 211 383 235 411 298 C445 376 338 415 264 382 C209 357 193 294 237 256 Z"
+              />
+              <path class="route" d="M214 153 C286 132 332 134 397 145" />
+              <path class="route" d="M392 226 C358 258 335 276 308 297" />
+              <path class="route" d="M189 225 C220 253 239 277 266 309" />
+              <g class="fish" transform="translate(114 148)">
+                <ellipse rx="38" ry="17" />
+                <path d="M-38 0 L-66 -19 L-58 0 L-66 19 Z" />
+              </g>
+              <g class="fish" transform="translate(486 163) rotate(-8)">
+                <ellipse rx="42" ry="18" />
+                <path d="M-42 0 L-72 -20 L-63 0 L-72 20 Z" />
+              </g>
+              <g class="fish" transform="translate(315 319) rotate(7)">
+                <ellipse rx="36" ry="16" />
+                <path d="M-36 0 L-64 -18 L-55 0 L-64 18 Z" />
+              </g>
+              <text x="124" y="92">lake</text>
+              <text x="497" y="85">catch</text>
+              <text x="320" y="392">species</text>
+            </svg>
+            <aside class="notes">
+              This is the SciPy setup slide. The data are simple enough to keep
+              in your head, but rich enough to show composition, grouping,
+              containment, connection, and emphasis.
+            </aside>
+          </section>
+
+          <!-- ══════════════════════════════════════════════════════
+             OPENING
+             ══════════════════════════════════════════════════════ -->
+
+          <!-- "how do we decide what chart to use?" -->
+          <section>
+            <h2>how do we decide what chart to use?</h2>
+            <aside class="notes">
+              Now how do we decide what chart to use today? Maybe we are lucky
+              to have some existing collection of charts we know work well.
+              Maybe we can vibe code our way to something that looks alright.
+              But when we're faced with a new problem what should we do?
+            </aside>
+          </section>
+
+          <!-- Seaborn / gallery example -->
+          <section>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 0.8rem;
+              "
+            >
+              <img
+                src="motivational-images/seaborn-gallery.png"
+                style="
+                  max-width: 90%;
+                  max-height: 440px;
+                  border-radius: 4px;
+                  object-fit: contain;
+                "
+                alt="Seaborn example gallery"
+              />
+            </div>
+            <aside class="notes">
+              We could sift through giant galleries and books of cool examples,
+              seeing if any of them might apply to our problem.
+            </aside>
+          </section>
+
+          <section>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 0.8rem;
+              "
+            >
+              <img
+                src="motivational-images/choosing-a-good-chart-09-1.png"
+                style="
+                  max-width: 90%;
+                  max-height: min(85vh, 520px);
+                  border-radius: 4px;
+                  object-fit: contain;
+                "
+                alt="Chart type guide: relationship, comparison, distribution, composition"
+              />
+            </div>
+            <aside class="notes">
+              We could consult guides that bucket the problem into
+              "relationship," "comparison," "distribution," "composition," and
+              so on. But those things are still too vague and leave us with
+              dozens of options to try, all of which can be pretty generic.
+            </aside>
+          </section>
+
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <p class="part">The problem</p>
+            <h2>menus become rules</h2>
+            <p class="big-claim">
+              This chart is good. This chart is bad. Use this color scheme, not
+              that one.
+            </p>
+            <p>
+              Rules are useful, but brittle. They tend to be all-or-nothing
+              just when scientific graphics need judgment.
+            </p>
+            <aside class="notes">
+              This is the SciPy framing. I am not arguing against heuristics; I
+              am arguing that chart typologies should not be the only way we see
+              a figure.
+            </aside>
+          </section>
+
+          <section class="scipy-statement" data-background-color="#f7f2e8" data-visibility="hidden">
+            <p class="part">The stance</p>
+            <h2>I'm a stylistic anarchist</h2>
+            <p class="big-claim">
+              Not anti-style. Anti brittle rules.
+            </p>
+            <p>
+              A prerequisite to designing good graphics is seeing what they are
+              doing as clearly as possible, before ranking them by type.
+            </p>
+            <aside class="notes">
+              Direct perception and non-judgmental awareness. First name what
+              the graphic asks the eye to do, then make the judgment call.
+            </aside>
+          </section>
+
+          <section class="split grammar-style" data-background-color="#f7f2e8" data-visibility="hidden">
+            <div>
+              <p class="part">A better lens</p>
+              <h2>grammar vs elements of style</h2>
+              <p class="big-claim">
+                Grammar names the relationships. Style controls the voice.
+              </p>
+            </div>
+            <div class="note-card">
+              <h3>Grammar</h3>
+              <p>containment, alignment, connection, order, scale, emphasis</p>
+              <h3>Style</h3>
+              <p>palette, texture, typography, density, ornament, tone</p>
+            </div>
+            <aside class="notes">
+              This keeps style tips from undercutting the message. The point is
+              not that style is unimportant; it is that style decisions should
+              answer structural and perceptual questions.
+            </aside>
+          </section>
+
+          <!-- Montage — bespoke graphics -->
+          <section>
+            <h2>graphics don't always fall into neat taxonomies</h2>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 0.6rem;
+                margin-top: 0.8rem;
+                height: 280px;
+              "
+            >
+              <img
+                src="motivational-images/science.png"
+                style="
+                  box-sizing: border-box;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 4px;
+                  border: 2px solid #ccc;
+                "
+                alt="Nature / Science"
+              />
+              <img
+                src="motivational-images/data-art.png"
+                style="
+                  box-sizing: border-box;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 4px;
+                  border: 2px solid #ccc;
+                "
+                alt="Data Art"
+              />
+              <img
+                src="motivational-images/sosp.png"
+                style="
+                  box-sizing: border-box;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 4px;
+                  border: 2px solid #ccc;
+                "
+                alt="Systems diagrams"
+              />
+            </div>
+            <aside class="notes">
+              There's no way you could use a chart picker like that to come up
+              with a graphic like one of these or even know if it's useful.
+            </aside>
+          </section>
+
+          <!-- Grouped bars — not interchangeable -->
+          <section>
+            <h2>grouped bar charts aren't created equal</h2>
+            <aside class="notes">
+              Even if we think we've found the right chart, our work isn't
+              necessarily done! In a second I'm going to show you three grouped
+              bar charts in sequence visualizing the heights of two children,
+              Charlie and River, over time. Your job is to just tell me the
+              first thing you see. You'll have five seconds per chart.
+            </aside>
+          </section>
+
+          <!-- Franconeri A — the hook -->
+          <section>
+            <h2>what trend do you see here?</h2>
+            <div class="chart-spec-slide">
+              <div
+                id="chart-viz-agg-year-site"
+                class="chart-container"
+                style="max-width: 80%"
+              ></div>
+            </div>
+            <aside class="notes">
+              What trend do you see here? [show ~5 seconds then advance] Boger
+              &amp; Franconeri (2024): "Reading a Graph Is Like Reading a
+              Paragraph."
+            </aside>
+          </section>
+
+          <!-- Franconeri B -->
+          <section>
+            <h2>what about now?</h2>
+            <div class="chart-spec-slide">
+              <div
+                id="chart-viz-agg-site-year"
+                class="chart-container"
+                style="max-width: 80%"
+              ></div>
+            </div>
+            <aside class="notes">
+              What about now? [show ~5 seconds then advance] Same exact data.
+              Boger &amp; Franconeri (2024).
+            </aside>
+          </section>
+
+          <!-- Franconeri A with color -->
+          <section data-visibility="hidden">
+            <!-- HIDDEN: Charlie/River color variant; the barley swap above carries the point. Restore by removing data-visibility. -->
+            <h2>how about now?</h2>
+            <div class="chart-spec-slide">
+              <div
+                id="chart-franconeri-a-color"
+                class="chart-container"
+                style="max-width: 80%"
+              ></div>
+              <pre class="spec-mini"><code class="language-typescript">Chart(heights)
+  .flow(
+    spread("age", { dir: "x" }),
+    spread("person", { dir: "x" })
+  )
+  .mark(rect({ h: "height", fill: "person" }))</code></pre>
+            </div>
+            <aside class="notes">
+              How about now? These are all the same kind of chart, yet our
+              takeaways differ. How do we make sense of that?
+            </aside>
+          </section>
+
+          <!-- Boger & Franconeri — study results figure -->
+          <section>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                margin: 0;
+              "
+            >
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  min-height: 0;
+                  width: 100%;
+                "
+              >
+                <img
+                  src="motivational-images/boger-franconeri-results.png"
+                  alt="Boger and Franconeri study: separate bar charts vs grouped bars with participant miss rates"
+                  style="
+                    max-width: 95%;
+                    max-height: 78vh;
+                    border-radius: 4px;
+                    object-fit: contain;
+                  "
+                />
+              </div>
+              <p
+                style="
+                  margin: 0.4rem 0 0;
+                  font-size: 0.78em;
+                  color: #555;
+                  letter-spacing: 0.01em;
+                "
+              >
+                <a
+                  href="https://psycnet.apa.org/manuscript/2024-85347-001.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style="
+                    color: inherit;
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
+                  "
+                  >Boger &amp; Franconeri 2024</a
+                >
+              </p>
+            </div>
+            <aside class="notes">
+              This was based on a study by Boger &amp; Franconeri where that
+              found that when you group the data by age fisrt, only 13% of
+              people missed the relationship, whereas 46% missed it when grouped
+              the other way.
+            </aside>
+          </section>
+
+          <!-- Three-thumbnail summary -->
+          <section>
+            <div
+              style="
+                margin-top: 1rem;
+                display: flex;
+                justify-content: center;
+                gap: 1.5rem;
+              "
+            >
+              <div
+                id="chart-viz-agg-year-site-mini"
+                class="chart-container"
+                style="max-width: 42%; min-height: 0"
+              ></div>
+              <div
+                id="chart-viz-agg-site-year-mini"
+                class="chart-container"
+                style="max-width: 42%; min-height: 0"
+              ></div>
+            </div>
+            <h2 style="margin-top: 1.2rem; font-size: 1.3em; line-height: 1.4">
+              these are all the same kind of chart —
+              <span class="highlight">yet our takeaways differ</span>
+            </h2>
+            <!-- <p
+              style="
+                margin-top: 0.6rem;
+                font-size: 0.85em;
+                color: #444;
+                line-height: 1.7;
+              "
+            >
+              How do we make sense of that?
+            </p> -->
+            <aside class="notes">
+              And I want to highlight that these are all the same kind of chart,
+              but their takeaways are different. How do we make sense of that?
+              <!-- Same data, same chart type — but grouping order and color
+              completely change what a reader sees first. The chart-type
+              heuristic doesn't help here. We need a better way to think about
+              this. Boger &amp; Franconeri (2024): "Reading a Graph Is Like
+              Reading a Paragraph." -->
+            </aside>
+          </section>
+
+          <!-- Marks & channels: related work that doesn't explain the swap -->
+          <section data-background-color="#f7f2e8">
+            <h2>maybe you've seen this before</h2>
+            <p class="viz-step-copy" style="margin-top: 0">
+              the grammar of graphics: marks and channels
+            </p>
+            <div
+              class="two-col"
+              style="gap: 2.5rem; align-items: start; margin-top: 0.5rem"
+            >
+              <div>
+                <h3>marks</h3>
+                <!-- TODO: drop the canonical marks figure here -->
+                <div
+                  style="
+                    border: 2px dashed #c3bca9;
+                    border-radius: 8px;
+                    padding: 1.8rem 1rem;
+                    color: #9c927a;
+                    text-align: center;
+                    font-family: monospace;
+                    min-height: 150px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  canonical marks figure<br /><small>marks-channels/marks.png</small>
+                </div>
+                <p class="viz-step-copy">the shapes: points, lines, areas</p>
+              </div>
+              <div>
+                <h3>channels</h3>
+                <!-- TODO: drop the canonical channels-accuracy figure here -->
+                <div
+                  style="
+                    border: 2px dashed #c3bca9;
+                    border-radius: 8px;
+                    padding: 1.8rem 1rem;
+                    color: #9c927a;
+                    text-align: center;
+                    font-family: monospace;
+                    min-height: 150px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  canonical channels figure<br /><small>marks-channels/channels.png</small>
+                </div>
+                <p class="viz-step-copy">
+                  how a value maps to a mark: position, length, angle, area,
+                  color. some are read more accurately than others.
+                </p>
+              </div>
+            </div>
+            <h2 style="margin-top: 1.2rem; font-size: 1.2em">
+              so does that tell us <span class="highlight">which chart to pick?</span>
+            </h2>
+            <aside class="notes">
+              You've probably seen the grammar of graphics, or marks and channels.
+              Marks are the shapes; channels are how data maps onto them, and
+              there's a famous accuracy ranking: position and length beat angle,
+              area, and color. That tells us how precisely one value can be read.
+              But both of our charts used the same marks and the same channels, so
+              the ranking can't explain why one grouping made the trend pop and
+              the other hid it. Hold that question.
+            </aside>
+          </section>
+
+          <!-- Key Idea -->
+          <section>
+            <!-- thumbnail recap removed; the barley swap above already made the point -->
+            <p
+              class="viz-step-copy"
+              style="text-align: center; margin: 0 auto 0.4rem; max-width: 46ch"
+            >
+              Marks and channels tell us how precisely to read a value. They
+              don't tell us which questions a chart makes easy.
+            </p>
+
+            <div
+              style="
+                margin-top: 1.2rem;
+                font-size: 1em;
+                line-height: 1.7;
+                text-align: center;
+                padding: 1rem 1.6rem;
+                background: #e8e8e8;
+                border-radius: 6px;
+                font-family: &quot;Shantell Sans&quot;, sans-serif;
+              "
+            >
+              <span style="font-weight: 700; color: #1a1a2e">Key idea:</span>
+              when we design a graphic, we're doing more than picking a chart
+              type. We're creating a
+              <strong>visual structure</strong> for our readers to navigate.
+            </div>
+            <div
+              class="fragment"
+              style="
+                margin-top: 2.25rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.85rem;
+                flex-wrap: wrap;
+                font-family: &quot;Shantell Sans&quot;, sans-serif;
+                font-size: 1.4em;
+                color: #1a1a2e;
+              "
+            >
+              <span>data structure</span>
+              <span
+                style="color: #555; font-size: 1.1em; line-height: 1"
+                aria-hidden="true"
+                >→</span
+              >
+              <span>visual structure</span>
+              <span
+                style="color: #555; font-size: 1.1em; line-height: 1"
+                aria-hidden="true"
+                >→</span
+              >
+              <span>reader</span>
+            </div>
+            <aside class="notes">
+              The key idea of this talk is that when we're designing a graphic,
+              we're doing a lot more than just picking a chart type — we're
+              creating a visual structure for our readers to navigate. The way
+              we arrange shapes and the colors we assign affect what our readers
+              see first, what comparisons they make, and what story they take
+              away.
+
+              <br />
+              <br />
+
+              In this talk you're going to see many examples of mapping data
+              structures to visual structures to reader experiences. And through
+              that process I'm gonna show you how thinking structurally frees
+              you from this useful, but rigid lens of chart types and
+              black-and-white design rules like banning pie charts, and helps
+              you think more precisely and creatively about visualization.
+            </aside>
+          </section>
+
+          <!-- GoFish: the language -->
+          <section>
+            <div style="margin-bottom: 1.2rem">
+              <p
+                style="
+                  font-size: 0.85em;
+                  color: #555;
+                  line-height: 1.7;
+                  margin-bottom: 1rem;
+                "
+              >
+                To talk about visual structure precisely, we need a language.
+              </p>
+            </div>
+            <div
+              class="fragment"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                justify-content: center;
+              "
+            >
+              <img
+                src="gofish-logo.png"
+                alt="GoFish logo"
+                style="height: 72px; object-fit: contain"
+              />
+              <div style="text-align: left">
+                <strong
+                  style="
+                    font-size: 1.15em;
+                    color: #1a1a2e;
+                    font-family:
+                      &quot;Shantell Sans&quot;, &quot;Comic Sans MS&quot;,
+                      cursive, sans-serif;
+                  "
+                  >GoFish
+                </strong>
+                <br />
+                <span style="font-size: 0.82em; color: #444; line-height: 1.6">
+                  A compositional language for visual structure<br />
+                  open source (MIT-licensed), TypeScript with Python bindings
+                  (quickly catching up to TS)<br />
+                  <span style="color: #777; font-size: 0.92em">
+                    <em>
+                      See papers:
+                      <a
+                        href="https://vis.csail.mit.edu/pubs/bluefish/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >UIST 2024</a
+                      >,
+                      <a
+                        href="https://vis.csail.mit.edu/pubs/gofish/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >VIS 2025</a
+                      >
+                    </em>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <aside class="notes">
+              And to talk about visual structure precisely, we're gonna want a
+              language. I've spent my PhD studying how visual structure conveys
+              meaning and designing better libraries to take advantage of it.
+
+              <br /><br />
+
+              The culmination of that work is GoFish, a compositional language
+              for visual structure.
+            </aside>
+          </section>
+
+          <section
+            class="split runway-pl-slide"
+            data-background-color="#f7f2e8"
+          >
+            <div>
+              <p class="part">Runway PL</p>
+              <h2>high fashion for graphics tools</h2>
+              <p class="big-claim">
+                Jean Yang asks what happens when programming-language ideas get
+                the same public design culture that fashion has.
+              </p>
+              <p class="tight-copy">
+                I want that for scientific figures: couture-level structure,
+                made available for everyday chart decisions.
+              </p>
+              <p class="source-line">
+                Jean Yang, “Runway PL” and Fast Fashion · Schiaparelli FW
+                2026-27
+              </p>
+            </div>
+            <div class="fashion-board">
+              <figure class="runway-photo-frame">
+                <img
+                  class="runway-photo"
+                  src="source-images/schiaparelli-fw2026-look10.jpg"
+                  alt="Schiaparelli Fall/Winter 2026-27 runway look with kinetic tentacle-like shoulders"
+                />
+                <figcaption>Schiaparelli FW 2026-27</figcaption>
+              </figure>
+            </div>
+            <aside class="notes">
+              This opening is borrowing Jean Yang's runway PL framing: make the
+              ideas behind programming languages feel like a design culture more
+              people can enter. I looked for a fish-fashion reference and the
+              strongest one is Schiaparelli Fall/Winter 2026-27, whose official
+              collection notes describe a look encrusted with real fish scales
+              and a palette drawn from sea fauna. The recent Louis Vuitton
+              Spring/Summer 2027 menswear show also had the giant artificial
+              wave set, but Schiaparelli gives us the tighter bridge: fish,
+              couture, structure, and technique. Source links:
+              https://jeanstack.substack.com/p/runway-pl-and-fast-fashion and
+              https://schiaparelli.com/en/pages/haute-couture-automne-hiver-2026-27
+            </aside>
+          </section>
+          <!-- GoFish is based on Gestalt grouping principles -->
+          <section>
+            <h2>GoFish is based on Gestalt grouping principles</h2>
+            <table
+              style="
+                width: 60%;
+                margin: 1.2rem auto 0;
+                border-collapse: collapse;
+                font-size: 0.8em;
+              "
+            >
+              <tbody>
+                <tr style="border-bottom: 1px solid #e8e8e8">
+                  <td
+                    style="
+                      padding: 0.5rem 0.8rem;
+                      font-weight: 600;
+                      color: #1a1a2e;
+                    "
+                  >
+                    containment
+                  </td>
+                  <td style="padding: 0.5rem 0.8rem; text-align: center">
+                    <img
+                      src="gestalt/containment.png"
+                      style="width: 160px; object-fit: contain"
+                    />
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e8e8e8">
+                  <td
+                    style="
+                      padding: 0.5rem 0.8rem;
+                      font-weight: 600;
+                      color: #1a1a2e;
+                    "
+                  >
+                    connection
+                  </td>
+                  <td style="padding: 0.5rem 0.8rem; text-align: center">
+                    <img
+                      src="gestalt/connection.png"
+                      style="width: 160px; object-fit: contain"
+                    />
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e8e8e8">
+                  <td
+                    style="
+                      padding: 0.5rem 0.8rem;
+                      font-weight: 600;
+                      color: #1a1a2e;
+                    "
+                  >
+                    similar attribute
+                  </td>
+                  <td style="padding: 0.5rem 0.8rem; text-align: center">
+                    <img
+                      src="gestalt/similar_attribute.png"
+                      style="width: 160px; object-fit: contain"
+                    />
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e8e8e8">
+                  <td
+                    style="
+                      padding: 0.5rem 0.8rem;
+                      font-weight: 600;
+                      color: #1a1a2e;
+                    "
+                  >
+                    alignment
+                  </td>
+                  <td style="padding: 0.5rem 0.8rem; text-align: center">
+                    <img
+                      src="gestalt/alignment.png"
+                      style="width: 160px; object-fit: contain"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      padding: 0.5rem 0.8rem;
+                      font-weight: 600;
+                      color: #1a1a2e;
+                    "
+                  >
+                    proximity / uniform density
+                  </td>
+                  <td style="padding: 0.5rem 0.8rem; text-align: center">
+                    <img
+                      src="gestalt/proximity-uniform-density.png"
+                      style="width: 160px; object-fit: contain"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <aside class="notes">
+              The big idea in GoFish is to identify these primitives of visual
+              structure, most often called Gestalt grouping principles, and turn
+              them in "graphical operators" that we can manipulate directly in
+              code. In fact with the grouped bar charts, similar attribute and
+              spatial proximity were driving the differences in our readings of
+              those charts. They made different visual "queries" easier or
+              harder.
+              <!-- GoFish's operators map directly onto Gestalt grouping principles,
+              ordered here by relational strength. Containment is the strongest
+              perceptual grouping cue — an enclosing boundary almost always
+              wins. Connection via lines is next. Similar attributes (color,
+              shape, size) are weaker but flexible. Alignment and proximity are
+              the weakest, but they're everywhere — a bar chart is just
+              alignment and uniform density. -->
+            </aside>
+          </section>
+
+          <!-- Science example + Gestalt grouping table (same rows as previous slide) -->
+          <section>
+            <!-- <h2>Gestalt structure, not a taxonomic menu</h2> -->
+            <div
+              class="gestalt-taxonomy-slide-body"
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 0.65rem;
+                margin-top: 0.5rem;
+                width: 100%;
+                box-sizing: border-box;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: center;
+                  align-items: center;
+                  flex-shrink: 0;
+                  width: 100%;
+                  min-height: 0;
+                "
+              >
+                <img
+                  src="motivational-images/science.png"
+                  style="
+                    display: block;
+                    max-width: 100%;
+                    width: auto;
+                    height: auto;
+                    max-height: clamp(200px, 36vh, 420px);
+                    object-fit: contain;
+                    border-radius: 4px;
+                  "
+                  alt="Nature / Science"
+                />
+              </div>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: row;
+                  flex-wrap: wrap;
+                  gap: 0.75rem 1.25rem;
+                  justify-content: center;
+                  align-items: flex-start;
+                  width: 100%;
+                "
+              >
+                <table
+                  style="
+                    flex: 1 1 240px;
+                    max-width: 48%;
+                    min-width: min(100%, 240px);
+                    border-collapse: collapse;
+                    font-size: 0.68em;
+                  "
+                >
+                  <tbody>
+                    <tr style="border-bottom: 1px solid #e8e8e8">
+                      <td
+                        style="
+                          padding: 0.2rem 0.5rem;
+                          font-weight: 600;
+                          color: #1a1a2e;
+                        "
+                      >
+                        containment
+                      </td>
+                      <td style="padding: 0.2rem 0.5rem; text-align: center">
+                        <img
+                          src="gestalt/containment.png"
+                          style="width: 88px; object-fit: contain"
+                        />
+                      </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e8e8e8">
+                      <td
+                        style="
+                          padding: 0.2rem 0.5rem;
+                          font-weight: 600;
+                          color: #1a1a2e;
+                        "
+                      >
+                        connection
+                      </td>
+                      <td style="padding: 0.2rem 0.5rem; text-align: center">
+                        <img
+                          src="gestalt/connection.png"
+                          style="width: 88px; object-fit: contain"
+                        />
+                      </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e8e8e8">
+                      <td
+                        style="
+                          padding: 0.2rem 0.5rem;
+                          font-weight: 600;
+                          color: #1a1a2e;
+                        "
+                      >
+                        similar attribute
+                      </td>
+                      <td style="padding: 0.2rem 0.5rem; text-align: center">
+                        <img
+                          src="gestalt/similar_attribute.png"
+                          style="width: 88px; object-fit: contain"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table
+                  style="
+                    flex: 1 1 240px;
+                    max-width: 48%;
+                    min-width: min(100%, 240px);
+                    border-collapse: collapse;
+                    font-size: 0.68em;
+                  "
+                >
+                  <tbody>
+                    <tr style="border-bottom: 1px solid #e8e8e8">
+                      <td
+                        style="
+                          padding: 0.2rem 0.5rem;
+                          font-weight: 600;
+                          color: #1a1a2e;
+                        "
+                      >
+                        alignment
+                      </td>
+                      <td style="padding: 0.2rem 0.5rem; text-align: center">
+                        <img
+                          src="gestalt/alignment.png"
+                          style="width: 88px; object-fit: contain"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style="
+                          padding: 0.2rem 0.5rem;
+                          font-weight: 600;
+                          color: #1a1a2e;
+                        "
+                      >
+                        proximity / uniform density
+                      </td>
+                      <td style="padding: 0.2rem 0.5rem; text-align: center">
+                        <img
+                          src="gestalt/proximity-uniform-density.png"
+                          style="width: 88px; object-fit: contain"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <aside class="notes">
+              We can see this play out in a more complex graphic, too.
+              Containment is suggested by the axes in each of the charts here,
+              connection is used for labeling, similar attribute to group points
+              and parts of the diagrams together, and so on.
+
+              <br /><br />
+
+              Ok enough of the theory and motivation, let's get into the code!
+            </aside>
+          </section>
+        </section>
+        <!-- /COLUMN 1 -->
+

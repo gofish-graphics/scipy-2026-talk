@@ -1,0 +1,848 @@
+        <!-- ═══ COLUMN 2: PART 1 ════════════════════════════════ -->
+        <section>
+          <!-- ══════════════════════════════════════════════════════
+             PART 1: ONE DATASET, MANY STRUCTURES
+             Repeating pattern per step:
+               A. Spec + chart
+               B. Data schema [placeholder]
+               C. Tasks / queries [placeholder]
+             ══════════════════════════════════════════════════════ -->
+
+          <!-- ─── VIZCHITRA WALKTHROUGH: GOFISH STRUCTURAL BUILD (barley) ─── -->
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <p class="part">GoFish walkthrough</p>
+              <h2>start with the data shape</h2>
+              <div class="fragment fade-in" data-fragment-index="1">
+                <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+  )
+  .<span class="viz-mark">mark</span>(
+  )</pre>
+                <div class="viz-legend">
+                  <span><b class="viz-op"></b>operators</span>
+                  <span><b class="viz-mark"></b>marks</span>
+                  <span><b class="viz-transform"></b>data transforms</span>
+                </div>
+              </div>
+            </div>
+            <div style="position: relative; min-height: 360px">
+              <!-- the opening's grouped bars, anonymized labels... -->
+              <div
+                id="chart-viz-reveal-anon"
+                class="chart-container viz-gofish-chart fragment fade-out"
+                data-fragment-index="1"
+                style="position: absolute; top: 0; left: 0"
+              ></div>
+              <!-- ...same bars, real barley labels -->
+              <div
+                id="chart-viz-reveal-real"
+                class="chart-container viz-gofish-chart fragment fade-in"
+                data-fragment-index="1"
+                style="position: absolute; top: 0; left: 0"
+              ></div>
+            </div>
+            <aside class="notes">
+              The cities and "sales" in the opening were anonymized so the
+              grouping read fresh. This is the classic 1931-1932 Minnesota barley
+              trial, and there's a dimension we hid to keep it simple: variety.
+              Ten varieties, six sites, two years.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>place one slot per site</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>()
+  )</pre>
+              <p class="viz-step-copy">
+                The first operator creates a row of visual neighborhoods.
+              </p>
+            </div>
+            <div
+              id="chart-viz-site-slots"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Spread is an operator, so it uses the green color.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>make yield visible</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield" })
+  )</pre>
+              <p class="viz-step-copy">
+                The mark says what gets drawn; the channel says what property
+                carries the value.
+              </p>
+            </div>
+            <div
+              id="chart-viz-site-yield"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Rect is the mark. Height encodes yield.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>some transforms are implied</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield" })
+  )</pre>
+              <p class="viz-callout viz-transform">
+                aggregate yield by site
+              </p>
+            </div>
+            <div
+              id="chart-viz-site-yield-transform"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              The structure requires a data transform, so the transform is
+              named in blue.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>add a second grouping</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "site", dir: "x" }),
+    <span class="viz-op">spread</span>({ by: "year", dir: "x" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield", fill: "site" })
+  )</pre>
+            </div>
+            <div
+              id="chart-viz-site-year"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Site nested by year — the same site-then-year structure as the
+              opening, now on the real barley data.
+            </aside>
+          </section>
+
+          <!-- Nesting build-up: one layout at a time, then all three together -->
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>group by site, then year</h2>
+            <div
+              id="chart-viz-nest-grouped-r-solo"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              site → year: each site's two years sit together, so the change per
+              site is easy to read.
+            </aside>
+          </section>
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>or group by year, then site</h2>
+            <div
+              id="chart-viz-nest-grouped-solo"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              year → site: sites sit together within each year, so the per-site
+              change is scattered across the two blocks.
+            </aside>
+          </section>
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>or flatten it to a grid</h2>
+            <div
+              id="chart-viz-nest-heatmap-solo"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              site × year as a heatmap: both fields on separable axes, no nesting
+              order privileged.
+            </aside>
+          </section>
+
+          <section>
+            <h2>nesting order matters</h2>
+            <div
+              class="kv-nesting-builder"
+              style="
+                display: flex;
+                gap: 1.6rem;
+                margin-top: 1rem;
+                align-items: flex-start;
+                justify-content: center;
+                font-size: 0.72em;
+              "
+            >
+              <!-- Stacked bar (visible on slide entry; columns 2–3 are fragments) -->
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  site → year
+                </div>
+                <div id="chart-viz-nest-grouped-r" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(barley).flow(
+  spread("site", dir="x"),
+  spread("year", dir="x"),
+).mark(rect(h="yield", fill="site"))</code></pre>
+              </div>
+
+              <!-- Grouped bar -->
+              <div
+                class="fragment"
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  year → site
+                </div>
+                <div id="chart-viz-nest-grouped" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(barley).flow(
+  spread("year", dir="x"),
+  spread("site", dir="x"),
+).mark(rect(h="yield", fill="site"))</code></pre>
+              </div>
+
+              <!-- Grouped bar reversed -->
+              <div
+                class="fragment"
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  site × year
+                </div>
+                <div id="chart-viz-nest-heatmap" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(barley).flow(
+  table("site", "year"),
+).mark(rect(fill="yield"))</code></pre>
+              </div>
+            </div>
+            <aside class="notes">
+              Same data. The two grouped bars differ only in nesting order, which
+              changes what you compare first. The heatmap flattens both keys onto
+              separable axes, so no nesting order is privileged. Advance twice to
+              reveal the second and third columns; layout stays fixed (hidden
+              fragments still reserve space).
+            </aside>
+          </section>
+
+          <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN: redundant with the barley 3-panel "nesting order matters" below. Restore by removing data-visibility. -->
+            <h2>nesting order changes the question</h2>
+            <div class="viz-compare">
+              <div class="viz-compare-card">
+                <h3>site → variety</h3>
+                <p>What are the trends across sites?</p>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>({ by: "site", dir: "x" })
+<span class="viz-op">spread</span>({ by: "variety", dir: "x" })</pre>
+                <div
+                  id="chart-viz-site-variety-mini"
+                  class="chart-container viz-gofish-compare"
+                ></div>
+              </div>
+              <div class="viz-compare-card">
+                <h3>variety → site</h3>
+                <p>What is the most productive site for each variety?</p>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>({ by: "variety", dir: "x" })
+<span class="viz-op">spread</span>({ by: "site", dir: "x" })</pre>
+                <div
+                  id="chart-viz-variety-site-mini"
+                  class="chart-container viz-gofish-compare"
+                ></div>
+              </div>
+            </div>
+            <aside class="notes">
+              Same data and same operators, different order, different
+              affordances.
+            </aside>
+          </section>
+
+          <!-- Exploratory bridge: a total can hide its parts -->
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <h2>is it one variety, or all of them?</h2>
+            <aside class="notes">
+              The totals rose at Morris and fell everywhere else. But a total can
+              hide its parts: maybe one big variety swung it. To answer, we break
+              each site open by variety.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2><code>stack()</code></h2>
+              <div
+                style="
+                  display: inline-block;
+                  background: #f5f5f5;
+                  border-radius: 6px;
+                  padding: 0.4rem 0.7rem;
+                  font-family: monospace;
+                  font-size: 1.05em;
+                  margin: 0.3rem 0 0.7rem;
+                "
+              >
+                variety, year → Σ<sub>site</sub> yield
+              </div>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
+    <span class="viz-op">spread</span>({ by: "year", dir: "x" }),
+    <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ w: 8, h: "yield", fill: "site" })
+  )</pre>
+              <p class="viz-step-copy">
+                Easier part-to-whole readings, while preserving direct variety
+                comparison.
+              </p>
+            </div>
+            <div
+              id="chart-viz-stacked"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Stack is a layout operator, green. One structural move buys
+              part-to-whole reading across sites within each variety.
+            </aside>
+          </section>
+
+          <!-- ─── KEY / VALUE STRUCTURE DIGRESSION ────────────── -->
+
+
+          <section data-visibility="hidden">
+            <!-- HIDDEN: the heatmap now lives in the 3-panel slide above, so this is redundant. Restore by removing data-visibility. -->
+            <h2>flattening the hierarchy</h2>
+            <div
+              style="
+                display: flex;
+                gap: 1.6rem;
+                margin-top: 1rem;
+                align-items: flex-start;
+                font-size: 0.72em;
+              "
+            >
+              <!-- Stacked bar (reference) -->
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  lake → species
+                  <span style="color: #888; font-size: 0.85em"
+                    >(part to whole)</span
+                  >
+                </div>
+                <div id="chart-kv-stacked-2" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(data).flow(
+  spread("lake",    dir="x"),
+  stack("species",  dir="y"),
+).mark(rect(h="count", fill="species"))</code></pre>
+              </div>
+
+              <!-- Heatmap -->
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  lake × species
+                </div>
+                <div id="chart-kv-heatmap" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(data).flow(
+  table("lake", "species"),
+).mark(rect(fill="count"))</code></pre>
+              </div>
+            </div>
+            <aside class="notes">
+              The heatmap collapses the hierarchy entirely: (lake, species) is a
+              flat compound key. No nesting, no containment — just a grid. The
+              key structure you choose determines what queries your reader can
+              answer.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN: sorting now lives on the stack (aspirational: stack({ by: field("site").sort("yield") })),
+                 so the standalone derive-to-sort beat is no longer needed. Remove data-visibility to restore. -->
+            <div>
+              <h2><code>derive()</code> to sort</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
+    <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 4 }),
+    <span class="viz-transform">derive</span>(d =&gt; orderBy(d, "yield", "asc")),
+    <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ h: "yield", fill: "site" })
+  )</pre>
+              <p class="viz-step-copy">
+                Add year as a second grouping, then sort each stack by yield
+                before placing it.
+              </p>
+            </div>
+            <div
+              id="chart-viz-year-sorted"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Derive is a data transform, blue. Because construction is split
+              into explicit steps, we can insert a sort between spreading and
+              stacking.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>sort each stack</h2>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
+    <span class="viz-op">spread</span>({ by: "year", dir: "x" }),
+    <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y" })
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>({ w: 8, h: "yield", fill: "site" })
+  )</pre>
+              <p class="viz-step-copy">
+                Order each stack by yield. Rank, min, and max now read off
+                position; what we give up is the "same site, same slot" tracking.
+              </p>
+            </div>
+            <div
+              id="chart-viz-stacked-sorted"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Sorting is a modifier on the stacked field, not a separate step. It
+              re-purposes position from an identity channel to a rank channel.
+            </aside>
+          </section>
+
+          <!-- Connection affordances: bars vs lines (Zacks & Tversky 1999).
+               Perceptual beat, no code — same format as the Franconeri slides. -->
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>what does connecting things do?</h2>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 3rem;
+                margin-top: 0.8rem;
+              "
+            >
+              <div style="text-align: center">
+                <div id="chart-conn-bars" class="chart-container"></div>
+                <p
+                  class="fragment"
+                  data-fragment-index="1"
+                  style="
+                    margin-top: 0.5rem;
+                    font-size: 0.72em;
+                    font-family: 'Shantell Sans', sans-serif;
+                    color: #1a1a2e;
+                  "
+                >
+                  “men are taller than women”
+                </p>
+              </div>
+              <div style="text-align: center">
+                <div style="position: relative; display: inline-block">
+                  <div id="chart-conn-line" class="chart-container"></div>
+                  <div class="conn-line-label" style="left: 6%">female</div>
+                  <div class="conn-line-label" style="left: 94%">male</div>
+                </div>
+                <p
+                  class="fragment"
+                  data-fragment-index="2"
+                  style="
+                    margin-top: 1.4rem;
+                    font-size: 0.72em;
+                    font-family: 'Shantell Sans', sans-serif;
+                    color: #1a1a2e;
+                  "
+                >
+                  “the more male a person is, the taller he or she is”
+                </p>
+              </div>
+            </div>
+            <p
+              class="viz-step-copy fragment"
+              data-fragment-index="3"
+              style="font-size: 0.6em; margin-top: 0.6rem"
+            >
+              Bars afford discrete comparisons; connected marks afford trends —
+              even when the x-axis is categorical.
+              <span style="color: #777">Zacks &amp; Tversky (1999)</span>
+            </p>
+            <aside class="notes">
+              Before we add the next operator, a perception question: what does
+              connecting marks do? Zacks &amp; Tversky (1999), "Bars and lines: a
+              study of graphic communication," showed people the same data as
+              bars and as a line. Bar readers produced discrete comparisons —
+              "men are taller than women." Line readers produced trends — even
+              on categorical data, giving absurd readings like "the more male a
+              person is, the taller he or she is." Connection is not decoration:
+              it asserts continuity and identity, and it licenses trend
+              readings. We just gave up identity when we sorted the stacks —
+              "same site, same slot" is gone. Connection is exactly the operator
+              that buys it back.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>connect related bars</h2>
+              <pre class="viz-code">Layer([
+  chart(barley)
+    .<span class="viz-op">flow</span>(
+      <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
+      <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 16 }),
+      <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y" })
+    )
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 8, h: "yield", fill: "site" }).name("bars")),
+  chart(selectAll("bars"))
+    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.5 }))
+])</pre>
+              <p class="viz-step-copy">
+                Connection restores the identity that sorting gave up: the
+                areas track each site across stacks, and a crossing reads as a
+                rank change.
+              </p>
+            </div>
+            <div
+              id="chart-viz-ribbon"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              The bars remain available as named structure; the second layer
+              connects across them. Key: we didn't throw away the stacked
+              structure, we added continuity on top of it. This is the
+              connection affordance from the last slide put to work: the areas
+              assert "same site" across the sorted stacks, so tracking is a
+              trend read instead of a color hunt, and a crossing is a rank
+              change you see directly.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <div>
+              <h2>style is downstream of structure</h2>
+              <pre class="viz-code">Layer([
+  chart(barley, {
+    color: palette({
+      Waseca: "#d7dadd", Morris: "#49a66a",
+      "Grand Rapids": "#d7dadd",
+      Crookston: "#d7dadd", Duluth: "#d7dadd",
+    }),
+  })
+    .<span class="viz-op">flow</span>(
+      <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 38 }),
+      <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 8 }),
+      <span class="viz-transform">derive</span>(d =&gt; orderBy(d, "yield", "asc")),
+      <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+    )
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 16, h: "yield", fill: "site" }).name("bars")),
+  chart(selectAll("bars"))
+    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.78 }))
+])</pre>
+              <p class="viz-step-copy">
+                Once the structure is right, palette becomes an attention
+                decision instead of a chart-type decision.
+              </p>
+            </div>
+            <div
+              id="chart-viz-ribbon-highlight"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              Highlight Morris, Grand Rapids after the structural moves are in
+              place. Same structure, same data — only the color encoding
+              changed, and the set of easily-answered queries is now
+              completely different.
+            </aside>
+          </section>
+
+          <section data-visibility="hidden"><!-- HIDDEN: pie/angle material, belongs with the cut scatter-pie section -->
+            <h2>mapping length to angle changes the afforded queries</h2>
+            <!-- <p
+              style="
+                font-size: 0.82em;
+                max-width: 52rem;
+                margin: 0.35rem auto 0.6rem;
+                line-height: 1.65;
+              "
+            >
+              Wrapping a Cartesian layout into polar coordinates is one way to
+              turn magnitude along an axis into angle. Pie and bar charts are
+              another: they can be more or less useful than each other depending
+              on what you need to do, not on which one is “better” in the
+              abstract.
+            </p> -->
+            <div
+              class="two-col"
+              style="
+                align-items: center;
+                gap: 8rem;
+                margin-top: 0.35rem;
+                grid-template-columns: auto auto;
+                justify-content: center;
+              "
+            >
+              <div style="text-align: center">
+                <img
+                  src="accuracy-efficiency/pie-even.png"
+                  alt="Pie chart with five similar wedges"
+                  style="
+                    max-width: 100%;
+                    max-height: 260px;
+                    object-fit: contain;
+                  "
+                />
+                <div style="font-size: 0.7em; margin-top: 0.3rem; color: #555">
+                  pie
+                </div>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="accuracy-efficiency/bar-even.png"
+                  alt="Bar chart with five similar values"
+                  style="
+                    max-width: 100%;
+                    max-height: 260px;
+                    object-fit: contain;
+                  "
+                />
+                <div style="font-size: 0.7em; margin-top: 0.3rem; color: #555">
+                  bar
+                </div>
+              </div>
+            </div>
+            <div
+              class="fragment"
+              style="
+                margin-top: 2rem;
+                font-size: 0.76em;
+                line-height: 1.55;
+                font-family: &quot;Shantell Sans&quot;, sans-serif;
+              "
+            >
+              Fine-grained comparison is MUCH harder
+            </div>
+            <aside class="notes">
+              Same point as polar: you swapped axis length for angle. Here the
+              bar/pie pair makes the tradeoff obvious before we abstract back to
+              clock().
+            </aside>
+          </section>
+
+          <section data-visibility="hidden"><!-- HIDDEN: pie/angle material, belongs with the cut scatter-pie section -->
+            <h2>mapping length to angle changes the afforded queries</h2>
+            <!-- <p
+              style="
+                font-size: 0.82em;
+                max-width: 52rem;
+                margin: 0.35rem auto 0.6rem;
+                line-height: 1.65;
+              "
+            >
+              The flip side is tasks where you only need a coarse sense of
+              part-to-whole: at a glance you can treat each wedge as “about a
+              fifth,” “about a third,” “nearly half”—familiar angles become a
+              quick recognition problem. Getting the same whole-to-part read
+              from bars often means adding gridlines or leaning on the axis, and
+              the comparison is less visually immediate.
+            </p> -->
+            <div
+              class="two-col"
+              style="
+                align-items: center;
+                gap: 8rem;
+                margin-top: 0.35rem;
+                grid-template-columns: auto auto;
+                justify-content: center;
+              "
+            >
+              <div style="text-align: center">
+                <img
+                  src="accuracy-efficiency/pie-lopsided.png"
+                  alt="Pie chart with uneven wedges"
+                  style="
+                    max-width: 100%;
+                    max-height: 260px;
+                    object-fit: contain;
+                  "
+                />
+                <div style="font-size: 0.7em; margin-top: 0.3rem; color: #555">
+                  pie
+                </div>
+              </div>
+              <div style="text-align: center">
+                <img
+                  src="accuracy-efficiency/bar-lopsided.png"
+                  alt="Bar chart with uneven category values"
+                  style="
+                    max-width: 100%;
+                    max-height: 260px;
+                    object-fit: contain;
+                  "
+                />
+                <div style="font-size: 0.7em; margin-top: 0.3rem; color: #555">
+                  bar
+                </div>
+              </div>
+            </div>
+            <!-- <div
+              class="callout fragment"
+              style="margin-top: 0.65rem; font-size: 0.76em; line-height: 1.55"
+            >
+              So polar mapping is an <strong>accuracy–efficiency</strong> trade:
+              angle can be faster for coarse proportion, while a Cartesian axis
+              often wins for fine comparison—same data, different tasks.
+            </div> -->
+            <div
+              class="fragment"
+              style="
+                margin-top: 2rem;
+                font-size: 0.76em;
+                line-height: 1.55;
+                font-family: &quot;Shantell Sans&quot;, sans-serif;
+              "
+            >
+              But coarse part-to-whole comparisons are much easier!
+            </div>
+            <aside class="notes">
+              This is the scatter-pie intuition too: small pies stay glanceable
+              because proportion reads off angle. Tie back to the ribbon slide:
+              cyclical structure vs. magnitude precision.
+            </aside>
+          </section>
+
+          <!-- <section>
+            <h2>Data schema</h2>
+            <div
+              class="grammar-grid"
+              style="margin-top: 2rem; font-size: 0.95em"
+            >
+              <div class="grammar-term">key</div>
+              <div class="grammar-def">
+                <code>lake: discrete → species: ordered</code>
+              </div>
+              <div class="grammar-term">value</div>
+              <div class="grammar-def">
+                <code>count: continuous, species: discrete</code>
+              </div>
+              <div class="grammar-term">+ connection</div>
+              <div class="grammar-def"><code>species: contiguous</code></div>
+            </div>
+            <p style="margin-top: 1.2rem; font-size: 0.82em; color: #777">
+              Same structure as the ribbon — only the coordinate system changed.
+            </p>
+            <aside class="notes">
+              This is the point. The schema is identical to the ribbon. The
+              coordinate transform is the only diff. That's one attribute change
+              in the spec.
+            </aside>
+          </section> -->
+
+          <!-- ─── COLOR + LABELS ────────────────────────────────── -->
+        </section>
+        <!-- /COLUMN 2 -->
+
