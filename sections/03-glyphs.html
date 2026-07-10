@@ -685,7 +685,7 @@ Frame(
           <!-- ─── OPERATOR / GESTALT TABLE ─────────────────────── -->
 
           <section>
-            <h2>operators map data types to Gestalt relations</h2>
+            <h2>each operator buys a query</h2>
             <table
               style="
                 width: 100%;
@@ -703,6 +703,7 @@ Frame(
                       padding: 0.4rem 0.8rem;
                       color: #1a1a2e;
                       font-weight: 700;
+                      width: 18%;
                     "
                   >
                     Operator
@@ -713,9 +714,10 @@ Frame(
                       padding: 0.4rem 0.8rem;
                       color: #1a1a2e;
                       font-weight: 700;
+                      width: 34%;
                     "
                   >
-                    Data type
+                    places
                   </th>
                   <th
                     style="
@@ -725,34 +727,46 @@ Frame(
                       font-weight: 700;
                     "
                   >
-                    Gestalt relation
+                    the query it makes cheap
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.45rem 0.8rem"><code>spread</code></td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">discrete</td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    alignment &amp; uniform density
+                    one slot per value of a field
+                  </td>
+                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-kw">for each</span> value</span>
+                      <span class="q-gloss">side by side; comparing across values is one scan</span>
+                    </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.45rem 0.8rem"><code>stack</code></td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    partitioned continuous
+                    scopes tiled end to end; boundaries at the running totals
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    part-to-whole
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-kw">total</span> measure</span>
+                      <span class="q-line"><span class="q-kw">share</span> when normalized</span>
+                      <span class="q-gloss">read the sum at the endpoint</span>
+                    </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.45rem 0.8rem"><code>scatter</code></td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    continuous × continuous
+                    each entity at its location in space
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #aaa">
-                    <em>none — no discrete grouping</em>
+                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-kw">compare</span> two measures</span>
+                      <span class="q-gloss">how things vary across space, over the whole cloud</span>
+                    </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
@@ -760,19 +774,24 @@ Frame(
                     <code>area / line / ribbon</code>
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    continuous or contiguous
+                    <em>nothing new — draws over existing placements</em>
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    connection
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-kw">track</span> an entity across scopes</span>
+                    </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.45rem 0.8rem"><code>table</code></td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    discrete × discrete
+                    two independently addressable axes
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
-                    uniform density
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-kw">look up</span> by two fields</span>
+                      <span class="q-gloss">scan a row or column for uniformity</span>
+                    </div>
                   </td>
                 </tr>
                 <!-- <tr>
@@ -789,13 +808,25 @@ Frame(
               </tbody>
             </table>
             <aside class="notes">
-              Each operator corresponds to a specific Gestalt principle. Spread
-              creates alignment and uniform density across discrete categories.
-              Stack creates part-to-whole contiguity. Area/line/ribbon use
-              element connectedness to imply continuity. Scatter deliberately
-              avoids a discrete grouping — proximity is the only cue. Table and
-              align/distribute are constraint-based; their Gestalt relation is
-              also alignment and density, but the mechanism differs.
+              spread — discrete; alignment &amp; uniform density.
+              <br />
+              stack — partitioned continuous; part-to-whole.
+              <br />
+              scatter — continuous × continuous; proximity.
+              <br />
+              area / line / ribbon — continuous or contiguous; connection.
+              <br />
+              table — discrete × discrete; uniform density.
+              <br /><br />
+              Every operator does two jobs: an addressing move (what's where,
+              what's locatable) and a pricing move (which readings become one
+              perceptual act). Connection is the only pure pricing move — and
+              the scatterpie works by keeping scatter's addressing while
+              swapping the value payload.
+              <br /><br />
+              The scatterpie composes two of these: scatter contributes how
+              the distribution varies across space, the pie glyph contributes
+              share-within-entity.
             </aside>
           </section>
 

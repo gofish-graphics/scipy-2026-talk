@@ -41,6 +41,7 @@ import {
   field,
   FieldExpr,
   repeat,
+  datum,
 } from "gofish-graphics";
 import _ from "lodash";
 import chroma from "chroma-js";
@@ -182,6 +183,76 @@ function waitForChild(
   });
 }
 
+// Draws a subtle rounded border behind each OUTER split group's bars, to make
+// the Gestalt containment structure visible on the "back to those bar charts"
+// spec tiles. GoFish's `enclose` operator draws a box around its children,
+// but its style (stroke color/width, fill) isn't exposed as an option — only
+// `padding`/`rx`/`ry` are — so it can't match this slide's muted-stroke look.
+// Instead this measures the rendered bars' own x/y/width/height attributes
+// (no layout/getBBox needed, so it works even while the slide is off-screen)
+// and clusters them by the gap between bars: the outer spread's spacing is
+// much wider than the inner spread's, so a gap threshold between the two
+// cleanly separates outer groups from the bars within them.
+function addOuterGroupBoxes(id: string, numOuterGroups: number) {
+  const el = getContainer(id);
+  if (!el) return;
+  waitForChild(el, "svg").then((svg) => {
+    if (!svg || svg.querySelector(".outer-group-box")) return;
+    const bars = Array.from(svg.querySelectorAll("rect")).filter((r) => {
+      const fill = r.getAttribute("fill");
+      return fill !== "gray" && fill !== "none" && r.height.baseVal.value > 15;
+    });
+    if (bars.length === 0) return;
+
+    const boxes = bars
+      .map((r) => ({
+        x0: r.x.baseVal.value,
+        x1: r.x.baseVal.value + r.width.baseVal.value,
+        y0: r.y.baseVal.value,
+        y1: r.y.baseVal.value + r.height.baseVal.value,
+      }))
+      .sort((a, b) => a.x0 - b.x0);
+
+    const GAP_THRESHOLD = 15; // between inner spacing (6px) and outer (24px+)
+    const clusters: (typeof boxes)[number][][] = [[boxes[0]]];
+    for (let i = 1; i < boxes.length; i++) {
+      const prev = boxes[i - 1];
+      const cur = boxes[i];
+      if (cur.x0 - prev.x1 > GAP_THRESHOLD) clusters.push([]);
+      clusters[clusters.length - 1].push(cur);
+    }
+
+    if (clusters.length !== numOuterGroups) {
+      console.warn(
+        `addOuterGroupBoxes(${id}): expected ${numOuterGroups} outer groups, found ${clusters.length}`
+      );
+    }
+
+    const PAD = 4;
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("class", "outer-group-boxes");
+    for (const cluster of clusters) {
+      const x0 = Math.min(...cluster.map((c) => c.x0)) - PAD;
+      const y0 = Math.min(...cluster.map((c) => c.y0)) - PAD;
+      const x1 = Math.max(...cluster.map((c) => c.x1)) + PAD;
+      const y1 = Math.max(...cluster.map((c) => c.y1)) + PAD;
+      const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      box.setAttribute("class", "outer-group-box");
+      box.setAttribute("x", String(x0));
+      box.setAttribute("y", String(y0));
+      box.setAttribute("width", String(x1 - x0));
+      box.setAttribute("height", String(y1 - y0));
+      box.setAttribute("rx", "6");
+      box.setAttribute("ry", "6");
+      box.setAttribute("fill", "none");
+      box.setAttribute("stroke", "#b0a999");
+      box.setAttribute("stroke-width", "1.5");
+      g.appendChild(box);
+    }
+    svg.insertBefore(g, svg.firstChild);
+  });
+}
+
 // ── Opening: Franconeri — same data, two groupings ────────────────────────
 type HeightSample = {
   age: string;
@@ -279,10 +350,13 @@ function renderAggSiteYear(
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(cityYearData)
+  const miniAxes = typeof axes === "object" && axes.x === false;
+  // The outermost spread's ordinal axis is claimed by the chart ROOT, so the
+  // chart-level `axes` option (not the operator-level override) governs it.
+  Chart(cityYearData, { axes })
     .flow(
-      spread("city", { dir: "x", spacing: 24 }),
-      spread("year", { dir: "x", spacing: 6 })
+      spread("city", { dir: "x", spacing: 24, ...(miniAxes ? { axes: { x: false } } : {}) }),
+      spread("year", { dir: "x", spacing: 6, ...(miniAxes ? { axes: { x: false } } : {}) })
     )
     .mark(rect({ h: "sales", fill: "city" }))
     .render(el, { w, h, axes, legend: false });
@@ -297,10 +371,11 @@ function renderAggSiteYearHighlight(
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(cityYearData, { color: palette({ Boulder: "#e08214" }), legend: false })
+  const miniAxes = typeof axes === "object" && axes.x === false;
+  Chart(cityYearData, { color: palette({ Boulder: "#e08214" }), legend: false, axes })
     .flow(
-      spread("city", { dir: "x", spacing: 24 }),
-      spread("year", { dir: "x", spacing: 6 })
+      spread("city", { dir: "x", spacing: 24, ...(miniAxes ? { axes: { x: false } } : {}) }),
+      spread("year", { dir: "x", spacing: 6, ...(miniAxes ? { axes: { x: false } } : {}) })
     )
     .mark(rect({ h: "sales", fill: "city" }))
     .render(el, { w, h, axes, legend: false });
@@ -313,10 +388,11 @@ function renderAggYearSite(
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(cityYearData)
+  const miniAxes = typeof axes === "object" && axes.x === false;
+  Chart(cityYearData, { axes })
     .flow(
-      spread("year", { dir: "x", spacing: 24 }),
-      spread("city", { dir: "x", spacing: 6 })
+      spread("year", { dir: "x", spacing: 24, ...(miniAxes ? { axes: { x: false } } : {}) }),
+      spread("city", { dir: "x", spacing: 6, ...(miniAxes ? { axes: { x: false } } : {}) })
     )
     .mark(rect({ h: "sales", fill: "city" }))
     .render(el, { w, h, axes, legend: false });
@@ -391,10 +467,14 @@ const vizChartOptions = { color: palette(vizStepColors), legend: false };
 function renderVizSiteSlots() {
   const el = getContainer("chart-viz-site-slots");
   if (!el || el.children.length > 0) return;
-  Chart(barley, vizChartOptions)
+  // Fixed-height slots (no `h` data field) make the y scale meaningless, so
+  // this render overrides axes to keep only the site labels (x). The y axis
+  // is governed by the chart-level `axes` option, not render()'s, so both
+  // need the override (see renderAggSiteYear's comment on the same split).
+  Chart(barley, { ...vizChartOptions, axes: { x: true, y: false } })
     .flow(spread("site", { dir: "x" }))
-    .mark(rect({ h: 1, fill: "#dff1e5" }))
-    .render(el, VIZ_RENDER_OPTIONS);
+    .mark(rect({ h: datum(1), fill: "#dff1e5" }))
+    .render(el, { ...VIZ_RENDER_OPTIONS, axes: { x: true, y: false } });
 }
 
 function renderVizSiteYield(id = "chart-viz-site-yield") {
@@ -1120,6 +1200,119 @@ function renderBottleChart(id = "chart-viz-ex-bottle", w = 380, h = 210) {
     .render(el, { w, h });
 }
 
+// ── Base-form counterparts for the "before/after" query-gallery pairs ──────
+// Same datasets and helpers as the four chart-q-* renderers above, minus the
+// one structural move that buys the partner's extra query clause. Used by
+// the "moves that change the query" / "a move that doesn't" slides.
+
+// Pair 1: gridded small-multiple pies. Same per-lake pie glyph as
+// renderScatterPieChart, just spread along a plain row instead of scattered
+// at each lake's real (x, y) map location.
+// Middle step of the scatterpie triptych: the same shares as a row of pies.
+// stack -> clock coords is a pure restyle (the query is unchanged); the
+// scatterpie step after it is what adds placement in space.
+function renderScatterPieSpreadMid(
+  id = "chart-q-scatterpie-mid",
+  w = 340,
+  h = 260
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(scatterByLake, { axes: false })
+    .flow(spread("lake", { dir: "x", spacing: 50 }))
+    .mark((data) =>
+      Chart(data[0].collection, { coord: clock(), axes: false })
+        .flow(stack("species", { dir: "x", h: 20, size: "count" }))
+        .mark(rect({ fill: "species" }))
+    )
+    .render(el, { w, h, axes: false });
+}
+
+// The scatterpie's "before": normalized stacked bars over the same seafood
+// data. Pies read shares, so a share-scaled stack is the faithful base —
+// the scatterpie move then purely adds position in space.
+function renderScatterPieGridBase(
+  id = "chart-q-scatterpie-base",
+  w = 340,
+  h = 260
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(seafood, { axes: { x: true, y: true } })
+    .flow(
+      spread("lake", { spacing: 24, dir: "x" }),
+      stack("species", { dir: "y", size: field("count").normalize() })
+    )
+    .mark(rect({ w: 36, fill: "species" }))
+    .render(el, { w, h, axes: { x: true, y: true } });
+}
+
+// Pair 2: plain stacked bar. Same seafood counts and stack-by-species move
+// as renderWaffleChart, but sized continuously (`size: "count"`) instead of
+// unitized into unit squares via repeat()/chunk().
+function renderStackedBarBase(id = "chart-q-waffle-base", w = 340, h = 260) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(seafood, { axes: { x: true, y: true } })
+    .flow(
+      spread("lake", { spacing: 24, dir: "x" }),
+      stack("species", { dir: "y", size: "count" })
+    )
+    .mark(rect({ w: 36, fill: "species" }))
+    .render(el, { w, h, axes: { x: true, y: true } });
+}
+
+// Pair 3: single normalized stack. Same `share` field expression as
+// renderTitanicMosaic minus the sex level: a TWO-level mosaic (class rows,
+// survival split within each row). This is the Simpson's-paradox "before":
+// it reads Third (25.2%) surviving at a higher rate than Crew (24.0%).
+// Adding the sex level (the three-level partner chart) reverses it — Crew
+// beats Third within BOTH sexes (men 22.3% vs 17.3%, women 87.0% vs 45.9%).
+function renderMosaicSingleStackBase(
+  id = "chart-q-mosaic-base",
+  w = 300,
+  h = 250
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  const share = field("count").normalize();
+  Chart(titanic, {
+    axes: false,
+    color: palette({ Yes: "#2b8cbe", No: "#c9c2b5" }),
+  })
+    .flow(
+      stack("class", { dir: "y", size: share }),
+      stack("survived", { dir: "x", size: share })
+    )
+    .mark(rect({ fill: "survived", stroke: "white", strokeWidth: 1 }))
+    .render(el, { w, h, axes: false });
+}
+
+// Slide B pair: the bottle's base form. An ordinary normalized bar — filled
+// vs. empty, sharing the bottle's own green fill — instead of the
+// pictorial's paint-composited bottle image.
+// One filled/empty bar per bottle category, mirroring bottleData's fill levels.
+const bottleBarData = bottleData.flatMap(({ category, amount }) => [
+  { category, part: "filled", amount },
+  { category, part: "empty", amount: 100 - amount },
+]);
+
+function renderBottleBarBase(id = "chart-q-bottle-base", w = 220, h = 210) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(bottleBarData, {
+    axes: { x: true, y: true },
+    legend: false,
+    color: palette({ filled: "#5aa66c", empty: "#e0ded4" }),
+  })
+    .flow(
+      spread("category", { dir: "x", spacing: 12 }),
+      stack("part", { dir: "y", size: field("amount").normalize() })
+    )
+    .mark(rect({ w: 36, fill: "part" }))
+    .render(el, { w, h, axes: { x: true, y: true }, legend: false });
+}
+
 // ── Bars vs. line (Zacks & Tversky) ─────────────────────────────────────────
 // Same two-datum dataset (average adult height by sex, cm) shown as a plain
 // bar chart and as a two-point line chart, for the connection-vs-comparison
@@ -1174,6 +1367,8 @@ export function renderCharts() {
   );
   renderAggSiteYear("chart-viz-agg-site-year-spec", 300, 210);
   renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
+  addOuterGroupBoxes("chart-viz-agg-site-year-spec", 6);
+  addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
   renderFranconeriAColor();
   renderFranconeriAColorKey();
   renderFranconeriB();
@@ -1194,9 +1389,14 @@ export function renderCharts() {
   renderVizRibbon("chart-viz-ribbon-annotated", true);
   renderScatterPieChart();
   renderScatterPieChart("chart-q-scatterpie", 340, 260);
+  renderScatterPieGridBase();
+  renderScatterPieSpreadMid();
   renderWaffleChart();
+  renderStackedBarBase();
   renderTitanicMosaic("chart-q-mosaic", 300, 250);
+  renderMosaicSingleStackBase();
   renderBottleChart("chart-q-bottle");
+  renderBottleBarBase();
   renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931");
   renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932");
   renderVizBarleySlopePanels();
@@ -1270,10 +1470,14 @@ export const chartRenderers: Record<string, () => void> = {
       210,
       { x: false, y: true }
     ),
-  "chart-viz-agg-site-year-spec": () =>
-    renderAggSiteYear("chart-viz-agg-site-year-spec", 300, 210),
-  "chart-viz-agg-year-site-spec": () =>
-    renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210),
+  "chart-viz-agg-site-year-spec": () => {
+    renderAggSiteYear("chart-viz-agg-site-year-spec", 300, 210);
+    addOuterGroupBoxes("chart-viz-agg-site-year-spec", 6);
+  },
+  "chart-viz-agg-year-site-spec": () => {
+    renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
+    addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
+  },
   "chart-franconeri-a-color": renderFranconeriAColor,
   "chart-franconeri-a-color-key": renderFranconeriAColorKey,
   "chart-franconeri-a-key-2": () => {
@@ -1469,9 +1673,14 @@ export const chartRenderers: Record<string, () => void> = {
   },
   "chart-scatter-pie": renderScatterPieChart,
   "chart-q-scatterpie": () => renderScatterPieChart("chart-q-scatterpie", 340, 260),
+  "chart-q-scatterpie-base": () => renderScatterPieGridBase(),
+  "chart-q-scatterpie-mid": () => renderScatterPieSpreadMid(),
   "chart-q-waffle": () => renderWaffleChart(),
+  "chart-q-waffle-base": () => renderStackedBarBase(),
   "chart-q-mosaic": () => renderTitanicMosaic("chart-q-mosaic", 300, 250),
+  "chart-q-mosaic-base": () => renderMosaicSingleStackBase(),
   "chart-q-bottle": () => renderBottleChart("chart-q-bottle"),
+  "chart-q-bottle-base": () => renderBottleBarBase(),
   "chart-flower": renderFlowerChart,
   "chart-balloon": renderBalloonChart,
   "chart-viz-ex-sankey": () => renderSankeyTree(),

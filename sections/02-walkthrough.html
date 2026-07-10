@@ -10,10 +10,14 @@
 
           <!-- ─── VIZCHITRA WALKTHROUGH: GOFISH STRUCTURAL BUILD (barley) ─── -->
 
-          <section class="split viz-step" data-background-color="#f7f2e8">
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN: the anon->barley reveal moved to 01-opening ("back to
+                 those bar charts"); its two chart-viz-reveal-* divs moved with
+                 it, so this slide no longer renders a chart. Restore by
+                 removing data-visibility (and moving the divs back). -->
+            <h2>start with the data shape</h2>
             <div>
               <p class="part">GoFish walkthrough</p>
-              <h2>start with the data shape</h2>
               <div class="fragment fade-in" data-fragment-index="1">
                 <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
@@ -27,22 +31,6 @@
                 </div>
               </div>
             </div>
-            <div style="position: relative; min-height: 360px">
-              <!-- the opening's grouped bars, anonymized labels... -->
-              <div
-                id="chart-viz-reveal-anon"
-                class="chart-container viz-gofish-chart fragment fade-out"
-                data-fragment-index="1"
-                style="position: absolute; top: 0; left: 0"
-              ></div>
-              <!-- ...same bars, real barley labels -->
-              <div
-                id="chart-viz-reveal-real"
-                class="chart-container viz-gofish-chart fragment fade-in"
-                data-fragment-index="1"
-                style="position: absolute; top: 0; left: 0"
-              ></div>
-            </div>
             <aside class="notes">
               The cities and "sales" in the opening were anonymized so the
               grouping read fresh. This is the classic 1931-1932 Minnesota barley
@@ -52,8 +40,8 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>place one slot per site</h2>
             <div>
-              <h2>place one slot per site</h2>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "site", dir: "x" })
@@ -75,8 +63,8 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>make yield visible</h2>
             <div>
-              <h2>make yield visible</h2>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "site", dir: "x" })
@@ -99,8 +87,8 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>some transforms are implied</h2>
             <div>
-              <h2>some transforms are implied</h2>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "site", dir: "x" })
@@ -123,8 +111,8 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>add a second grouping</h2>
             <div>
-              <h2>add a second grouping</h2>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "site", dir: "x" }),
@@ -152,7 +140,9 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
-              <span class="q-kw">for each</span> site → <span class="q-kw">for each</span> year → <span class="q-kw">compare</span> yield
+              <span class="q-line"><span class="q-kw">for each</span> site</span>
+              <span class="q-line"><span class="q-kw">for each</span> year</span>
+              <span class="q-line"><span class="q-kw">compare</span> yield</span>
             </div>
             <aside class="notes">
               site → year: each site's two years sit together, so the change per
@@ -167,7 +157,9 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
-              <span class="q-kw">for each</span> year → <span class="q-kw">for each</span> site → <span class="q-kw">compare</span> yield
+              <span class="q-line"><span class="q-kw">for each</span> year</span>
+              <span class="q-line"><span class="q-kw">for each</span> site</span>
+              <span class="q-line"><span class="q-kw">compare</span> yield</span>
             </div>
             <aside class="notes">
               year → site: sites sit together within each year, so the per-site
@@ -231,7 +223,9 @@
   spread("year", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
                 <div class="viz-query" style="font-size: 0.95em">
-                  <span class="q-kw">for each</span> site → <span class="q-kw">for each</span> year → <span class="q-kw">compare</span> yield
+                  <span class="q-line"><span class="q-kw">for each</span> site</span>
+                  <span class="q-line"><span class="q-kw">for each</span> year</span>
+                  <span class="q-line"><span class="q-kw">compare</span> yield</span>
                 </div>
               </div>
 
@@ -264,7 +258,9 @@
   spread("site", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
                 <div class="viz-query" style="font-size: 0.95em">
-                  <span class="q-kw">for each</span> year → <span class="q-kw">for each</span> site → <span class="q-kw">compare</span> yield
+                  <span class="q-line"><span class="q-kw">for each</span> year</span>
+                  <span class="q-line"><span class="q-kw">for each</span> site</span>
+                  <span class="q-line"><span class="q-kw">compare</span> yield</span>
                 </div>
               </div>
 
@@ -347,7 +343,9 @@
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2>is it one variety, or all of them?</h2>
             <div class="viz-query fragment" style="margin-top: 1.4rem; font-size: 0.5em">
-              <span class="q-kw">for each</span> variety → <span class="q-kw">for each</span> site → <span class="q-kw">compare</span> Δ yield (1931 → 1932)
+              <span class="q-line"><span class="q-kw">for each</span> variety</span>
+              <span class="q-line"><span class="q-kw">for each</span> site</span>
+              <span class="q-line"><span class="q-kw">compare</span> Δ yield (1931 → 1932)</span>
             </div>
             <p class="fragment" style="margin-top: 1rem; font-size: 0.55em; color: #555">
               this time, start from the query — then build the structure that answers it
@@ -364,10 +362,12 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2><code>stack()</code></h2>
             <div>
-              <h2><code>stack()</code></h2>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
-                <span class="q-kw">for each</span> variety → <span class="q-kw">for each</span> year → <span class="q-kw">total</span> yield across sites
+                <span class="q-line"><span class="q-kw">for each</span> variety</span>
+                <span class="q-line"><span class="q-kw">for each</span> year</span>
+                <span class="q-line"><span class="q-kw">total</span> yield across sites</span>
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
@@ -480,8 +480,8 @@
             <!-- HIDDEN: sorting now lives on the stack (stack({ by: field("site").sort("yield") }),
                  real as of gofish 0.1.0-nightly.20260709), so the standalone
                  derive-to-sort beat is no longer needed. Remove data-visibility to restore. -->
+            <h2><code>sort()</code> on the stack</h2>
             <div>
-              <h2><code>sort()</code> on the stack</h2>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
@@ -508,8 +508,8 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>sort each stack</h2>
             <div>
-              <h2>sort each stack</h2>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
@@ -607,8 +607,8 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>connect related bars</h2>
             <div>
-              <h2>connect related bars</h2>
               <pre class="viz-code">Layer([
   chart(barley)
     .<span class="viz-op">flow</span>(
@@ -643,8 +643,8 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>style is downstream of structure</h2>
             <div>
-              <h2>style is downstream of structure</h2>
               <pre class="viz-code">Layer([
   chart(barley, {
     color: palette({

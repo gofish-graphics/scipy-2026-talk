@@ -4,84 +4,280 @@
              CLOSE
              ══════════════════════════════════════════════════════ -->
 
-          <!-- Query gallery: four structures, each captioned with the question it
-               answers and the query in foreach notation. Charts are live renders
-               (charts.ts: chart-q-*). Tiles 2-4 are fragments so each can be
-               introduced one at a time if there's time to linger. -->
+          <!-- Query gallery, part 1: three before/after slides, one per move
+               (shared h2, "move N of 3" kicker). Each slide shows the plain
+               base form (charts.ts: chart-q-*-base) beside the existing
+               chart-q-* structure, with query chips underneath showing what
+               clause the structural move buys. The gained clause is the
+               highlighted q-line on the "after" side. Move 1 is a triptych:
+               the bars → pies step keeps an IDENTICAL chip (pure restyle —
+               foreshadows the bottle slide), then pies → scatter gains the
+               clause. -->
           <section data-background-color="#f7f2e8">
-            <h2>other data, other queries</h2>
+            <h2>moves that change the query</h2>
+            <p class="part">move 1 of 3 · bars → pies → scatter</p>
             <div
               style="
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.2rem 1.4rem;
-                margin-top: 0.3rem;
-                justify-items: center;
-                align-items: start;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1.1rem;
+                margin-top: 0.8rem;
               "
             >
               <div style="text-align: center">
                 <div
-                  id="chart-q-scatterpie"
-                  class="chart-container viz-ex-tile"
-                  style="zoom: 0.58"
-                ></div>
-                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
-                  which species dominates each lake?
-                </p>
-                <div class="viz-query" style="font-size: 0.5em">
-                  <span class="q-kw">for each</span> lake → <span class="q-kw">share</span> of each species
-                </div>
-              </div>
-              <div class="fragment" data-fragment-index="1" style="text-align: center">
-                <div
-                  id="chart-q-waffle"
-                  class="chart-container viz-ex-tile"
-                  style="zoom: 0.58"
-                ></div>
-                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
-                  how many fish, exactly?
-                </p>
-                <div class="viz-query" style="font-size: 0.5em">
-                  <span class="q-kw">for each</span> lake → <span class="q-kw">for each</span> species → <span class="q-kw">count</span> squares
-                </div>
-              </div>
-              <div class="fragment" data-fragment-index="2" style="text-align: center">
-                <div
-                  id="chart-q-mosaic"
+                  id="chart-q-scatterpie-base"
                   class="chart-container viz-ex-tile"
                   style="zoom: 0.55"
+                  aria-label="Normalized stacked bars: species share within each lake"
                 ></div>
-                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
-                  who survived the Titanic?
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  shares as stacked bars
                 </p>
-                <div class="viz-query" style="font-size: 0.5em">
-                  <span class="q-kw">for each</span> class → <span class="q-kw">for each</span> sex → <span class="q-kw">share</span> who survived
+                <div class="viz-query" style="font-size: 0.45em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> lake</span>
+                  <span class="q-line"><span class="q-kw">share</span> of species</span>
                 </div>
               </div>
-              <div class="fragment" data-fragment-index="3" style="text-align: center">
+              <div style="font-size: 1.5em; color: #4a7fb5">→</div>
+              <div style="text-align: center">
                 <div
-                  id="chart-q-bottle"
+                  id="chart-q-scatterpie-mid"
                   class="chart-container viz-ex-tile"
-                  style="zoom: 0.42"
+                  style="zoom: 0.55"
+                  aria-label="Row of pies: the same species shares per lake in clock coordinates"
                 ></div>
-                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
-                  how full is each bottle?
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  the same shares as pies
                 </p>
-                <div class="viz-query" style="font-size: 0.5em">
-                  <span class="q-kw">for each</span> bottle → <span class="q-kw">read</span> the fill line
+                <div class="viz-query" style="font-size: 0.45em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> lake</span>
+                  <span class="q-line"><span class="q-kw">share</span> of species</span>
+                </div>
+              </div>
+              <div style="font-size: 1.5em; color: #4a7fb5">→</div>
+              <div style="text-align: center">
+                <div
+                  id="chart-q-scatterpie"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.55"
+                  aria-label="Scatterpie: one pie of species share at each lake's position"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  which species dominates each lake?
+                </p>
+                <div class="viz-query" style="font-size: 0.45em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> lake</span>
+                  <span class="q-line"><span class="q-kw">share</span> of species</span>
+                  <span
+                    class="q-line"
+                    style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px"
+                    ><span class="q-kw">at</span> its place in space</span
+                  >
                 </div>
               </div>
             </div>
             <aside class="notes">
-              Same game, four datasets. The scatterpie answers a composition
-              question at each place. The waffle is the same seafood data, but
-              the structure is countable unit squares, so exact how-many
-              queries get cheap. The mosaic nests three shares. The bottle is
-              a pictorial — one fraction per bottle, read as a fill level.
-              Each tile is a fragment: step through them one at a time if
-              there's room to breathe, or take the slide in one gulp if not.
-              The next slide breaks the mosaic open.
+              First move, in two steps. All three charts carry the same
+              per-lake species shares. Bars to pies is stack-to-clock
+              coordinates — note the chips are identical, because that step
+              is a pure restyle. Nothing gained, nothing lost (hold that
+              thought for the last slide). Pies to scatterpie is the
+              structural step: the glyphs land at each lake's real position,
+              and the chip gains the highlighted clause — composition is
+              now answerable AT a place, so "what's happening in the
+              north?" is one glance instead of a lookup.
+            </aside>
+          </section>
+
+          <section data-background-color="#f7f2e8">
+            <h2>moves that change the query</h2>
+            <p class="part">move 2 of 3 · size → units</p>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                margin-top: 0.8rem;
+              "
+            >
+              <div style="text-align: center">
+                <div
+                  id="chart-q-waffle-base"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.75"
+                  aria-label="Stacked bar chart: continuous species counts per lake"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  the same counts as continuous bars
+                </p>
+                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> lake</span>
+                  <span class="q-line"><span class="q-kw">for each</span> species</span>
+                  <span class="q-line"><span class="q-kw">share</span> of the total</span>
+                </div>
+              </div>
+              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div style="text-align: center">
+                <div
+                  id="chart-q-waffle"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.75"
+                  aria-label="Stacked waffle: the same counts as countable unit squares"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  how many fish, exactly?
+                </p>
+                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> lake</span>
+                  <span class="q-line"><span class="q-kw">for each</span> species</span>
+                  <span
+                    class="q-line"
+                    style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px"
+                    ><span class="q-kw">count</span> squares</span
+                  >
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Second pair, same seafood data. The left sizes each segment
+              continuously; the right chunks the same counts into unit
+              squares. The nested for-eaches are identical — what changes is
+              the last line: an eyeballed "share of the total" becomes an
+              exact "count squares," because the units are countable atoms.
+            </aside>
+          </section>
+
+          <!-- Move 3 is a Simpson's paradox demo, verified in the packaged
+               titanic data: the two-level mosaic reads Third (25.2%)
+               surviving above Crew (24.0%); adding the sex level reverses
+               it within BOTH sexes (the crew is 97% male). -->
+          <section data-background-color="#f7f2e8">
+            <h2>moves that change the query</h2>
+            <p class="part">move 3 of 3 · one more level</p>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                margin-top: 0.8rem;
+              "
+            >
+              <div style="text-align: center">
+                <div
+                  id="chart-q-mosaic-base"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.75"
+                  aria-label="Two-level mosaic: survival share within each Titanic class; Third reads above Crew"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  did third class fare better than crew?
+                </p>
+                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> class</span>
+                  <span class="q-line"><span class="q-kw">share</span> who survived</span>
+                </div>
+              </div>
+              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div style="text-align: center">
+                <div
+                  id="chart-q-mosaic"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.75"
+                  aria-label="Three-level mosaic: survival share within each class and sex; Crew beats Third within both sexes"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  add sex: the answer flips
+                </p>
+                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> class</span>
+                  <span
+                    class="q-line"
+                    style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px"
+                    ><span class="q-kw">for each</span> sex</span
+                  >
+                  <span class="q-line"><span class="q-kw">share</span> who survived</span>
+                </div>
+              </div>
+            </div>
+            <p class="viz-step-copy" style="text-align: center; margin-top: 0.9rem">
+              one level short, the chart says the opposite. (Simpson's paradox)
+            </p>
+            <aside class="notes">
+              Third pair, Titanic data — and this one has teeth. The
+              two-level mosaic answers the class question directly: Third
+              class survived at 25.2%, Crew at 24.0%, so third class fared
+              better. Add the sex level and the answer flips within BOTH
+              sexes: among men, Crew 22.3% vs Third 17.3%; among women, Crew
+              87.0% vs Third 45.9%. The mechanism: the crew is 97% male, and
+              men survived at far lower rates everywhere, so the crew's
+              aggregate is dragged down below Third's. Simpson's paradox —
+              the extra for-each isn't decoration, it changes the verdict.
+              The next slide is the counterexample: a move that changes
+              nothing.
+            </aside>
+          </section>
+
+          <!-- Query gallery, part 2: the one pair where the query DOESN'T
+               change — a pure style move. Same chip both sides on purpose. -->
+          <section data-background-color="#f7f2e8">
+            <h2>a move that doesn't</h2>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 2.2rem;
+                margin-top: 1rem;
+              "
+            >
+              <div style="text-align: center">
+                <div
+                  id="chart-q-bottle-base"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.7"
+                  aria-label="Four ordinary normalized bars, one per bottle, filled versus empty"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  ordinary normalized bars
+                </p>
+                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.2rem">
+                  <span class="q-line"><span class="q-kw">for each</span> bottle</span>
+                  <span class="q-line"><span class="q-kw">share</span> of full</span>
+                </div>
+              </div>
+              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div style="text-align: center">
+                <div
+                  id="chart-q-bottle"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.7"
+                  aria-label="Bottle pictorial: the same fill shares drawn as bottle fill levels"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  how full is each bottle?
+                </p>
+                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.2rem">
+                  <span class="q-line"><span class="q-kw">for each</span> bottle</span>
+                  <span class="q-line"><span class="q-kw">share</span> of full</span>
+                </div>
+              </div>
+            </div>
+            <p class="viz-step-copy" style="text-align: center; margin-top: 0.9rem">
+              same query. different voice.
+            </p>
+            <aside class="notes">
+              Not every move is structural. The bottles are a
+              paint-composited pictorial dressed over four ordinary
+              normalized bars, one per bottle — same "share of full" chip on
+              both sides, because the query hasn't moved at all. What
+              changed is voice, not structure: a fill line and a bottle
+              photo standing in for a rectangle. Useful, memorable even, but
+              it's a style choice layered on the same chart, not a new
+              question the reader can ask.
             </aside>
           </section>
 
@@ -89,9 +285,9 @@
                renderTitanicMosaic() in charts.ts (modulo elided cosmetics).
                Rendered live since 0.1.0-nightly.20260709 ships #675 (normalize
                space-filling spines); the pre-rendered SVG is retired. -->
-          <section class="split viz-step" data-background-color="#f7f2e8">
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: superseded by the Simpson's-paradox move-3 slide, which now teaches the nested mosaic -->
+            <h2>three stacks make a mosaic</h2>
             <div>
-              <h2>three stacks make a mosaic</h2>
               <pre class="viz-code">const share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
 
 chart(titanic)
@@ -140,34 +336,23 @@ chart(titanic)
             </aside>
           </section>
 
-          <!-- Beyond taxonomies: same principles, stranger structures.
-               Live renders (mosaic, sankey, rose, bottle) + gotree SVGs
-               (sunburst, orthogonal tree). Polar coverage: rose + sunburst. -->
+          <!-- Escalation beat: keep composing and the chart menu runs out.
+               Only structures the audience has NOT already seen — the mosaic
+               and bottle tiles were cut once they starred in the move slides.
+               Live renders (sankey, rose) + gotree SVGs (sunburst,
+               orthogonal tree). Polar coverage: rose + sunburst. -->
           <section data-background-color="#f7f2e8">
             <h2>the same moves, stranger structures</h2>
             <div
               style="
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
                 gap: 0.4rem 0.8rem;
                 margin-top: 0.6rem;
                 justify-items: center;
                 align-items: center;
               "
             >
-              <div style="text-align: center">
-                <img
-                  src="gallery-images/titanic-mosaic.svg"
-                  alt="Titanic survival mosaic"
-                  style="max-height: 200px; max-width: 100%"
-                />
-                <p class="viz-ex-caption">
-                  mosaic
-                  <span class="fragment viz-ex-ops" data-fragment-index="1"
-                    ><code>stack ∘ stack ∘ stack</code></span
-                  >
-                </p>
-              </div>
               <div style="text-align: center">
                 <div
                   id="chart-viz-ex-sankey"
@@ -220,48 +405,36 @@ chart(titanic)
                   >
                 </p>
               </div>
-              <div style="text-align: center">
-                <div
-                  id="chart-viz-ex-bottle"
-                  class="chart-container viz-ex-tile"
-                  style="zoom: 0.47"
-                ></div>
-                <p class="viz-ex-caption">
-                  bottle pictorial
-                  <span class="fragment viz-ex-ops" data-fragment-index="1"
-                    ><code>layer + paint + constraints</code></span
-                  >
-                </p>
-              </div>
             </div>
             <p
               class="viz-step-copy fragment"
               data-fragment-index="1"
-              style="margin-top: 0.5rem"
+              style="margin-top: 0.7rem"
             >
-              None of these is a "chart type." You already know every move on
-              this screen.
+              Keep composing the same moves and you run out of chart names.
             </p>
             <aside class="notes">
-              The same structural moves that took us from bars to a heatmap
-              also build mosaics, sankeys, trees, and pictorials — forms no
-              chart-type menu contains. [advance] And the operator captions are
-              the point: the mosaic is three stacks; the sankey is spreads and
-              stacks with ribbons connecting named tiers; the rose is the
-              stacked bar wrapped into clock coordinates — polar is a
-              coordinate change on structure we already built, not a new chart
-              family. The sunburst and the orthogonal tree come from GoTree, a
-              tree-layout grammar embedded in GoFish; the bottle composites an
-              image with a fill bar through a paint blend mode and aligns its
-              label with constraints. Structure, not taxonomy, is the
-              through-line.
+              Escalation beat. The moves the audience just learned — spread,
+              stack, nest, restyle — don't stop where the chart menu does.
+              [advance] The operator captions are the point: the sankey is
+              spreads and stacks with ribbons connecting named tiers; the
+              rose is the stacked bar wrapped into clock coordinates — polar
+              is a coordinate change on structure we already built, not a
+              new chart family. The sunburst and the orthogonal tree come
+              from GoTree, a tree-layout grammar embedded in GoFish. None of
+              these four has a slot in the dropdown; all four are the same
+              composition, carried further.
             </aside>
           </section>
 
-          <!-- gallery-images/pulley-diagram.png is the GoFish docs-gallery export of
+          <!-- HORIZON SLIDE — cut this one first if time runs short.
+               gallery-images/pulley-diagram.png is the GoFish docs-gallery export of
                stories/bluefish/Pulley.stories.tsx — a real constraint-based GoFish
                render (port of Bluefish's pulley example), not a mockup. It reproduces
-               Figure 1 of Larkin & Simon 1987, whose problem text appears at left. -->
+               Figure 1 of Larkin & Simon 1987, whose problem text appears at left.
+               Framing: a horizon gesture, not a capability claim — the structure
+               language already reaches diagrams; the query language for them is
+               open research (hence the dashed speculative chip). -->
           <section data-background-color="#f7f2e8">
             <h2>diagrams are visual data structures too</h2>
             <div class="two-col" style="align-items: center; margin-top: 0.5rem">
@@ -278,32 +451,48 @@ chart(titanic)
                 <p style="margin-top: 0.4rem; font-size: 0.5em; color: #666">
                   Larkin &amp; Simon 1987, "Why a Diagram Is (Sometimes) Worth Ten Thousand Words"
                 </p>
+                <p class="viz-step-copy fragment">
+                  The same operators drew this. The structure language already
+                  reaches diagrams — the query language for them is open
+                  research.
+                </p>
+                <p class="viz-step-copy fragment">
+                  And the strange diagrams from the start of the talk? Same
+                  moves, within reach.
+                </p>
               </div>
               <div style="flex: 1; text-align: center">
                 <img src="gallery-images/pulley-diagram.png" alt="Pulley diagram of the Larkin and Simon problem: pulleys A, B, C, rope segments x, y, z, p, q, s, weights W1 and W2, rendered with GoFish" style="max-height: 400px; max-width: 100%" />
                 <div class="viz-query fragment" style="margin-top: 0.4rem; font-size: 0.5em">
-                  <span class="q-kw">look up</span> Pulley A → which ropes pull on it?
+                  <span class="q-line"><span class="q-kw">look up</span> what this rope attaches to</span>
+                  <span class="q-line"><span class="q-kw">follow</span> the rope through the pulleys</span>
+                  <span class="q-line"><span class="q-kw">compare</span> which side is heavier</span>
                 </div>
               </div>
             </div>
             <aside class="notes">
-              Larkin and Simon's classic. The paragraph and the diagram carry
-              exactly the same information — they are informationally
-              equivalent — but they are not computationally equivalent. The
-              diagram indexes the facts by location: everything you need
-              about Pulley A is AT Pulley A, so the query is one glance,
-              while the paragraph makes you search and join clauses. In our
-              terms: the diagram is the better data structure for the
-              queries the physics asks. And this diagram is not clip art —
-              it's the GoFish port of Bluefish's pulley example, built from
-              the same layers, alignment, and constraints as everything else
-              today. The trees on the previous slide, this pulley: the
-              operators don't stop at charts.
+              Horizon slide — cut it first if time runs short. Larkin and
+              Simon's classic: the paragraph and the diagram carry exactly
+              the same information, but they are not computationally
+              equivalent. Their claim is the talk's thesis stated for
+              diagrams in 1987 — a diagram earns its keep by making the
+              right inferences cheap. And this diagram is not clip art: it's
+              the GoFish docs-gallery export of the Bluefish pulley example,
+              drawn by the same layers, alignment, and constraints as
+              everything else today — the structure language already reaches
+              diagrams. What's open is the query side: the chips we've been
+              writing all talk say for-each and share; a diagram's queries
+              are richer — incidence, attachment, which way does it turn —
+              and a query language for those is where the research goes
+              next. That's why this chip is dashed: speculative, like the
+              two-languages slide's invitation — please push back on it.
+              Close the loop: the strange Science figures and systems
+              diagrams from the opening are in reach of the same moves.
             </aside>
           </section>
 
           <!-- Why "more": other grammars are subsets / neighbors -->
-          <section class="scipy-statement" data-background-color="#f7f2e8">
+          <section class="scipy-statement" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: cut as unnecessary here -->
             <p class="part">Why "more"</p>
             <h2>a grammar of <em>more</em> graphics</h2>
             <p class="big-claim">

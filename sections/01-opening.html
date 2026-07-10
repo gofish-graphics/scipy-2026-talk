@@ -25,8 +25,8 @@
 
           <section class="split lake-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <!-- HIDDEN: the seafood dataset is no longer used -->
+            <h2>start with the lakes</h2>
             <div>
-              <h2>start with the lakes</h2>
               <p class="big-claim">
                 The examples use fishery data: lakes, species, catch amounts,
                 and locations.
@@ -186,9 +186,9 @@
           </section>
 
           <section class="split grammar-style" data-background-color="#f7f2e8" data-visibility="hidden">
+            <h2>grammar vs elements of style</h2>
             <div>
               <p class="part">A better lens</p>
-              <h2>grammar vs elements of style</h2>
               <p class="big-claim">
                 Grammar names the relationships. Style controls the voice.
               </p>
@@ -303,22 +303,6 @@
             <aside class="notes">
               What about now? [show ~5 seconds then advance] Same exact data.
               Boger &amp; Franconeri (2024).
-            </aside>
-          </section>
-
-          <!-- Franconeri B with Boulder highlighted -->
-          <section>
-            <h2>what about now?</h2>
-            <div class="chart-spec-slide">
-              <div
-                id="chart-viz-agg-site-year-highlight"
-                class="chart-container"
-                style="max-width: 80%"
-              ></div>
-            </div>
-            <aside class="notes">
-              Same grouping again, but color does the pointing: Boulder is the
-              one city whose sales rise. Everything else recedes into gray.
             </aside>
           </section>
 
@@ -476,16 +460,13 @@
 
           <!-- Marks & channels: related work that doesn't explain the swap -->
           <section data-background-color="#f7f2e8">
-            <h2>maybe you've seen this before</h2>
-            <p class="viz-step-copy" style="margin-top: 0">
-              the grammar of graphics: marks and channels
-            </p>
+            <h2>the grammar of graphics: marks and channels</h2>
             <div
               class="two-col"
               style="gap: 2.5rem; align-items: start; margin-top: 0.5rem"
             >
               <div>
-                <h3>marks</h3>
+                <h3>marks <span style="color: #888; font-weight: 400">(shapes)</span></h3>
                 <img
                   src="marks-channels/marks.png"
                   alt="Gallery of Observable Plot mark types"
@@ -493,17 +474,16 @@
                     display: block;
                     margin: 0 auto;
                     max-width: 100%;
-                    max-height: 320px;
+                    max-height: 420px;
                     object-fit: contain;
                   "
                 />
                 <p class="source-line" style="margin-top: 0.6em !important">
                   Observable Plot
                 </p>
-                <p class="viz-step-copy">the shapes: points, lines, areas</p>
               </div>
               <div>
-                <h3>channels</h3>
+                <h3>channels <span style="color: #888; font-weight: 400">(shape attributes)</span></h3>
                 <img
                   src="marks-channels/channels.png"
                   alt="Munzner's ranking of visual channels by accuracy"
@@ -511,16 +491,12 @@
                     display: block;
                     margin: 0 auto;
                     max-width: 100%;
-                    max-height: 320px;
+                    max-height: 420px;
                     object-fit: contain;
                   "
                 />
                 <p class="source-line" style="margin-top: 0.6em !important">
                   Munzner, <em>Visualization Analysis and Design</em> (2014)
-                </p>
-                <p class="viz-step-copy">
-                  how a value maps to a mark: position, length, angle, area,
-                  color. some are read more accurately than others.
                 </p>
               </div>
             </div>
@@ -539,7 +515,8 @@
           </section>
 
           <!-- Key Idea -->
-          <section>
+          <section data-visibility="hidden">
+            <!-- HIDDEN: superseded by the "graphics are visual data structures" slide and the "two languages" slide -->
             <!-- thumbnail recap removed; the barley swap above already made the point -->
             <p
               class="viz-step-copy"
@@ -616,7 +593,8 @@
 
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2 style="line-height: 1.6">
-              graphics are <strong>visual data structures</strong> 🪾<br />
+              graphics are<br />
+              <strong>visual data structures</strong> 🪾<br />
               <span class="fragment">that we <strong>query with our eyes</strong> 👀</span>
             </h2>
             <aside class="notes">
@@ -643,107 +621,79 @@
             >
               <div>
                 <p style="font-weight: 700; color: #1a1a2e; margin: 0">
-                  1 · a language for visual data structures
+                  1 · a structure language
                 </p>
-                <p style="color: #555; margin: 0.2rem 0 0">
-                  GoFish — open source, in alpha today
-                </p>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 0.8rem;
+                    margin-top: 0.5rem;
+                  "
+                >
+                  <img
+                    src="gofish-logo.png"
+                    alt="GoFish logo"
+                    style="height: 44px; object-fit: contain"
+                  />
+                  <div style="text-align: left">
+                    <strong
+                      style="
+                        font-size: 1em;
+                        color: #1a1a2e;
+                        font-family:
+                          &quot;Shantell Sans&quot;, &quot;Comic Sans MS&quot;,
+                          cursive, sans-serif;
+                      "
+                      >GoFish
+                    </strong>
+                    <br />
+                    <span style="font-size: 0.75em; color: #444; line-height: 1.5">
+                      A compositional language for visual structure<br />
+                      open source (MIT-licensed), TypeScript with Python
+                      bindings (quickly catching up to TS)<br />
+                      <span style="color: #777; font-size: 0.92em">
+                        <em>
+                          See papers:
+                          <a
+                            href="https://vis.csail.mit.edu/pubs/bluefish/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >UIST 2024</a
+                          >,
+                          <a
+                            href="https://vis.csail.mit.edu/pubs/gofish/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >VIS 2025</a
+                          >
+                        </em>
+                      </span>
+                    </span>
+                  </div>
+                </div>
               </div>
               <div class="fragment">
                 <p style="font-weight: 700; color: #1a1a2e; margin: 0">
-                  2 · a language for visual queries
+                  2 · a query language
                 </p>
                 <p style="color: #555; margin: 0.2rem 0 0">
                   speculative — cutting-edge research. please push back!
                 </p>
                 <div class="viz-query" style="margin-top: 0.5rem; font-size: 0.85em">
-                  <span class="q-kw">for each</span> city →
-                  <span class="q-kw">for each</span> year →
-                  <span class="q-kw">compare</span> sales
+                  <span class="q-line"><span class="q-kw">for each</span> city</span>
+                  <span class="q-line"><span class="q-kw">for each</span> year</span>
+                  <span class="q-line"><span class="q-kw">compare</span> sales</span>
                 </div>
               </div>
             </div>
             <aside class="notes">
               Two halves of the framing. The structure language exists: GoFish, open
-              source, alpha, you can install it today. The query language does not
+              source, alpha, you can install it today. It's the culmination of a
+              PhD spent studying how visual structure conveys meaning and building
+              better libraries to take advantage of it. The query language does not
               exist yet — it is where my current research is, so everything you see
               in the dashed chips is a proposal, and I genuinely want pushback on it.
-            </aside>
-          </section>
-
-          <!-- GoFish: the language -->
-          <section>
-            <div style="margin-bottom: 1.2rem">
-              <p
-                style="
-                  font-size: 0.85em;
-                  color: #555;
-                  line-height: 1.7;
-                  margin-bottom: 1rem;
-                "
-              >
-                Language 1, for the structures — available today.
-              </p>
-            </div>
-            <div
-              class="fragment"
-              style="
-                display: flex;
-                align-items: center;
-                gap: 1.5rem;
-                justify-content: center;
-              "
-            >
-              <img
-                src="gofish-logo.png"
-                alt="GoFish logo"
-                style="height: 72px; object-fit: contain"
-              />
-              <div style="text-align: left">
-                <strong
-                  style="
-                    font-size: 1.15em;
-                    color: #1a1a2e;
-                    font-family:
-                      &quot;Shantell Sans&quot;, &quot;Comic Sans MS&quot;,
-                      cursive, sans-serif;
-                  "
-                  >GoFish
-                </strong>
-                <br />
-                <span style="font-size: 0.82em; color: #444; line-height: 1.6">
-                  A compositional language for visual structure<br />
-                  open source (MIT-licensed), TypeScript with Python bindings
-                  (quickly catching up to TS)<br />
-                  <span style="color: #777; font-size: 0.92em">
-                    <em>
-                      See papers:
-                      <a
-                        href="https://vis.csail.mit.edu/pubs/bluefish/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >UIST 2024</a
-                      >,
-                      <a
-                        href="https://vis.csail.mit.edu/pubs/gofish/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >VIS 2025</a
-                      >
-                    </em>
-                  </span>
-                </span>
-              </div>
-            </div>
-            <aside class="notes">
-              And to talk about visual structure precisely, we're gonna want a
-              language. I've spent my PhD studying how visual structure conveys
-              meaning and designing better libraries to take advantage of it.
-
-              <br /><br />
-
-              The culmination of that work is GoFish, a compositional language
-              for visual structure.
             </aside>
           </section>
 
@@ -784,10 +734,12 @@
           <section
             class="split runway-pl-slide"
             data-background-color="#f7f2e8"
+            data-visibility="hidden"
           >
+            <!-- HIDDEN: runway PL framing cut for time/flow; restore by removing data-visibility -->
+            <h2>high fashion for graphics tools</h2>
             <div>
               <p class="part">Runway PL</p>
-              <h2>high fashion for graphics tools</h2>
               <p class="big-claim">
                 Jean Yang asks what happens when programming-language ideas get
                 the same public design culture that fashion has.
@@ -1115,6 +1067,40 @@
             </aside>
           </section>
 
+          <!-- The reveal beat: same bars, real barley labels -->
+          <section data-background-color="#f7f2e8">
+            <h2>back to those bar charts</h2>
+            <div
+              style="
+                position: relative;
+                min-height: 360px;
+                width: 480px;
+                margin: 1.5rem auto 0;
+              "
+            >
+              <!-- the opening's grouped bars, anonymized labels... -->
+              <div
+                id="chart-viz-reveal-anon"
+                class="chart-container viz-gofish-chart fragment fade-out"
+                data-fragment-index="1"
+                style="position: absolute; top: 0; left: 0"
+              ></div>
+              <!-- ...same bars, real barley labels -->
+              <div
+                id="chart-viz-reveal-real"
+                class="chart-container viz-gofish-chart fragment fade-in"
+                data-fragment-index="1"
+                style="position: absolute; top: 0; left: 0"
+              ></div>
+            </div>
+            <aside class="notes">
+              The reveal beat: the cities and "sales" up to now were
+              anonymized so the grouping read fresh. This is the classic
+              1931-1932 Minnesota barley trial data: ten varieties, six sites,
+              two years.
+            </aside>
+          </section>
+
           <section data-background-color="#f7f2e8">
             <h2>back to those bar charts</h2>
             <div
@@ -1144,7 +1130,7 @@
                     font-size: 1.05em;
                   "
                 >
-                  year → city
+                  spread by year, then by city
                 </div>
                 <div
                   id="chart-viz-agg-year-site-spec"
@@ -1158,9 +1144,9 @@
   spread("city", dir="x"),
 ).mark(rect(h="sales", fill="city"))</code></pre>
                 <div class="viz-query fragment" data-fragment-index="1">
-                  <span class="q-kw">for each</span> year →
-                  <span class="q-kw">for each</span> city →
-                  <span class="q-kw">compare</span> sales
+                  <span class="q-line"><span class="q-kw">for each</span> year</span>
+                  <span class="q-line"><span class="q-kw">for each</span> city</span>
+                  <span class="q-line"><span class="q-kw">compare</span> sales</span>
                   <span class="q-gloss">which city leads, within each year?</span>
                 </div>
               </div>
@@ -1183,7 +1169,7 @@
                     font-size: 1.05em;
                   "
                 >
-                  city → year
+                  spread by city, then by year
                 </div>
                 <div
                   id="chart-viz-agg-site-year-spec"
@@ -1197,9 +1183,9 @@
   spread("year", dir="x"),
 ).mark(rect(h="sales", fill="city"))</code></pre>
                 <div class="viz-query fragment" data-fragment-index="1">
-                  <span class="q-kw">for each</span> city →
-                  <span class="q-kw">for each</span> year →
-                  <span class="q-kw">compare</span> sales
+                  <span class="q-line"><span class="q-kw">for each</span> city</span>
+                  <span class="q-line"><span class="q-kw">for each</span> year</span>
+                  <span class="q-line"><span class="q-kw">compare</span> sales</span>
                   <span class="q-gloss">how did each city's sales change?</span>
                 </div>
               </div>
@@ -1207,6 +1193,13 @@
             <p
               class="viz-step-copy fragment"
               data-fragment-index="2"
+              style="margin-top: 0.6rem; text-align: center"
+            >
+              same query — two plans. order changes what's cheap.
+            </p>
+            <p
+              class="viz-step-copy fragment"
+              data-fragment-index="3"
               style="margin-top: 0.6rem; text-align: center"
             >
               same structure, swapped — and the cheap query swaps with it
@@ -1219,6 +1212,11 @@
               inner spread is what ends up adjacent — what you compare first. Swap
               the spreads and you swap the question the reader answers without
               trying.
+
+              These chips are perceptual query plans, not just queries: the two
+              orderings are logically the same question, but perceptually
+              different plans — like a database EXPLAIN, order is the whole
+              point.
             </aside>
           </section>
         </section>

@@ -800,7 +800,7 @@
 }
 
 .split {
-  align-items: center;
+  align-items: start;
   display: grid;
   gap: 1.1em;
   grid-template-columns: 1fr 1fr;
@@ -808,6 +808,37 @@
 
 .reveal .slides section.present.split {
   display: grid !important;
+}
+
+/* ─── Title positioning contract (center: false) ─────────────────────
+   Every slide's <h2> is the first child of its <section>. A modest,
+   consistent padding-top on every section is where that title sits —
+   titled and untitled slides alike land at the same spot instead of
+   the old vertically-centered float. h2's own top margin is already 0
+   (theme's --r-heading-margin), so this padding is the only offset. */
+.reveal .slides section {
+  padding-top: 0.6em;
+}
+
+/* .split / .viz-step.split sections are CSS grid: a first-child h2
+   would otherwise auto-place into column 1 only, squeezing the title
+   into half the slide and leaving the second column title-less. Span
+   it across the row above both columns, and keep it shrink-wrapped
+   (not stretched) so its underline accent still hugs the title text. */
+.reveal .slides section.split > h2:first-child {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+/* Title/statement slides are designed centered, not top-anchored —
+   give them their own vertical centering so center:false doesn't
+   flatten them to the top of the slide. */
+.reveal .slides section.scipy-title-slide,
+.reveal .slides section.scipy-statement {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
 }
 
 .big-claim {
@@ -1283,6 +1314,10 @@
 .viz-query .q-kw {
   color: #c05621;
   font-weight: 700;
+}
+
+.viz-query .q-line {
+  display: block;
 }
 
 .viz-query .q-gloss {

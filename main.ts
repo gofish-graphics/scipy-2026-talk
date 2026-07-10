@@ -56,6 +56,7 @@ const deck = new Reveal({
   hash: true,
   transition: "none",
   navigationMode: "linear",
+  center: false,
   width: 1280,
   height: 720,
   margin: 0.06,
