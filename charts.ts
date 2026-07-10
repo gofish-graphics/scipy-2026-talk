@@ -9,6 +9,7 @@ import {
   derive,
   table as gofishTable,
   rect,
+  circle,
   blank as scaffold,
   line,
   selectAll as select,
@@ -473,7 +474,15 @@ function renderVizSiteSlots() {
   // need the override (see renderAggSiteYear's comment on the same split).
   Chart(barley, { ...vizChartOptions, axes: { x: true, y: false } })
     .flow(spread("site", { dir: "x" }))
-    .mark(rect({ h: datum(1), fill: "#dff1e5" }))
+    .mark(
+      rect({
+        h: datum(1),
+        fill: "none",
+        stroke: "#d02670",
+        strokeWidth: 1.5,
+        strokeDasharray: "6 4",
+      }),
+    )
     .render(el, { ...VIZ_RENDER_OPTIONS, axes: { x: true, y: false } });
 }
 
@@ -597,6 +606,33 @@ function renderVizRibbon(id = "chart-viz-ribbon", highlight = false) {
 
 const SLOPE_W = 940;
 const SLOPE_H = 220;
+
+// Same facet/group scaffold as renderVizBarleySlopePanels below, minus the
+// connecting-line layer: each site panel is just its ten varieties' two
+// yearly points, plotted as visible circles instead of the invisible
+// rect(w=0,h=0) points the slope version names and re-selects. This is
+// literally the slope chart's first layer, rendered on its own — the bridge
+// slide before the line gets drawn. The between-site spacing is wider than
+// the slope panels' 20 on purpose: narrower panels pull each panel's two
+// year point-columns together so they read as a grouped pair, echoing the
+// stacked-bar slides' rhythm (tight within a site's year pair, wide between
+// sites — cf. renderVizSiteYear's spacing 24/4).
+function renderVizBarleySlopePoints(
+  id = "chart-viz-barley-slope-points",
+  w = SLOPE_W,
+  h = SLOPE_H
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(spread("site", { dir: "x", spacing: 120 }))
+    .mark((data) =>
+      Chart(data, vizChartOptions)
+        .flow(group("variety"), scatter({ x: "year", y: "yield" }))
+        .mark(circle({ r: 3, fill: "variety" }))
+    )
+    .render(el, { w, h, axes: true, legend: false });
+}
 
 // One line per variety per site, connecting its 1931 -> 1932 yield. Facets
 // by site with the mark-as-function pattern (see FacetedChart.stories.tsx);
@@ -1506,6 +1542,7 @@ export function renderCharts() {
   renderEnergyRibbon();
   renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931");
   renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932");
+  renderVizBarleySlopePoints();
   renderVizBarleySlopePanels();
   renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true);
   renderVizBarleySlopePanels("chart-viz-barley-slope-annotated", true);
@@ -1545,6 +1582,7 @@ export const chartRenderers: Record<string, () => void> = {
     renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931"),
   "chart-viz-barley-pie-1932": () =>
     renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932"),
+  "chart-viz-barley-slope-points": renderVizBarleySlopePoints,
   "chart-viz-barley-slope": renderVizBarleySlopePanels,
   "chart-viz-barley-slope-highlight": () =>
     renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true),

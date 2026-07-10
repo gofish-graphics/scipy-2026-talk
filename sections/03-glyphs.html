@@ -83,21 +83,18 @@
             <h2>same glyph, new dataset — barley, two years</h2>
             <div class="two-col">
               <div class="col-code">
-                <pre><code class="language-typescript">// x, y: each site's Minnesota lon/lat
-chart(barleyScatterByYear(1931))
-  .flow(scatter("site", { x: "x", y: "y" }))
-  .mark((data) => {
-    const totalYield = totalYieldFor(1931, data[0].site);
-    return chart(data[0].collection, { coord: clock() })
-      .flow(
-        stack("variety", {
-          dir: "x",
-          h: pieRadius(totalYield),
-          size: "yield",
-        })
-      )
-      .mark(rect({ fill: "variety" }));
-  })</code></pre>
+                <pre><code class="language-python"># x, y: each site's Minnesota lon/lat
+def site_pie(data):
+    total_yield = total_yield_for(1931, data[0]["site"])
+    return (
+        chart(data[0]["collection"], coord=clock())
+        .flow(stack("variety", dir="x", h=pie_radius(total_yield), size="yield"))
+        .mark(rect(fill="variety"))
+    )
+
+chart(barley_scatter_by_year(1931)).flow(
+    scatter("site", x="x", y="y")
+).mark(site_pie)</code></pre>
                 <div
                   style="
                     margin-top: 0.8rem;
@@ -176,6 +173,48 @@ chart(barleyScatterByYear(1931))
             </aside>
           </section>
 
+          <!-- ─── BRIDGE: THE SLOPE CHART'S FIRST LAYER ───────────── -->
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>first, just the points</h2>
+            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
+              Each site panel scatters every variety's two years as points —
+              the connecting lines come next.
+            </p>
+            <pre class="viz-code compact">def mark_points(data):
+    return (
+      chart(data)
+        .<span class="viz-op">flow</span>(
+          <span class="viz-op">group</span>(by="variety"),
+          <span class="viz-op">scatter</span>(x="year", y="yield")
+        )
+        .<span class="viz-mark">mark</span>(<span class="viz-mark">circle</span>(r=3, fill="variety"))
+    )
+
+chart(barley)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>("site", dir="x", spacing=120))
+  .<span class="viz-mark">mark</span>(mark_points)</pre>
+            <div
+              id="chart-viz-barley-slope-points"
+              class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
+            ></div>
+            <aside class="notes">
+              Same facet/group scaffold as the slope panels that follow —
+              spread by site, group by variety within each panel — but no
+              connecting line yet, so the points are drawn as real visible
+              circles instead of the invisible rect(w=0,h=0) placeholders the
+              slope version names and re-selects for its line layer. This is
+              literally the slope chart's first layer on its own: same data,
+              same facets, same axes. The wide between-site spacing (120 vs
+              the slope slide's 20) narrows each panel so its two year
+              columns sit as a tight pair — the same tight-within,
+              wide-between rhythm as the stacked-bar slides. Next slide adds
+              one thing — connect each variety's two points with a line —
+              and the sentence starts to read.
+            </aside>
+          </section>
+
           <!-- ─── SLOPE PANELS: THE TAKEAWAY IS A SENTENCE ────────── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
@@ -184,22 +223,23 @@ chart(barleyScatterByYear(1931))
               "Every variety decreased at every site — except Morris, where
               every variety increased."
             </p>
-            <pre class="viz-code compact">chart(barley)
-  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>({ by: "site", dir: "x", spacing: 20 }))
-  .<span class="viz-mark">mark</span>((data) =&gt; {
-    const pointName = `slope-pts-${data[0].site}`;
+            <pre class="viz-code compact">def mark_slope(data):
+    point_name = f"slope-pts-{data[0]['site']}"
     return layer([
       chart(data)
         .<span class="viz-op">flow</span>(
-          <span class="viz-op">group</span>({ by: "variety" }),
-          <span class="viz-op">scatter</span>({ x: "year", y: "yield" })
+          <span class="viz-op">group</span>(by="variety"),
+          <span class="viz-op">scatter</span>(x="year", y="yield")
         )
-        .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 0, h: 0, fill: "variety" }).name(pointName)),
-      chart(selectAll(pointName))
-        .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }))
-        .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>({ strokeWidth: 2 })),
-    ]);
-  })</pre>
+        .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=0, h=0, fill="variety").name(point_name)),
+      chart(selectAll(point_name))
+        .<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="variety"))
+        .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(strokeWidth=2)),
+    ])
+
+chart(barley)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>("site", dir="x", spacing=20))
+  .<span class="viz-mark">mark</span>(mark_slope)</pre>
             <div
               id="chart-viz-barley-slope"
               class="chart-container viz-gofish-chart"
@@ -237,11 +277,12 @@ chart(barleyScatterByYear(1931))
               Same panels, now colored by site with Morris in orange. The
               structure already found the exception; color just names it.
             </p>
-            <pre class="viz-code compact">chart(barley, {
-  color: <span class="viz-op">palette</span>({ Morris: "orange" }),  // every other site gray
-})
-  <span style="color: #888">// ...same slope panels; lines inherit the point color...</span>
-  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ fill: "site" }).name("pts"))</pre>
+            <pre class="viz-code compact">chart(
+  barley,
+  color=<span class="viz-op">palette</span>({"Morris": "orange"}),  # every other site gray
+)
+  <span style="color: #888"># ...same slope panels; lines inherit the point color...</span>
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="site").name("pts"))</pre>
             <div
               id="chart-viz-barley-slope-highlight"
               class="chart-container viz-gofish-chart"
@@ -308,11 +349,11 @@ chart(barleyScatterByYear(1931))
             <h2>compile the sentence</h2>
             <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-transform">derive</span>(pairYears),
-    <span class="viz-op">table</span>({ by: { x: "variety", y: "site" }, spacing: 4 })
+    <span class="viz-transform">derive</span>(pair_years),
+    <span class="viz-op">table</span>(by={"x": "variety", "y": "site"}, spacing=4)
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ fill: "deltaColor" })
+    <span class="viz-mark">rect</span>(fill="deltaColor")
   )</pre>
             <div
               id="chart-viz-barley-delta"
@@ -389,42 +430,35 @@ chart(barleyScatterByYear(1931))
             <h2>Swap the inner chart for a different part-to-whole viz</h2>
             <div class="two-col">
               <div class="col-code">
-                <pre><code class="language-typescript">const FLOWER_RADIUS = 40;
-const stemData = seafood.map((d) => ({
-  ...d,
-  x: catchLocations[d.lake].x,
-}));
+                <pre><code class="language-python">FLOWER_RADIUS = 40
+stem_data = [{**d, "x": catch_locations[d["lake"]]["x"]} for d in seafood]
 
 layer([
-  chart(stemData)
-    .flow(scatter({ by: "lake", x: "x" }))
+  chart(stem_data)
+    .flow(scatter(by="lake", x="x"))
     .mark(
-      rect({ w: 4, h: "count", fill: color.green[5] })
+      rect(w=4, h="count", fill=color.green[5])
         .name("stems")
     ),
   chart(selectAll("stems"))
-    .flow(group({ by: "lake" }))
-    .mark((d) =>
-      spread(
-        { dir: "y", alignment: "middle",
-          spacing: -FLOWER_RADIUS },
+    .flow(group(by="lake"))
+    .mark(lambda d: spread(
         [
           d[0],
-          layer({ coord: polar() }, [
+          layer([
             stackX(
-              { h: FLOWER_RADIUS, spacing: 0,
-                alignment: "start", sharedScale: true },
-              d[0].datum.map((r) =>
-                petal({
-                  w: v(r.count),
-                  fill: v(r.species).lighten(0.5),
-                })
-              )
+              [
+                petal(w=v(r["count"]), fill=v(r["species"]).lighten(0.5))
+                for r in d[0]["datum"]
+              ],
+              h=FLOWER_RADIUS, spacing=0,
+              alignment="start", sharedScale=True,
             ),
-          ]),
-        ]
-      )
-    ),
+          ], coord=polar()),
+        ],
+        dir="y", alignment="middle",
+        spacing=-FLOWER_RADIUS,
+    )),
 ])</code></pre>
                 <!-- <pre><code class="language-python">chart(scatter_data).flow(
     scatter("lake", x="x", y="y")
@@ -527,54 +561,43 @@ layer([
             <h2>balloons???</h2>
             <div class="two-col">
               <div class="col-code">
-                <pre><code class="language-typescript">const Balloon = (x, y, scale, colors) =>
-  Frame(
-    {
-      x: x - 15 * scale,
-      y: y + 27 * scale,
-      box: true,
-      transform: { scale: { x: scale, y: -scale } },
-    },
+                <pre><code class="language-python">def balloon(x, y, scale, colors):
+  return Frame(
     [
-      ellipse({
-        cx: 15,
-        cy: 15,
-        w: 24,
-        h: 30,
-        fill: colors.body,
-      }),
-      ellipse({
-        cx: 12,
-        cy: 11,
-        w: 7,
-        h: 11,
-        fill: colors.highlight,
-      }),
-      rect({ cx: 15, cy: 32, w: 8, h: 4,
-        fill: colors.knot, rx: 3, ry: 2 }),
-      rect({ cx: 15, cy: 32, w: 5, h: 2.4,
-        fill: colors.knot, rx: 2, ry: 1 }),
-    ]
-  );
+      ellipse(cx=15, cy=15, w=24, h=30, fill=colors["body"]),
+      ellipse(cx=12, cy=11, w=7, h=11, fill=colors["highlight"]),
+      rect(cx=15, cy=32, w=8, h=4,
+        fill=colors["knot"], rx=3, ry=2),
+      rect(cx=15, cy=32, w=5, h=2.4,
+        fill=colors["knot"], rx=2, ry=1),
+    ],
+    x=x - 15 * scale,
+    y=y + 27 * scale,
+    box=True,
+    transform={"scale": {"x": scale, "y": -scale}},
+  )
+
+
+def balloon_for_sample(sample):
+  top3 = sorted(
+    sample["collection"],
+    key=lambda r: r["count"],
+    reverse=True,
+  )[:3]
+
+  return Frame([
+    rect(x=0, y=0, w=1, h=sample["y"], emY=True),
+    balloon(0, sample["y"], 1, {
+      "body": species_color_map[top3[0]["species"]],
+      "highlight": species_color_map[top3[1]["species"]],
+      "knot": species_color_map[top3[2]["species"]],
+    }),
+  ], x=sample["x"])
+
 
 Frame(
-  { coord: wavy(), x: 0, y: 0 },
-  scatterByLake.map((sample) => {
-    const top3 = _.orderBy(
-      sample.collection,
-      "count",
-      "desc"
-    ).slice(0, 3);
-
-    return Frame({ x: sample.x }, [
-      rect({ x: 0, y: 0, w: 1, h: sample.y, emY: true }),
-      Balloon(0, sample.y, 1, {
-        body: speciesColorMap[top3[0].species],
-        highlight: speciesColorMap[top3[1].species],
-        knot: speciesColorMap[top3[2].species],
-      }),
-    ]);
-  })
+  [balloon_for_sample(sample) for sample in scatter_by_lake],
+  coord=wavy(), x=0, y=0,
 )</code></pre>
                 <div class="todo-note">
                   TODO Python: expose a balloon glyph helper with

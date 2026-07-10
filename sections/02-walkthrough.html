@@ -40,14 +40,63 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>start with the data</h2>
+            <div>
+              <pre class="viz-code">chart(barley)</pre>
+              <p class="viz-step-copy">
+                Ten varieties, six sites, two years — before any operator
+                touches it, the chart is just the data.
+              </p>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>variety</th>
+                  <th>site</th>
+                  <th>year</th>
+                  <th>yield</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Manchuria</td>
+                  <td>University Farm</td>
+                  <td>1931</td>
+                  <td>27.00</td>
+                </tr>
+                <tr>
+                  <td>Manchuria</td>
+                  <td>Waseca</td>
+                  <td>1931</td>
+                  <td>48.87</td>
+                </tr>
+                <tr>
+                  <td>Manchuria</td>
+                  <td>Morris</td>
+                  <td>1931</td>
+                  <td>27.43</td>
+                </tr>
+                <tr>
+                  <td>&hellip;</td>
+                  <td>&hellip;</td>
+                  <td>&hellip;</td>
+                  <td>&hellip;</td>
+                </tr>
+              </tbody>
+            </table>
+            <aside class="notes">
+              Before we spread anything, the chart call is just chart(barley):
+              no flow, no mark, nothing drawn yet. The next slide adds the
+              first operator.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
             <h2>place one slot per site</h2>
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
-  )
-  .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>()
+    <span class="viz-op">spread</span>("site", dir="x")
   )</pre>
               <p class="viz-step-copy">
                 The first operator creates a row of visual neighborhoods.
@@ -67,10 +116,10 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+    <span class="viz-op">spread</span>("site", dir="x")
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ h: "yield" })
+    <span class="viz-mark">rect</span>(h="yield")
   )</pre>
               <p class="viz-step-copy">
                 The mark says what gets drawn; the channel says what property
@@ -91,10 +140,10 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>({ by: "site", dir: "x" })
+    <span class="viz-op">spread</span>("site", dir="x")
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ h: "yield" })
+    <span class="viz-mark">rect</span>(h="yield")
   )</pre>
               <p class="viz-callout viz-transform">
                 aggregate yield by site
@@ -115,11 +164,11 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>({ by: "site", dir: "x" }),
-    <span class="viz-op">spread</span>({ by: "year", dir: "x" })
+    <span class="viz-op">spread</span>("site", dir="x"),
+    <span class="viz-op">spread</span>("year", dir="x")
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ h: "yield", fill: "site" })
+    <span class="viz-mark">rect</span>(h="yield", fill="site")
   )</pre>
             </div>
             <div
@@ -202,6 +251,7 @@
                   flex: 1;
                   display: flex;
                   flex-direction: column;
+                  align-items: center;
                   gap: 0.6rem;
                 "
               >
@@ -237,6 +287,7 @@
                   flex: 1;
                   display: flex;
                   flex-direction: column;
+                  align-items: center;
                   gap: 0.6rem;
                 "
               >
@@ -272,6 +323,7 @@
                   flex: 1;
                   display: flex;
                   flex-direction: column;
+                  align-items: center;
                   gap: 0.6rem;
                 "
               >
@@ -316,8 +368,8 @@
               <div class="viz-compare-card">
                 <h3>site → variety</h3>
                 <p>What are the trends across sites?</p>
-                <pre class="viz-code compact"><span class="viz-op">spread</span>({ by: "site", dir: "x" })
-<span class="viz-op">spread</span>({ by: "variety", dir: "x" })</pre>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>("site", dir="x")
+<span class="viz-op">spread</span>("variety", dir="x")</pre>
                 <div
                   id="chart-viz-site-variety-mini"
                   class="chart-container viz-gofish-compare"
@@ -326,8 +378,8 @@
               <div class="viz-compare-card">
                 <h3>variety → site</h3>
                 <p>What is the most productive site for each variety?</p>
-                <pre class="viz-code compact"><span class="viz-op">spread</span>({ by: "variety", dir: "x" })
-<span class="viz-op">spread</span>({ by: "site", dir: "x" })</pre>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>("variety", dir="x")
+<span class="viz-op">spread</span>("site", dir="x")</pre>
                 <div
                   id="chart-viz-variety-site-mini"
                   class="chart-container viz-gofish-compare"
@@ -373,12 +425,12 @@
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
-    <span class="viz-op">spread</span>({ by: "year", dir: "x" }),
-    <span class="viz-op">stack</span>({ by: "site", dir: "y", size: "yield" })
+    <span class="viz-op">spread</span>("variety", dir="x"),
+    <span class="viz-op">spread</span>("year", dir="x"),
+    <span class="viz-op">stack</span>("site", dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ w: 8, fill: "site" })
+    <span class="viz-mark">rect</span>(w=8, fill="site")
   )</pre>
               <p class="viz-step-copy">
                 The first thing to try: totals and the rough site mix become
@@ -501,12 +553,12 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
-    <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 4 }),
-    <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
+    <span class="viz-op">spread</span>("variety", dir="x", spacing=24),
+    <span class="viz-op">spread</span>("year", dir="x", spacing=4),
+    <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ fill: "site" })
+    <span class="viz-mark">rect</span>(fill="site")
   )</pre>
               <p class="viz-step-copy">
                 Add year as a second grouping, then sort each stack by yield
@@ -529,12 +581,12 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
-    <span class="viz-op">spread</span>({ by: "year", dir: "x" }),
-    <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
+    <span class="viz-op">spread</span>("variety", dir="x"),
+    <span class="viz-op">spread</span>("year", dir="x"),
+    <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ w: 8, fill: "site" })
+    <span class="viz-mark">rect</span>(w=8, fill="site")
   )</pre>
               <p class="viz-step-copy">
                 Order each stack by yield. Rank, min, and max now read off
@@ -553,7 +605,8 @@
 
           <!-- Connection affordances: bars vs lines (Zacks & Tversky 1999).
                Perceptual beat, no code — same format as the Franconeri slides. -->
-          <section class="viz-step" data-background-color="#f7f2e8">
+          <!-- HIDDEN for now: "what does connecting things do?" set parked; remove data-visibility to restore. -->
+          <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>what does connecting things do?</h2>
             <div
               style="
@@ -628,17 +681,17 @@
           <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: moved to sections/04-closing.html's move-4 slide (chart-move-ribbon). See the "sort each stack" HIDDEN comment above for why. Remove data-visibility to restore. -->
             <h2>connect related bars</h2>
             <div>
-              <pre class="viz-code">Layer([
+              <pre class="viz-code">layer([
   chart(barley)
     .<span class="viz-op">flow</span>(
-      <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
-      <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 16 }),
-      <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
+      <span class="viz-op">spread</span>("variety", dir="x", spacing=24),
+      <span class="viz-op">spread</span>("year", dir="x", spacing=16),
+      <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
     )
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 8, fill: "site" }).name("bars")),
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, fill="site").name("bars")),
   chart(selectAll("bars"))
-    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.5 }))
+    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="variety"), <span class="viz-op">group</span>(by="site"))
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.5))
 ])</pre>
               <p class="viz-step-copy">
                 Connection restores the identity that sorting gave up: the
@@ -664,23 +717,21 @@
           <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: ribbon highlight variant, part of the ribbon build-up moved to sections/04-closing.html's move-4 slide. See the "sort each stack" HIDDEN comment above. Remove data-visibility to restore. -->
             <h2>style is downstream of structure</h2>
             <div>
-              <pre class="viz-code">Layer([
-  chart(barley, {
-    color: palette({
-      Waseca: "#d7dadd", Morris: "#49a66a",
-      "Grand Rapids": "#d7dadd",
-      Crookston: "#d7dadd", Duluth: "#d7dadd",
-    }),
-  })
+              <pre class="viz-code">layer([
+  chart(barley, color=palette({
+    "Waseca": "#d7dadd", "Morris": "#49a66a",
+    "Grand Rapids": "#d7dadd",
+    "Crookston": "#d7dadd", "Duluth": "#d7dadd",
+  }))
     .<span class="viz-op">flow</span>(
-      <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 38 }),
-      <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 8 }),
-      <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
+      <span class="viz-op">spread</span>("variety", dir="x", spacing=38),
+      <span class="viz-op">spread</span>("year", dir="x", spacing=8),
+      <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
     )
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 16, fill: "site" }).name("bars")),
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=16, fill="site").name("bars")),
   chart(selectAll("bars"))
-    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.78 }))
+    .<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="variety"), <span class="viz-op">group</span>(by="site"))
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.78))
 ])</pre>
               <p class="viz-step-copy">
                 Once the structure is right, palette becomes an attention

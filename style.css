@@ -1088,6 +1088,13 @@
   font-weight: 760;
 }
 
+/* "place one slot per site": empty placeholder slots are outlined only.
+   GoFish's rect mark doesn't forward strokeDasharray through to the SVG
+   attribute, so the dash is applied here instead of in the mark spec. */
+#chart-viz-site-slots rect {
+  stroke-dasharray: 6 4;
+}
+
 .viz-mark {
   color: var(--viz-mark);
   font-weight: 760;
@@ -1343,6 +1350,34 @@
   opacity: 0.55;
 }
 
+/* Bulleted list of compares inside a single chip (e.g. "back to those bar
+   charts"): one box, multiple q-lines, each with its own bullet marker.
+   .q-weak-item is the item-level equivalent of .q-weak for list entries. */
+.viz-query .q-list {
+  list-style: none;
+  margin: 0.4em 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.viz-query .q-list .q-item {
+  position: relative;
+  padding-left: 1.1em;
+}
+
+.viz-query .q-list .q-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #4a7fb5;
+}
+
+.viz-query .q-list .q-item.q-weak-item {
+  opacity: 0.55;
+}
+
 /* Math case-expression form for multi-channel encode clauses:
    the encode keyword, then one tall "{" grouping one data → channel
    mapping per line. Text+CSS only; the brace is a literal character
@@ -1357,7 +1392,7 @@
   font-size: 2.2em;
   line-height: 1;
   font-weight: 300;
-  color: #7ba3c9; /* lightened tone of the chip's dashed-border blue */
+  color: #c05621; /* keyword orange, matches .viz-query .q-kw */
 }
 
 .viz-query .q-cases .q-case-lines {
