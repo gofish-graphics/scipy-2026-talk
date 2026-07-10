@@ -1491,7 +1491,6 @@ export function renderCharts() {
   renderVizYearSorted();
   renderVizRibbon();
   renderVizRibbon("chart-viz-ribbon-highlight", true);
-  renderVizRibbon("chart-viz-ribbon-annotated", true);
   renderScatterPieChart();
   renderScatterPieChart("chart-q-scatterpie", 340, 260);
   renderScatterPieGridBase();
@@ -1509,6 +1508,7 @@ export function renderCharts() {
   renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932");
   renderVizBarleySlopePanels();
   renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true);
+  renderVizBarleySlopePanels("chart-viz-barley-slope-annotated", true);
   renderVizBarleyDeltaHeatmap();
   renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180);
   renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230);
@@ -1541,8 +1541,6 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-ribbon": () => renderVizRibbon(),
   "chart-viz-ribbon-highlight": () =>
     renderVizRibbon("chart-viz-ribbon-highlight", true),
-  "chart-viz-ribbon-annotated": () =>
-    renderVizRibbon("chart-viz-ribbon-annotated", true),
   "chart-viz-barley-pie-1931": () =>
     renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931"),
   "chart-viz-barley-pie-1932": () =>
@@ -1550,6 +1548,8 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-barley-slope": renderVizBarleySlopePanels,
   "chart-viz-barley-slope-highlight": () =>
     renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true),
+  "chart-viz-barley-slope-annotated": () =>
+    renderVizBarleySlopePanels("chart-viz-barley-slope-annotated", true),
   "chart-viz-barley-delta": renderVizBarleyDeltaHeatmap,
   "chart-viz-barley-slope-cmp": () =>
     renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180),

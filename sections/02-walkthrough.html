@@ -369,6 +369,7 @@
                 <span class="q-line"><span class="q-kw">for each</span> variety</span>
                 <span class="q-line"><span class="q-kw">for each</span> year</span>
                 <span class="q-line"><span class="q-val">total</span> yield across sites</span>
+                <span class="q-gloss">a cheaper query than the Δ one — worth trying first</span>
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
@@ -380,8 +381,11 @@
     <span class="viz-mark">rect</span>({ w: 8, fill: "site" })
   )</pre>
               <p class="viz-step-copy">
-                Easier part-to-whole readings, while preserving direct variety
-                comparison.
+                The first thing to try: totals and the rough site mix become
+                cheap reads. But the Δ query stays expensive — segments sit
+                on shifting baselines. Velvet at Grand Rapids rose
+                <strong>+9.2 bu/acre</strong>, the largest rise outside
+                Morris, and you can barely see it move.
               </p>
             </div>
             <div
@@ -389,8 +393,20 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <aside class="notes">
-              Stack is a layout operator, green. One structural move buys
-              part-to-whole reading across sites within each variety.
+              Stack is a layout operator, green. It's the natural first move
+              on the Δ query, and it partially pays off: total yield per
+              variety and the rough site mix both become cheap reads. But it
+              prices per-part change out. Once a segment sits above others in
+              the stack, its two endpoints (1931 stack, 1932 stack) share a
+              shifting baseline set by every segment below it, so the eye
+              can't isolate its own Δ. Concretely: Velvet at Grand Rapids
+              rose +9.2 bushels/acre, the biggest jump anywhere outside
+              Morris — bigger than Morris's own Manchuria (+6.9) or Glabron
+              (+6.4) — and it's invisible here. That failure is the point:
+              it's what sends us hunting for a structure built for
+              comparing change directly, rather than reading it off two
+              stacked totals. Slope panels and the Δ heatmap, later in the
+              glyphs section, are that structure.
             </aside>
           </section>
 

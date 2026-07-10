@@ -259,16 +259,17 @@ chart(barleyScatterByYear(1931))
           <!-- Labels/annotations: say the takeaway out loud -->
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>call it out</h2>
-            <div style="position: relative; display: inline-block">
+            <div style="position: relative; width: 100%">
               <div
-                id="chart-viz-ribbon-annotated"
+                id="chart-viz-barley-slope-annotated"
                 class="chart-container viz-gofish-chart"
+                style="height: 312px; min-height: 312px"
               ></div>
               <div
                 style="
                   position: absolute;
-                  top: 6%;
-                  right: 2%;
+                  top: 4%;
+                  right: 3%;
                   max-width: 250px;
                   background: #fff6e6;
                   border: 2px solid #e08214;
@@ -288,9 +289,16 @@ chart(barleyScatterByYear(1931))
               reader doesn't have to find it.
             </p>
             <aside class="notes">
-              The last step of explanatory polish: annotate. Color makes Morris
-              pop; the label states the conclusion directly. Exploratory charts
-              help you find the story; explanatory charts tell it.
+              The last step of explanatory polish: annotate. Same slope
+              panels, same Morris-orange highlight — color already made
+              Morris's rising panel pop; the label states the conclusion
+              directly instead of leaving the reader to infer it from six
+              panels of slopes. Morris is the third of six panels
+              (University Farm, Waseca, Morris, Crookston, Grand Rapids,
+              Duluth), so the callout sits in the top-right corner, over
+              Grand Rapids/Duluth's dead space, well clear of Morris.
+              Exploratory charts help you find the story; explanatory
+              charts tell it.
             </aside>
           </section>
 
@@ -321,10 +329,12 @@ chart(barleyScatterByYear(1931))
             </p>
             <aside class="notes">
               One green row (Morris) in an otherwise red matrix. Two other
-              cells buck their row's sign — University Farm/No. 475 and
-              Grand Rapids/Velvet both tick faintly positive — real noise in
-              the data, not a chart bug; they just aren't uniform the way
-              Morris's whole row is. `derive` is term-level computation:
+              cells buck their row's sign, and they're not faint: Grand
+              Rapids/Velvet rose +9.2 bushels/acre, the largest increase
+              anywhere outside Morris — bigger than several of Morris's own
+              varieties. University Farm/No. 475 rose a more moderate +5.3.
+              Both are real data, not a chart bug; they just aren't uniform
+              the way Morris's whole row is. `derive` is term-level computation:
               gofish-graphics's built-in `gradient()` color scale always
               spans the field's actual min/max, so it can't be recentered at
               0 for an asymmetric spread of deltas — the diverging scale
