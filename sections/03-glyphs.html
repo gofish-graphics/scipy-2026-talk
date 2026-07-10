@@ -181,19 +181,16 @@ chart(barley_scatter_by_year(1931)).flow(
               Each site panel scatters every variety's two years as points —
               the connecting lines come next.
             </p>
-            <pre class="viz-code compact">def mark_points(data):
-    return (
-      chart(data)
-        .<span class="viz-op">flow</span>(
-          <span class="viz-op">group</span>(by="variety"),
-          <span class="viz-op">scatter</span>(x="year", y="yield")
-        )
-        .<span class="viz-mark">mark</span>(<span class="viz-mark">circle</span>(r=3, fill="variety"))
-    )
-
-chart(barley)
+            <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>("site", dir="x", spacing=120))
-  .<span class="viz-mark">mark</span>(mark_points)</pre>
+  .<span class="viz-mark">mark</span>(
+    chart()
+      .<span class="viz-op">flow</span>(
+        <span class="viz-op">group</span>(by="variety"),
+        <span class="viz-op">scatter</span>(x="year", y="yield")
+      )
+      .<span class="viz-mark">mark</span>(<span class="viz-mark">circle</span>(r=3, fill="variety"))
+  )</pre>
             <div
               id="chart-viz-barley-slope-points"
               class="chart-container viz-gofish-chart"
