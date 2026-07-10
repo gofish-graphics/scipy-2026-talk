@@ -30,8 +30,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       gofish-graphics:
-        specifier: 0.1.0-nightly.20260708
-        version: 0.1.0-nightly.20260708(solid-js@1.9.13)
+        specifier: 0.1.0-nightly.20260709
+        version: 0.1.0-nightly.20260709(solid-js@1.9.13)
       lodash:
         specifier: ^4.17.21
         version: 4.18.1
@@ -578,13 +578,13 @@ packages:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
 
-  gofish-graphics@0.1.0-nightly.20260708:
-    resolution: {integrity: sha512-cr2XFAzce7gZtx9LS86hzWEZGZ8RcQKg30eDN5HsbKQSYYBxh9E2n2h3hvOCr79eisNrcqli01heQFts5KuTEQ==}
+  gofish-graphics@0.1.0-nightly.20260709:
+    resolution: {integrity: sha512-zE0Yh5WwuIUawcSGMnQgcohunx6wFjIBY9lz8WR7/4KvTjb3eOgAZhUZVZkoMUplLpTsmb8WFAJUtXL6H2qm3A==}
     peerDependencies:
       solid-js: ^1.9.5
 
-  gofish-ir@0.1.0-nightly.20260708:
-    resolution: {integrity: sha512-QUfMTViWI2HUqYm9PBMh8jM3nar7kw920HfSNtYROwjGpKOaUTdW+cHBvkqYZQ3b1TUFrnQdsonn1Aqsq43VNA==}
+  gofish-ir@0.1.0-nightly.20260709:
+    resolution: {integrity: sha512-ytbzHxt/yycN5mMfgHFnYoGy+NIrgU3EghOyq3Sy49PVnlmUjKP2B2OUEKofO684noCwrt1gr9vq64bMWZ0Llw==}
 
   html-entities@2.3.3:
     resolution: {integrity: sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==}
@@ -1201,7 +1201,7 @@ snapshots:
 
   gensync@1.0.0-beta.2: {}
 
-  gofish-graphics@0.1.0-nightly.20260708(solid-js@1.9.13):
+  gofish-graphics@0.1.0-nightly.20260709(solid-js@1.9.13):
     dependencies:
       '@types/d3-array': 3.2.2
       bubblesets-js: 3.0.1
@@ -1209,7 +1209,7 @@ snapshots:
       culori: 4.0.2
       d3-array: 3.2.4
       d3-hierarchy: 3.1.2
-      gofish-ir: 0.1.0-nightly.20260708
+      gofish-ir: 0.1.0-nightly.20260709
       lodash: 4.18.1
       perfect-arrows: 0.3.7
       rybitten: 0.22.0
@@ -1217,7 +1217,7 @@ snapshots:
       solid-js: 1.9.13
       spectral.js: 2.0.2
 
-  gofish-ir@0.1.0-nightly.20260708: {}
+  gofish-ir@0.1.0-nightly.20260709: {}
 
   html-entities@2.3.3: {}
 

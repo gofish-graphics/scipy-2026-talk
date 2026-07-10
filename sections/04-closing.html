@@ -4,22 +4,104 @@
              CLOSE
              ══════════════════════════════════════════════════════ -->
 
-          <!-- Capstone: three stacks make a mosaic. Spec must stay verbatim
-               with scripts/scipy-titanic-mosaic/main.ts (modulo elided
-               cosmetics), which generates gallery-images/titanic-mosaic.svg.
-               Pre-rendered from the gofish checkout because the deck's npm
-               nightly predates #675 (normalize space-filling spines). -->
+          <!-- Query gallery: four structures, each captioned with the question it
+               answers and the query in foreach notation. Charts are live renders
+               (charts.ts: chart-q-*). Tiles 2-4 are fragments so each can be
+               introduced one at a time if there's time to linger. -->
+          <section data-background-color="#f7f2e8">
+            <h2>other data, other queries</h2>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.2rem 1.4rem;
+                margin-top: 0.3rem;
+                justify-items: center;
+                align-items: start;
+              "
+            >
+              <div style="text-align: center">
+                <div
+                  id="chart-q-scatterpie"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.58"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
+                  which species dominates each lake?
+                </p>
+                <div class="viz-query" style="font-size: 0.5em">
+                  <span class="q-kw">for each</span> lake → <span class="q-kw">share</span> of each species
+                </div>
+              </div>
+              <div class="fragment" data-fragment-index="1" style="text-align: center">
+                <div
+                  id="chart-q-waffle"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.58"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
+                  how many fish, exactly?
+                </p>
+                <div class="viz-query" style="font-size: 0.5em">
+                  <span class="q-kw">for each</span> lake → <span class="q-kw">for each</span> species → <span class="q-kw">count</span> squares
+                </div>
+              </div>
+              <div class="fragment" data-fragment-index="2" style="text-align: center">
+                <div
+                  id="chart-q-mosaic"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.55"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
+                  who survived the Titanic?
+                </p>
+                <div class="viz-query" style="font-size: 0.5em">
+                  <span class="q-kw">for each</span> class → <span class="q-kw">for each</span> sex → <span class="q-kw">share</span> who survived
+                </div>
+              </div>
+              <div class="fragment" data-fragment-index="3" style="text-align: center">
+                <div
+                  id="chart-q-bottle"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.42"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.15rem 0 0.1rem">
+                  how full is each bottle?
+                </p>
+                <div class="viz-query" style="font-size: 0.5em">
+                  <span class="q-kw">for each</span> bottle → <span class="q-kw">read</span> the fill line
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Same game, four datasets. The scatterpie answers a composition
+              question at each place. The waffle is the same seafood data, but
+              the structure is countable unit squares, so exact how-many
+              queries get cheap. The mosaic nests three shares. The bottle is
+              a pictorial — one fraction per bottle, read as a fill level.
+              Each tile is a fragment: step through them one at a time if
+              there's room to breathe, or take the slide in one gulp if not.
+              The next slide breaks the mosaic open.
+            </aside>
+          </section>
+
+          <!-- Capstone: three stacks make a mosaic. Spec must stay verbatim with
+               renderTitanicMosaic() in charts.ts (modulo elided cosmetics).
+               Rendered live since 0.1.0-nightly.20260709 ships #675 (normalize
+               space-filling spines); the pre-rendered SVG is retired. -->
           <section class="split viz-step" data-background-color="#f7f2e8">
             <div>
               <h2>three stacks make a mosaic</h2>
-              <pre class="viz-code">chart(titanic)
+              <pre class="viz-code">const share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
+
+chart(titanic)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">stack</span>({ by: "class", dir: "y", normalize: true }),
-    <span class="viz-op">stack</span>({ by: "sex", dir: "x", h: "count", normalize: true }),
-    <span class="viz-op">stack</span>({ by: "survived", dir: "y", w: "count", normalize: true })
+    <span class="viz-op">stack</span>({ by: "class",    dir: "y", size: share }),
+    <span class="viz-op">stack</span>({ by: "sex",      dir: "x", size: share }),
+    <span class="viz-op">stack</span>({ by: "survived", dir: "y", size: share })
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ h: "count", fill: "survived" })
+    <span class="viz-mark">rect</span>({ fill: "survived" })
   )</pre>
               <p class="viz-step-copy">
                 No new operators — just <code>stack</code> three deep. Cell
@@ -30,19 +112,19 @@
               </p>
             </div>
             <div style="position: relative; display: inline-block">
-              <img
-                src="gallery-images/titanic-mosaic.svg"
-                alt="Titanic survival mosaic: class rows, sex columns within each row, survival fraction in blue"
-                style="width: 480px; display: block"
-              />
-              <!-- row labels; tops/centers measured from the SVG cell geometry -->
-              <div class="mosaic-row-label" style="top: 24.9%">Crew</div>
-              <div class="mosaic-row-label" style="top: 55.3%">Third</div>
-              <div class="mosaic-row-label" style="top: 74.2%">Second</div>
-              <div class="mosaic-row-label" style="top: 85.8%">First</div>
+              <div
+                id="chart-viz-titanic-mosaic"
+                class="chart-container"
+                aria-label="Titanic survival mosaic: class rows, sex columns within each row, survival fraction in blue"
+              ></div>
+              <!-- row-band centers measured off the live SVG cell geometry -->
+              <div class="mosaic-row-label" style="top: 21.2%">Crew</div>
+              <div class="mosaic-row-label" style="top: 51.0%">Third</div>
+              <div class="mosaic-row-label" style="top: 69.6%">Second</div>
+              <div class="mosaic-row-label" style="top: 81.1%">First</div>
               <!-- sex labels under the bottom (First-class) row's split -->
-              <div class="mosaic-col-label" style="left: 23.9%">women</div>
-              <div class="mosaic-col-label" style="left: 63.8%">men</div>
+              <div class="mosaic-col-label" style="left: 24.2%">women</div>
+              <div class="mosaic-col-label" style="left: 63.2%">men</div>
             </div>
             <aside class="notes">
               Titanic passengers: class, sex, survived. Three stacks, nested,
@@ -173,6 +255,50 @@
               image with a fill bar through a paint blend mode and aligns its
               label with constraints. Structure, not taxonomy, is the
               through-line.
+            </aside>
+          </section>
+
+          <!-- gallery-images/pulley-diagram.png is the GoFish docs-gallery export of
+               stories/bluefish/Pulley.stories.tsx — a real constraint-based GoFish
+               render (port of Bluefish's pulley example), not a mockup. It reproduces
+               Figure 1 of Larkin & Simon 1987, whose problem text appears at left. -->
+          <section data-background-color="#f7f2e8">
+            <h2>diagrams are visual data structures too</h2>
+            <div class="two-col" style="align-items: center; margin-top: 0.5rem">
+              <div style="flex: 1.2">
+                <div style="background: #fff; border-radius: 8px; padding: 0.9rem 1.1rem; font-size: 0.5em; line-height: 1.6; text-align: left; color: #333">
+                  <p style="margin-bottom: 0.4rem">"We have three pulleys, two weights, and some ropes, arranged as follows:</p>
+                  <ol style="margin: 0 0 0.4rem 1.1rem; padding: 0">
+                    <li>The first weight is suspended from the left end of a rope over Pulley A. The right end of this rope is attached to, and partially supports, the second weight.</li>
+                    <li>Pulley A is suspended from the left end of a rope that runs over Pulley B, and under Pulley C. Pulley B is suspended from the ceiling. The right end of the rope that runs under Pulley C is attached to the ceiling.</li>
+                    <li>Pulley C is attached to the second weight, supporting it jointly with the right end of the first rope.</li>
+                  </ol>
+                  <p style="margin: 0">[…] Find the ratio of the second to the first weight, if the system is in equilibrium."</p>
+                </div>
+                <p style="margin-top: 0.4rem; font-size: 0.5em; color: #666">
+                  Larkin &amp; Simon 1987, "Why a Diagram Is (Sometimes) Worth Ten Thousand Words"
+                </p>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <img src="gallery-images/pulley-diagram.png" alt="Pulley diagram of the Larkin and Simon problem: pulleys A, B, C, rope segments x, y, z, p, q, s, weights W1 and W2, rendered with GoFish" style="max-height: 400px; max-width: 100%" />
+                <div class="viz-query fragment" style="margin-top: 0.4rem; font-size: 0.5em">
+                  <span class="q-kw">look up</span> Pulley A → which ropes pull on it?
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Larkin and Simon's classic. The paragraph and the diagram carry
+              exactly the same information — they are informationally
+              equivalent — but they are not computationally equivalent. The
+              diagram indexes the facts by location: everything you need
+              about Pulley A is AT Pulley A, so the query is one glance,
+              while the paragraph makes you search and join clauses. In our
+              terms: the diagram is the better data structure for the
+              queries the physics asks. And this diagram is not clip art —
+              it's the GoFish port of Bluefish's pulley example, built from
+              the same layers, alignment, and constraints as everything else
+              today. The trees on the previous slide, this pulley: the
+              operators don't stop at charts.
             </aside>
           </section>
 

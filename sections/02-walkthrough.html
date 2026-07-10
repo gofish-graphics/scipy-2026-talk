@@ -151,6 +151,9 @@
               id="chart-viz-nest-grouped-r-solo"
               class="chart-container viz-gofish-chart"
             ></div>
+            <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
+              <span class="q-kw">for each</span> site → <span class="q-kw">for each</span> year → <span class="q-kw">compare</span> yield
+            </div>
             <aside class="notes">
               site → year: each site's two years sit together, so the change per
               site is easy to read.
@@ -163,6 +166,9 @@
               id="chart-viz-nest-grouped-solo"
               class="chart-container viz-gofish-chart"
             ></div>
+            <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
+              <span class="q-kw">for each</span> year → <span class="q-kw">for each</span> site → <span class="q-kw">compare</span> yield
+            </div>
             <aside class="notes">
               year → site: sites sit together within each year, so the per-site
               change is scattered across the two blocks.
@@ -175,6 +181,9 @@
               id="chart-viz-nest-heatmap-solo"
               class="chart-container viz-gofish-chart"
             ></div>
+            <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
+              <span class="q-kw">look up</span> yield at (site, year)
+            </div>
             <aside class="notes">
               site × year as a heatmap: both fields on separable axes, no nesting
               order privileged.
@@ -221,6 +230,9 @@
   spread("site", dir="x"),
   spread("year", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
+                <div class="viz-query" style="font-size: 0.95em">
+                  <span class="q-kw">for each</span> site → <span class="q-kw">for each</span> year → <span class="q-kw">compare</span> yield
+                </div>
               </div>
 
               <!-- Grouped bar -->
@@ -251,6 +263,9 @@
   spread("year", dir="x"),
   spread("site", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
+                <div class="viz-query" style="font-size: 0.95em">
+                  <span class="q-kw">for each</span> year → <span class="q-kw">for each</span> site → <span class="q-kw">compare</span> yield
+                </div>
               </div>
 
               <!-- Grouped bar reversed -->
@@ -280,6 +295,9 @@
                 ><code class="language-python">chart(barley).flow(
   table("site", "year"),
 ).mark(rect(fill="yield"))</code></pre>
+                <div class="viz-query" style="font-size: 0.95em">
+                  <span class="q-kw">look up</span> yield at (site, year)
+                </div>
               </div>
             </div>
             <aside class="notes">
@@ -287,7 +305,10 @@
               changes what you compare first. The heatmap flattens both keys onto
               separable axes, so no nesting order is privileged. Advance twice to
               reveal the second and third columns; layout stays fixed (hidden
-              fragments still reserve space).
+              fragments still reserve space). The chips under the specs read the
+              structure back out as a query: the spread order IS the for-each
+              order, and the heatmap trades the for-each nesting for direct
+              lookup.
             </aside>
           </section>
 
@@ -325,37 +346,37 @@
           <!-- Exploratory bridge: a total can hide its parts -->
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2>is it one variety, or all of them?</h2>
+            <div class="viz-query fragment" style="margin-top: 1.4rem; font-size: 0.5em">
+              <span class="q-kw">for each</span> variety → <span class="q-kw">for each</span> site → <span class="q-kw">compare</span> Δ yield (1931 → 1932)
+            </div>
+            <p class="fragment" style="margin-top: 1rem; font-size: 0.55em; color: #555">
+              this time, start from the query — then build the structure that answers it
+            </p>
             <aside class="notes">
               The totals rose at Morris and fell everywhere else. But a total can
               hide its parts: maybe one big variety swung it. To answer, we break
-              each site open by variety.
+              each site open by variety. New move: instead of reading the query
+              off a chart we already built, write the query down first — for each
+              variety, for each site, how did yield change — and go hunting for
+              the structure that makes it cheap. The rest of this section is that
+              hunt.
             </aside>
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8">
             <div>
               <h2><code>stack()</code></h2>
-              <div
-                style="
-                  display: inline-block;
-                  background: #f5f5f5;
-                  border-radius: 6px;
-                  padding: 0.4rem 0.7rem;
-                  font-family: monospace;
-                  font-size: 1.05em;
-                  margin: 0.3rem 0 0.7rem;
-                "
-              >
-                variety, year → Σ<sub>site</sub> yield
+              <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
+                <span class="q-kw">for each</span> variety → <span class="q-kw">for each</span> year → <span class="q-kw">total</span> yield across sites
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
     <span class="viz-op">spread</span>({ by: "year", dir: "x" }),
-    <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+    <span class="viz-op">stack</span>({ by: "site", dir: "y", size: "yield" })
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ w: 8, h: "yield", fill: "site" })
+    <span class="viz-mark">rect</span>({ w: 8, fill: "site" })
   )</pre>
               <p class="viz-step-copy">
                 Easier part-to-whole readings, while preserving direct variety
@@ -415,8 +436,8 @@
                   style="margin: 0; font-size: 0.9em"
                 ><code class="language-python">chart(data).flow(
   spread("lake",    dir="x"),
-  stack("species",  dir="y"),
-).mark(rect(h="count", fill="species"))</code></pre>
+  stack("species",  dir="y", size="count"),
+).mark(rect(fill="species"))</code></pre>
               </div>
 
               <!-- Heatmap -->
@@ -456,19 +477,19 @@
           </section>
 
           <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
-            <!-- HIDDEN: sorting now lives on the stack (aspirational: stack({ by: field("site").sort("yield") })),
-                 so the standalone derive-to-sort beat is no longer needed. Remove data-visibility to restore. -->
+            <!-- HIDDEN: sorting now lives on the stack (stack({ by: field("site").sort("yield") }),
+                 real as of gofish 0.1.0-nightly.20260709), so the standalone
+                 derive-to-sort beat is no longer needed. Remove data-visibility to restore. -->
             <div>
-              <h2><code>derive()</code> to sort</h2>
+              <h2><code>sort()</code> on the stack</h2>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
     <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 4 }),
-    <span class="viz-transform">derive</span>(d =&gt; orderBy(d, "yield", "asc")),
-    <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+    <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ h: "yield", fill: "site" })
+    <span class="viz-mark">rect</span>({ fill: "site" })
   )</pre>
               <p class="viz-step-copy">
                 Add year as a second grouping, then sort each stack by yield
@@ -493,10 +514,10 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>({ by: "variety", dir: "x" }),
     <span class="viz-op">spread</span>({ by: "year", dir: "x" }),
-    <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y" })
+    <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>({ w: 8, h: "yield", fill: "site" })
+    <span class="viz-mark">rect</span>({ w: 8, fill: "site" })
   )</pre>
               <p class="viz-step-copy">
                 Order each stack by yield. Rank, min, and max now read off
@@ -593,9 +614,9 @@
     .<span class="viz-op">flow</span>(
       <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 24 }),
       <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 16 }),
-      <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y" })
+      <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
     )
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 8, h: "yield", fill: "site" }).name("bars")),
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 8, fill: "site" }).name("bars")),
   chart(selectAll("bars"))
     .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
     .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.5 }))
@@ -635,10 +656,9 @@
     .<span class="viz-op">flow</span>(
       <span class="viz-op">spread</span>({ by: "variety", dir: "x", spacing: 38 }),
       <span class="viz-op">spread</span>({ by: "year", dir: "x", spacing: 8 }),
-      <span class="viz-transform">derive</span>(d =&gt; orderBy(d, "yield", "asc")),
-      <span class="viz-op">stack</span>({ by: "site", dir: "y" })
+      <span class="viz-op">stack</span>({ by: <span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir: "y", size: "yield" })
     )
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 16, h: "yield", fill: "site" }).name("bars")),
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>({ w: 16, fill: "site" }).name("bars")),
   chart(selectAll("bars"))
     .<span class="viz-op">flow</span>(<span class="viz-op">group</span>({ by: "variety" }), <span class="viz-op">group</span>({ by: "site" }))
     .<span class="viz-mark">mark</span>(<span class="viz-mark">area</span>({ opacity: 0.78 }))

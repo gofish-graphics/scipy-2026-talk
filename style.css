@@ -748,15 +748,34 @@
   width: 94%;
 }
 
+.scipy-title-slide {
+  text-align: center;
+}
+
 .scipy-title-slide h1,
 .scipy-title-slide .subtitle,
 .scipy-title-slide .meta {
   max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .scipy-title-slide h1 {
   font-size: 3.35em;
-  margin: 0.2em 0 0.15em;
+  margin: 0.2em auto 0.15em;
+}
+
+.title-logo-row {
+  align-items: center;
+  display: flex;
+  gap: 2.2em;
+  justify-content: center;
+  margin-top: 2.2em;
+}
+
+.title-logo-row img {
+  height: 58px;
+  width: auto;
 }
 
 .eyebrow,
@@ -924,6 +943,18 @@
 
 .chart-spec-slide .chart-container {
   max-width: none !important;
+}
+
+/* Full-size chart slides with a lone chart (no accompanying spec-mini code
+   block) collapse into the grid's first (1.1fr) column and read off-center;
+   center them explicitly. */
+.chart-spec-slide:has(> .chart-container:only-child) {
+  grid-template-columns: 1fr;
+}
+
+.chart-spec-slide:has(> .chart-container:only-child) .chart-container {
+  margin: 0 auto;
+  max-width: 80% !important;
 }
 
 .reveal pre.spec-mini {
@@ -1231,4 +1262,32 @@
   font-size: 0.46em !important;
   line-height: 1.2 !important;
   min-height: 2.5em;
+}
+
+/* ── Query chips: the (speculative) visual query language ───────────────
+   Dashed border = "not shipped yet": these chips notate the query a
+   structure makes cheap, in the talk's foreach notation. Keywords take
+   .q-kw; an optional plain-language gloss line takes .q-gloss. */
+.viz-query {
+  display: inline-block;
+  background: #eef4fb;
+  border: 1.5px dashed #4a7fb5;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-family: monospace;
+  color: #1a1a2e;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.viz-query .q-kw {
+  color: #c05621;
+  font-weight: 700;
+}
+
+.viz-query .q-gloss {
+  display: block;
+  font-family: "Shantell Sans", sans-serif;
+  color: #555;
+  font-size: 0.85em;
 }

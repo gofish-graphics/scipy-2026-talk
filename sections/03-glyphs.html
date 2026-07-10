@@ -17,8 +17,8 @@
     scatter("lake", x="x", y="y")
 ).mark(
     chart(coord=clock())
-    .flow(stack("species", dir="x"))
-    .mark(rect(w="count", fill="species"))
+    .flow(stack("species", dir="x", size="count"))
+    .mark(rect(fill="species"))
 )</code></pre>
                 <div
                   style="
@@ -93,9 +93,10 @@ chart(barleyScatterByYear(1931))
         stack("variety", {
           dir: "x",
           h: pieRadius(totalYield),
+          size: "yield",
         })
       )
-      .mark(rect({ w: "yield", fill: "variety" }));
+      .mark(rect({ fill: "variety" }));
   })</code></pre>
                 <div
                   style="

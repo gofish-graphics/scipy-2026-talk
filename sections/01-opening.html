@@ -4,13 +4,16 @@
              TITLE
              ══════════════════════════════════════════════════════ -->
           <section data-background-color="#f7f2e8" class="scipy-title-slide">
-            <p class="eyebrow">SciPy draft</p>
             <h1>Seeing Graphics Clearly</h1>
             <p class="subtitle">
               Direct perception, graphical structure, and better judgment calls
               for scientific figures
             </p>
-            <p class="meta">Josh M. Pollock · adapted from PyData 2026</p>
+            <p class="meta">Josh Pollock · with Arvind Satyanarayan</p>
+            <div class="title-logo-row">
+              <img src="mit-csail-logo.svg" alt="MIT CSAIL logo" />
+              <img src="mit-vis-logo.png" alt="MIT Visualization Group logo" />
+            </div>
             <aside class="notes">
               Today I want to talk about two things. First is a way to see what
               a graphic is doing before judging it by chart type. The second is
@@ -303,6 +306,38 @@
             </aside>
           </section>
 
+          <!-- Franconeri B with Boulder highlighted -->
+          <section>
+            <h2>what about now?</h2>
+            <div class="chart-spec-slide">
+              <div
+                id="chart-viz-agg-site-year-highlight"
+                class="chart-container"
+                style="max-width: 80%"
+              ></div>
+            </div>
+            <aside class="notes">
+              Same grouping again, but color does the pointing: Boulder is the
+              one city whose sales rise. Everything else recedes into gray.
+            </aside>
+          </section>
+
+          <!-- Franconeri B with Boulder highlighted -->
+          <section>
+            <h2>what about now?</h2>
+            <div class="chart-spec-slide">
+              <div
+                id="chart-viz-agg-site-year-highlight"
+                class="chart-container"
+                style="max-width: 80%"
+              ></div>
+            </div>
+            <aside class="notes">
+              Same grouping again, but color does the pointing: Boulder is the
+              one city whose sales rise. Everything else recedes into gray.
+            </aside>
+          </section>
+
           <!-- Franconeri A with color -->
           <section data-visibility="hidden">
             <!-- HIDDEN: Charlie/River color variant; the barley swap above carries the point. Restore by removing data-visibility. -->
@@ -401,17 +436,22 @@
               <div
                 id="chart-viz-agg-year-site-mini"
                 class="chart-container"
-                style="max-width: 42%; min-height: 0"
+                style="max-width: 30%; min-height: 0"
               ></div>
               <div
                 id="chart-viz-agg-site-year-mini"
                 class="chart-container"
-                style="max-width: 42%; min-height: 0"
+                style="max-width: 30%; min-height: 0"
+              ></div>
+              <div
+                id="chart-viz-agg-site-year-highlight-mini"
+                class="chart-container"
+                style="max-width: 30%; min-height: 0"
               ></div>
             </div>
             <h2 style="margin-top: 1.2rem; font-size: 1.3em; line-height: 1.4">
-              these are all the same kind of chart —
-              <span class="highlight">yet our takeaways differ</span>
+              these are all grouped bar charts, but
+              <span class="highlight">we read them differently!</span>
             </h2>
             <!-- <p
               style="
@@ -446,44 +486,38 @@
             >
               <div>
                 <h3>marks</h3>
-                <!-- TODO: drop the canonical marks figure here -->
-                <div
+                <img
+                  src="marks-channels/marks.png"
+                  alt="Gallery of Observable Plot mark types"
                   style="
-                    border: 2px dashed #c3bca9;
-                    border-radius: 8px;
-                    padding: 1.8rem 1rem;
-                    color: #9c927a;
-                    text-align: center;
-                    font-family: monospace;
-                    min-height: 150px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    display: block;
+                    margin: 0 auto;
+                    max-width: 100%;
+                    max-height: 320px;
+                    object-fit: contain;
                   "
-                >
-                  canonical marks figure<br /><small>marks-channels/marks.png</small>
-                </div>
+                />
+                <p class="source-line" style="margin-top: 0.6em !important">
+                  Observable Plot
+                </p>
                 <p class="viz-step-copy">the shapes: points, lines, areas</p>
               </div>
               <div>
                 <h3>channels</h3>
-                <!-- TODO: drop the canonical channels-accuracy figure here -->
-                <div
+                <img
+                  src="marks-channels/channels.png"
+                  alt="Munzner's ranking of visual channels by accuracy"
                   style="
-                    border: 2px dashed #c3bca9;
-                    border-radius: 8px;
-                    padding: 1.8rem 1rem;
-                    color: #9c927a;
-                    text-align: center;
-                    font-family: monospace;
-                    min-height: 150px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    display: block;
+                    margin: 0 auto;
+                    max-width: 100%;
+                    max-height: 320px;
+                    object-fit: contain;
                   "
-                >
-                  canonical channels figure<br /><small>marks-channels/channels.png</small>
-                </div>
+                />
+                <p class="source-line" style="margin-top: 0.6em !important">
+                  Munzner, <em>Visualization Analysis and Design</em> (2014)
+                </p>
                 <p class="viz-step-copy">
                   how a value maps to a mark: position, length, angle, area,
                   color. some are read more accurately than others.
@@ -580,6 +614,63 @@
             </aside>
           </section>
 
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <h2 style="line-height: 1.6">
+              graphics are <strong>visual data structures</strong> 🪾<br />
+              <span class="fragment">that we <strong>query with our eyes</strong> 👀</span>
+            </h2>
+            <aside class="notes">
+              The whole talk in one sentence. A chart is not a picture of numbers —
+              it is a data structure laid out in space, and reading it is running
+              queries against that structure with your visual system. [advance]
+              Structure is the first half; the queries are the second.
+            </aside>
+          </section>
+
+          <section data-background-color="#f7f2e8">
+            <h2>so we need two languages</h2>
+            <div
+              style="
+                max-width: 46rem;
+                margin: 1.5rem auto 0;
+                display: flex;
+                flex-direction: column;
+                gap: 1.6rem;
+                text-align: left;
+                font-size: 0.85em;
+                line-height: 1.7;
+              "
+            >
+              <div>
+                <p style="font-weight: 700; color: #1a1a2e; margin: 0">
+                  1 · a language for visual data structures
+                </p>
+                <p style="color: #555; margin: 0.2rem 0 0">
+                  GoFish — open source, in alpha today
+                </p>
+              </div>
+              <div class="fragment">
+                <p style="font-weight: 700; color: #1a1a2e; margin: 0">
+                  2 · a language for visual queries
+                </p>
+                <p style="color: #555; margin: 0.2rem 0 0">
+                  speculative — cutting-edge research. please push back!
+                </p>
+                <div class="viz-query" style="margin-top: 0.5rem; font-size: 0.85em">
+                  <span class="q-kw">for each</span> city →
+                  <span class="q-kw">for each</span> year →
+                  <span class="q-kw">compare</span> sales
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Two halves of the framing. The structure language exists: GoFish, open
+              source, alpha, you can install it today. The query language does not
+              exist yet — it is where my current research is, so everything you see
+              in the dashed chips is a proposal, and I genuinely want pushback on it.
+            </aside>
+          </section>
+
           <!-- GoFish: the language -->
           <section>
             <div style="margin-bottom: 1.2rem">
@@ -591,7 +682,7 @@
                   margin-bottom: 1rem;
                 "
               >
-                To talk about visual structure precisely, we need a language.
+                Language 1, for the structures — available today.
               </p>
             </div>
             <div
@@ -653,6 +744,40 @@
 
               The culmination of that work is GoFish, a compositional language
               for visual structure.
+            </aside>
+          </section>
+
+          <section>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin-top: 0.8rem;
+              "
+            >
+              <img
+                src="motivational-images/gofish-homepage.png"
+                style="
+                  max-width: 95%;
+                  max-height: 74vh;
+                  border-radius: 4px;
+                  object-fit: contain;
+                "
+                alt="gofish.graphics home page: bottle pictorial, streamgraph, scatterpie, rose chart, and pulley diagram examples"
+              />
+              <p style="margin-top: 0.6rem; font-size: 0.75em; color: #555">
+                <a href="https://gofish.graphics" target="_blank" rel="noopener noreferrer"
+                  >gofish.graphics</a
+                >
+              </p>
+            </div>
+            <aside class="notes">
+              This is the vibe: the front page is a wall of the gallery — bar
+              charts, streamgraphs, scatterpies, rose charts, even a pulley
+              diagram, all one language. npm install today, Python alpha close
+              behind. I'll come back to some of these examples at the end.
             </aside>
           </section>
 
@@ -987,6 +1112,113 @@
               <br /><br />
 
               Ok enough of the theory and motivation, let's get into the code!
+            </aside>
+          </section>
+
+          <section data-background-color="#f7f2e8">
+            <h2>back to those bar charts</h2>
+            <div
+              style="
+                display: flex;
+                gap: 1.8rem;
+                justify-content: center;
+                margin-top: 1rem;
+                font-size: 0.72em;
+              "
+            >
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.6rem;
+                  max-width: 400px;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  year → city
+                </div>
+                <div
+                  id="chart-viz-agg-year-site-spec"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.6; align-self: center"
+                ></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(sales).flow(
+  spread("year", dir="x"),
+  spread("city", dir="x"),
+).mark(rect(h="sales", fill="city"))</code></pre>
+                <div class="viz-query fragment" data-fragment-index="1">
+                  <span class="q-kw">for each</span> year →
+                  <span class="q-kw">for each</span> city →
+                  <span class="q-kw">compare</span> sales
+                  <span class="q-gloss">which city leads, within each year?</span>
+                </div>
+              </div>
+
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.6rem;
+                  max-width: 400px;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  city → year
+                </div>
+                <div
+                  id="chart-viz-agg-site-year-spec"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.6; align-self: center"
+                ></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(sales).flow(
+  spread("city", dir="x"),
+  spread("year", dir="x"),
+).mark(rect(h="sales", fill="city"))</code></pre>
+                <div class="viz-query fragment" data-fragment-index="1">
+                  <span class="q-kw">for each</span> city →
+                  <span class="q-kw">for each</span> year →
+                  <span class="q-kw">compare</span> sales
+                  <span class="q-gloss">how did each city's sales change?</span>
+                </div>
+              </div>
+            </div>
+            <p
+              class="viz-step-copy fragment"
+              data-fragment-index="2"
+              style="margin-top: 0.6rem; text-align: center"
+            >
+              same structure, swapped — and the cheap query swaps with it
+            </p>
+            <aside class="notes">
+              Now we can say precisely what happened at the start of the talk. The
+              two grouped bar charts are the same two nested spreads in a different
+              order. And reading the spec top to bottom reads out the query the
+              chart makes cheap: the outer spread is the outer for-each, and the
+              inner spread is what ends up adjacent — what you compare first. Swap
+              the spreads and you swap the question the reader answers without
+              trying.
             </aside>
           </section>
         </section>
