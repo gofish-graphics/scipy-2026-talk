@@ -142,7 +142,7 @@
             <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
               <span class="q-line"><span class="q-kw">for each</span> site</span>
               <span class="q-line"><span class="q-kw">for each</span> year</span>
-              <span class="q-line"><span class="q-kw">compare</span> yield</span>
+              <span class="q-line"><span class="q-val">compare</span> yield</span>
             </div>
             <aside class="notes">
               site → year: each site's two years sit together, so the change per
@@ -159,7 +159,7 @@
             <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
               <span class="q-line"><span class="q-kw">for each</span> year</span>
               <span class="q-line"><span class="q-kw">for each</span> site</span>
-              <span class="q-line"><span class="q-kw">compare</span> yield</span>
+              <span class="q-line"><span class="q-val">compare</span> yield</span>
             </div>
             <aside class="notes">
               year → site: sites sit together within each year, so the per-site
@@ -174,7 +174,8 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
-              <span class="q-kw">look up</span> yield at (site, year)
+              <span class="q-line"><span class="q-val">compare</span> yield across site × year</span>
+              <span class="q-gloss">read by color — coarse; the cheap scans are lookup and row/column uniformity</span>
             </div>
             <aside class="notes">
               site × year as a heatmap: both fields on separable axes, no nesting
@@ -225,7 +226,7 @@
                 <div class="viz-query" style="font-size: 0.95em">
                   <span class="q-line"><span class="q-kw">for each</span> site</span>
                   <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-line"><span class="q-kw">compare</span> yield</span>
+                  <span class="q-line"><span class="q-val">compare</span> yield</span>
                 </div>
               </div>
 
@@ -260,7 +261,7 @@
                 <div class="viz-query" style="font-size: 0.95em">
                   <span class="q-line"><span class="q-kw">for each</span> year</span>
                   <span class="q-line"><span class="q-kw">for each</span> site</span>
-                  <span class="q-line"><span class="q-kw">compare</span> yield</span>
+                  <span class="q-line"><span class="q-val">compare</span> yield</span>
                 </div>
               </div>
 
@@ -292,7 +293,7 @@
   table("site", "year"),
 ).mark(rect(fill="yield"))</code></pre>
                 <div class="viz-query" style="font-size: 0.95em">
-                  <span class="q-kw">look up</span> yield at (site, year)
+                  <span class="q-val">look up</span> yield at (site, year)
                 </div>
               </div>
             </div>
@@ -345,7 +346,7 @@
             <div class="viz-query fragment" style="margin-top: 1.4rem; font-size: 0.5em">
               <span class="q-line"><span class="q-kw">for each</span> variety</span>
               <span class="q-line"><span class="q-kw">for each</span> site</span>
-              <span class="q-line"><span class="q-kw">compare</span> Δ yield (1931 → 1932)</span>
+              <span class="q-line"><span class="q-val">compare</span> Δ yield (1931 → 1932)</span>
             </div>
             <p class="fragment" style="margin-top: 1rem; font-size: 0.55em; color: #555">
               this time, start from the query — then build the structure that answers it
@@ -367,7 +368,7 @@
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
                 <span class="q-line"><span class="q-kw">for each</span> variety</span>
                 <span class="q-line"><span class="q-kw">for each</span> year</span>
-                <span class="q-line"><span class="q-kw">total</span> yield across sites</span>
+                <span class="q-line"><span class="q-val">total</span> yield across sites</span>
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
@@ -507,7 +508,7 @@
             </aside>
           </section>
 
-          <section class="split viz-step" data-background-color="#f7f2e8">
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: the ribbon build-up (this slide, "connect related bars", and the "style is downstream of structure" highlight variant) moved to sections/04-closing.html's move-4 slide. This section's query was sign-of-change; ribbons price rank-change queries, which is what the closing energy dataset is for. The slope chart (03-glyphs.html) now carries the sign-of-change beat. Remove data-visibility to restore. -->
             <h2>sort each stack</h2>
             <div>
               <pre class="viz-code">chart(barley)
@@ -600,13 +601,15 @@
               on categorical data, giving absurd readings like "the more male a
               person is, the taller he or she is." Connection is not decoration:
               it asserts continuity and identity, and it licenses trend
-              readings. We just gave up identity when we sorted the stacks —
-              "same site, same slot" is gone. Connection is exactly the operator
-              that buys it back.
+              readings. Sorting a stack by value buys rank-as-position but
+              gives up identity — "same site, same slot" is gone — and
+              connection is exactly the operator that buys it back. (That
+              trade plays out later, in the closing section's move-4 slide,
+              on the energy ribbon.)
             </aside>
           </section>
 
-          <section class="split viz-step" data-background-color="#f7f2e8">
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: moved to sections/04-closing.html's move-4 slide (chart-move-ribbon). See the "sort each stack" HIDDEN comment above for why. Remove data-visibility to restore. -->
             <h2>connect related bars</h2>
             <div>
               <pre class="viz-code">Layer([
@@ -642,7 +645,7 @@
             </aside>
           </section>
 
-          <section class="split viz-step" data-background-color="#f7f2e8">
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: ribbon highlight variant, part of the ribbon build-up moved to sections/04-closing.html's move-4 slide. See the "sort each stack" HIDDEN comment above. Remove data-visibility to restore. -->
             <h2>style is downstream of structure</h2>
             <div>
               <pre class="viz-code">Layer([

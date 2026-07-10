@@ -1316,6 +1316,16 @@
   font-weight: 700;
 }
 
+/* Value-operation words (what the reader runs against the structure),
+   as opposed to .q-kw's structural/arrangement words. Same weight/size
+   as .q-kw — only the color differs. A darkened solid version of the
+   chip's own accent blue, rgba(74, 127, 181, …) / #4a7fb5 (used for
+   gained-clause pills elsewhere), for legible contrast as text. */
+.viz-query .q-val {
+  color: #3a6a9a;
+  font-weight: 700;
+}
+
 .viz-query .q-line {
   display: block;
 }
@@ -1325,4 +1335,37 @@
   font-family: "Shantell Sans", sans-serif;
   color: #555;
   font-size: 0.85em;
+}
+
+/* Weak/afforded-but-not-cheap query chips: same chip styling, faded.
+   The plan doesn't forbid the other query — it prices it. */
+.viz-query.q-weak {
+  opacity: 0.55;
+}
+
+/* Math case-expression form for multi-channel encode clauses:
+   the encode keyword, then one tall "{" grouping one data → channel
+   mapping per line. Text+CSS only; the brace is a literal character
+   scaled to span the mapping block. */
+.viz-query .q-cases {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.viz-query .q-cases .q-brace {
+  font-size: 2.2em;
+  line-height: 1;
+  font-weight: 300;
+  color: #7ba3c9; /* lightened tone of the chip's dashed-border blue */
+}
+
+.viz-query .q-cases .q-case-lines {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.45;
+}
+
+.viz-query .q-cases .q-arrow {
+  color: #555;
 }

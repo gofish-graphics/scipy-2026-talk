@@ -1313,6 +1313,111 @@ function renderBottleBarBase(id = "chart-q-bottle-base", w = 220, h = 210) {
     .render(el, { w, h, axes: { x: true, y: true }, legend: false });
 }
 
+// ── Move 4: sort + connect, composed (closing "moves" slide) ───────────────
+// vendor-gofish/src/data/energy.ts turned out to be Sankey flow data (nodes +
+// links for a single-year UK energy diagram) with no period dimension at
+// all — unusable for a "for each year" ribbon. Real figures instead: UK
+// share of electricity generation (%), Our World in Data / Ember yearly
+// electricity data. Verified by script: between 2014 and 2018 Wind passes
+// Coal (and Nuclear passes Coal too, as Coal collapses 29.6 -> 5.0); between
+// 2018 and 2022 Wind passes Nuclear; Solar passes Coal by 2022. Five
+// sources, so no top-N filtering was needed.
+type EnergyMixRow = { year: number; source: string; amount: number };
+const energyMix: EnergyMixRow[] = [
+  { year: 2010, source: "Gas", amount: 46.0 },
+  { year: 2010, source: "Coal", amount: 28.2 },
+  { year: 2010, source: "Nuclear", amount: 16.3 },
+  { year: 2010, source: "Wind", amount: 2.7 },
+  { year: 2010, source: "Solar", amount: 0.0 },
+
+  { year: 2014, source: "Gas", amount: 29.8 },
+  { year: 2014, source: "Coal", amount: 29.6 },
+  { year: 2014, source: "Nuclear", amount: 18.9 },
+  { year: 2014, source: "Wind", amount: 9.5 },
+  { year: 2014, source: "Solar", amount: 1.2 },
+
+  { year: 2018, source: "Gas", amount: 39.4 },
+  { year: 2018, source: "Coal", amount: 5.0 },
+  { year: 2018, source: "Nuclear", amount: 19.5 },
+  { year: 2018, source: "Wind", amount: 17.1 },
+  { year: 2018, source: "Solar", amount: 3.8 },
+
+  { year: 2022, source: "Gas", amount: 38.5 },
+  { year: 2022, source: "Coal", amount: 1.8 },
+  { year: 2022, source: "Nuclear", amount: 14.6 },
+  { year: 2022, source: "Wind", amount: 24.7 },
+  { year: 2022, source: "Solar", amount: 4.1 },
+];
+
+const energyPalette = palette({
+  Gas: "#c78755",
+  Coal: "#5b4a42",
+  Nuclear: "#a181c8",
+  Wind: "#49a66a",
+  Solar: "#f0bf4d",
+});
+
+// One renderer for all three charts on the move-4 slide, mirroring
+// renderVizStackChart's stack -> sort -> connect idiom: `sort` orders each
+// year's stack by amount (rank-as-position), `connect` adds the area/ribbon
+// layer tracking each source across years (identity-as-continuity). The
+// slide composes the two moves: base = sort only (sorted stacks — rank
+// reads as position, no connection); mid = connect only (stacked area,
+// fixed order — the bands carry identity but never cross); ribbon = both
+// (sorted + connected — now a crossing is a rank inversion, an overtake).
+function renderEnergyStackChart(
+  id: string,
+  {
+    sort = false,
+    connect = false,
+    w = 340,
+    h = 260,
+    barW = 36,
+  }: {
+    sort?: boolean;
+    connect?: boolean;
+    w?: number;
+    h?: number;
+    barW?: number;
+  } = {}
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  const chartOptions = { axes: { x: true, y: true }, color: energyPalette };
+  const barsFlow: any[] = [
+    spread("year", { dir: "x", spacing: 30 }),
+    stack(sort ? field("source").sort("amount") : "source", {
+      dir: "y",
+      size: "amount",
+    }),
+  ];
+  const layers: any[] = [
+    Chart(energyMix, chartOptions)
+      .flow(...barsFlow)
+      .mark(rect({ w: barW, fill: "source" }).name("bars")),
+  ];
+  if (connect) {
+    layers.push(
+      Chart(select("bars"))
+        .flow(group("source"))
+        .mark(ribbon({ opacity: 0.5 }))
+    );
+  }
+  Layer(layers).render(el, { w, h, axes: { x: true, y: true } });
+}
+
+// Left-column ingredient charts render smaller (they stack vertically);
+// the ribbon is the payoff and renders at the full pair size.
+function renderEnergyRibbonBase(id = "chart-move-ribbon-base") {
+  renderEnergyStackChart(id, { sort: true, w: 280, h: 180, barW: 26 });
+}
+function renderEnergyRibbonMid(id = "chart-move-ribbon-mid") {
+  renderEnergyStackChart(id, { connect: true, w: 280, h: 180, barW: 26 });
+}
+function renderEnergyRibbon(id = "chart-move-ribbon") {
+  renderEnergyStackChart(id, { sort: true, connect: true, w: 400, h: 320 });
+}
+
 // ── Bars vs. line (Zacks & Tversky) ─────────────────────────────────────────
 // Same two-datum dataset (average adult height by sex, cm) shown as a plain
 // bar chart and as a two-point line chart, for the connection-vs-comparison
@@ -1397,6 +1502,9 @@ export function renderCharts() {
   renderMosaicSingleStackBase();
   renderBottleChart("chart-q-bottle");
   renderBottleBarBase();
+  renderEnergyRibbonBase();
+  renderEnergyRibbonMid();
+  renderEnergyRibbon();
   renderBarleyScatterPie(1931, "chart-viz-barley-pie-1931");
   renderBarleyScatterPie(1932, "chart-viz-barley-pie-1932");
   renderVizBarleySlopePanels();
@@ -1681,6 +1789,9 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-q-mosaic-base": () => renderMosaicSingleStackBase(),
   "chart-q-bottle": () => renderBottleChart("chart-q-bottle"),
   "chart-q-bottle-base": () => renderBottleBarBase(),
+  "chart-move-ribbon-base": () => renderEnergyRibbonBase(),
+  "chart-move-ribbon-mid": () => renderEnergyRibbonMid(),
+  "chart-move-ribbon": () => renderEnergyRibbon(),
   "chart-flower": renderFlowerChart,
   "chart-balloon": renderBalloonChart,
   "chart-viz-ex-sankey": () => renderSankeyTree(),

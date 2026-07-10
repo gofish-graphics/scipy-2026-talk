@@ -4,18 +4,23 @@
              CLOSE
              ══════════════════════════════════════════════════════ -->
 
-          <!-- Query gallery, part 1: three before/after slides, one per move
-               (shared h2, "move N of 3" kicker). Each slide shows the plain
+          <!-- Query gallery, part 1: four before/after slides, one per move
+               (shared h2, "move N of 4" kicker). Each slide shows the plain
                base form (charts.ts: chart-q-*-base) beside the existing
                chart-q-* structure, with query chips underneath showing what
                clause the structural move buys. The gained clause is the
                highlighted q-line on the "after" side. Move 1 is a triptych:
                the bars → pies step keeps an IDENTICAL chip (pure restyle —
                foreshadows the bottle slide), then pies → scatter gains the
-               clause. -->
+               clause. Move 4 is a composition instead of a before/after:
+               two ingredient charts (sorted stacks; connected areas) on the
+               left, the ribbon that combines them on the right. It replaces
+               the barley ribbon build-up cut from 02-walkthrough.html (that
+               section's query was sign-of-change; ribbons price rank-change
+               queries, which is what this energy dataset is actually for). -->
           <section data-background-color="#f7f2e8">
             <h2>moves that change the query</h2>
-            <p class="part">move 1 of 3 · bars → pies → scatter</p>
+            <p class="part">move 1 of 4 · bars → pies → scatter</p>
             <div
               style="
                 display: flex;
@@ -37,7 +42,7 @@
                 </p>
                 <div class="viz-query" style="font-size: 0.45em; margin-top: 0.25rem">
                   <span class="q-line"><span class="q-kw">for each</span> lake</span>
-                  <span class="q-line"><span class="q-kw">share</span> of species</span>
+                  <span class="q-line"><span class="q-val">share</span> of species</span>
                 </div>
               </div>
               <div style="font-size: 1.5em; color: #4a7fb5">→</div>
@@ -53,7 +58,7 @@
                 </p>
                 <div class="viz-query" style="font-size: 0.45em; margin-top: 0.25rem">
                   <span class="q-line"><span class="q-kw">for each</span> lake</span>
-                  <span class="q-line"><span class="q-kw">share</span> of species</span>
+                  <span class="q-line"><span class="q-val">share</span> of species</span>
                 </div>
               </div>
               <div style="font-size: 1.5em; color: #4a7fb5">→</div>
@@ -69,7 +74,7 @@
                 </p>
                 <div class="viz-query" style="font-size: 0.45em; margin-top: 0.25rem">
                   <span class="q-line"><span class="q-kw">for each</span> lake</span>
-                  <span class="q-line"><span class="q-kw">share</span> of species</span>
+                  <span class="q-line"><span class="q-val">share</span> of species</span>
                   <span
                     class="q-line"
                     style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px"
@@ -93,7 +98,7 @@
 
           <section data-background-color="#f7f2e8">
             <h2>moves that change the query</h2>
-            <p class="part">move 2 of 3 · size → units</p>
+            <p class="part">move 2 of 4 · size → units</p>
             <div
               style="
                 display: flex;
@@ -116,7 +121,7 @@
                 <div class="viz-query" style="font-size: 0.5em; margin-top: 0.25rem">
                   <span class="q-line"><span class="q-kw">for each</span> lake</span>
                   <span class="q-line"><span class="q-kw">for each</span> species</span>
-                  <span class="q-line"><span class="q-kw">share</span> of the total</span>
+                  <span class="q-line"><span class="q-val">share</span> of the total</span>
                 </div>
               </div>
               <div style="font-size: 1.6em; color: #4a7fb5">→</div>
@@ -136,7 +141,7 @@
                   <span
                     class="q-line"
                     style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px"
-                    ><span class="q-kw">count</span> squares</span
+                    ><span class="q-val">count</span> squares</span
                   >
                 </div>
               </div>
@@ -156,7 +161,7 @@
                it within BOTH sexes (the crew is 97% male). -->
           <section data-background-color="#f7f2e8">
             <h2>moves that change the query</h2>
-            <p class="part">move 3 of 3 · one more level</p>
+            <p class="part">move 3 of 4 · one more level</p>
             <div
               style="
                 display: flex;
@@ -178,7 +183,7 @@
                 </p>
                 <div class="viz-query" style="font-size: 0.5em; margin-top: 0.25rem">
                   <span class="q-line"><span class="q-kw">for each</span> class</span>
-                  <span class="q-line"><span class="q-kw">share</span> who survived</span>
+                  <span class="q-line"><span class="q-val">share</span> who survived</span>
                 </div>
               </div>
               <div style="font-size: 1.6em; color: #4a7fb5">→</div>
@@ -199,7 +204,7 @@
                     style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px"
                     ><span class="q-kw">for each</span> sex</span
                   >
-                  <span class="q-line"><span class="q-kw">share</span> who survived</span>
+                  <span class="q-line"><span class="q-val">share</span> who survived</span>
                 </div>
               </div>
             </div>
@@ -216,8 +221,146 @@
               men survived at far lower rates everywhere, so the crew's
               aggregate is dragged down below Third's. Simpson's paradox —
               the extra for-each isn't decoration, it changes the verdict.
-              The next slide is the counterexample: a move that changes
-              nothing.
+              Next: one more move (connect, then sort) before the
+              counterexample.
+            </aside>
+          </section>
+
+          <!-- Move 4 is a COMPOSITION, not a before/after sequence: the two
+               ingredient charts stack vertically on the left (top: sorted
+               stacks — rank as position, no connection; bottom: stacked
+               area — fixed order + connected, bands carry identity but
+               never cross), and the ribbon on the right combines them
+               (sorted + connected: a crossing is a rank inversion). Only
+               the ribbon's overtake-reading line is pill-highlighted — it's
+               the clause neither ingredient affords alone. This replaces
+               the barley ribbon build-up cut from 02-walkthrough.html (that
+               section's query was sign-of-change, now carried by the slope
+               chart in 03-glyphs.html; ribbons price rank-change queries).
+               Data: charts.ts energyMix — real UK share-of-generation
+               figures (Our World in Data / Ember); vendor-gofish's
+               energy.ts is Sankey flow data with no period dimension.
+               Verified overtakes: Wind passes Coal 2014->2018 (Nuclear
+               passes Coal too as Coal collapses 29.6 -> 5.0), Wind passes
+               Nuclear 2018->2022, Solar passes Coal by 2022. -->
+          <section data-background-color="#f7f2e8">
+            <h2>moves that change the query</h2>
+            <p class="part">move 4 of 4 · sort + connect</p>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1.4rem;
+                margin-top: 0.5rem;
+              "
+            >
+              <div style="display: flex; flex-direction: column; gap: 0.7rem">
+                <div style="text-align: center">
+                  <div
+                    id="chart-move-ribbon-base"
+                    class="chart-container viz-ex-tile"
+                    style="zoom: 0.6"
+                    aria-label="Sorted stacks: UK generation mix, one stack per year, each year's sources ordered by amount, no connection"
+                  ></div>
+                  <p class="viz-ex-caption" style="margin: 0.15rem 0 0; font-size: 0.5em">
+                    each year's stack, sorted
+                  </p>
+                  <div class="viz-query" style="font-size: 0.4em; margin-top: 0.15rem">
+                    <span class="q-line"><span class="q-kw">for each</span> year</span>
+                    <span class="q-line"
+                      ><span class="q-kw">for each</span> source,
+                      <span class="q-kw">sort by</span> amount</span
+                    >
+                    <span class="q-line"
+                      ><span class="q-val">compare</span> shares within a year</span
+                    >
+                    <span class="q-gloss">rank readable as position</span>
+                  </div>
+                </div>
+                <div style="text-align: center">
+                  <div
+                    id="chart-move-ribbon-mid"
+                    class="chart-container viz-ex-tile"
+                    style="zoom: 0.6"
+                    aria-label="Stacked area: fixed-order stacks connected continuously across years; bands never cross"
+                  ></div>
+                  <p class="viz-ex-caption" style="margin: 0.15rem 0 0; font-size: 0.5em">
+                    the same stacks, connected
+                  </p>
+                  <div class="viz-query" style="font-size: 0.4em; margin-top: 0.15rem">
+                    <span class="q-line"><span class="q-kw">for each</span> year</span>
+                    <span class="q-line"><span class="q-kw">for each</span> source</span>
+                    <span class="q-line"
+                      ><span class="q-val">track</span> each source across years</span
+                    >
+                    <span class="q-gloss">connection carries identity</span>
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: center; color: #4a7fb5">
+                <div
+                  style="
+                    font-size: 0.5em;
+                    font-family: 'Shantell Sans', sans-serif;
+                  "
+                >
+                  sort + connect
+                </div>
+                <div style="font-size: 1.6em; line-height: 1">→</div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  id="chart-move-ribbon"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.75"
+                  aria-label="Ribbon: sorted stacks with bands connecting each source across years, crossing where rank changes"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  which source overtook which?
+                </p>
+                <div class="viz-query" style="font-size: 0.48em; margin-top: 0.25rem">
+                  <span class="q-line"><span class="q-kw">for each</span> year</span>
+                  <span class="q-line"
+                    ><span class="q-kw">for each</span> source,
+                    <span class="q-kw">sort by</span> amount</span
+                  >
+                  <span class="q-line"
+                    ><span class="q-val">track</span> each source across years</span
+                  >
+                  <span
+                    class="q-line"
+                    style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px"
+                    ><span class="q-val">read</span> crossings as overtakes</span
+                  >
+                </div>
+              </div>
+            </div>
+            <p class="source-line" style="margin-top: 0.5em !important">
+              UK electricity generation · Our World in Data / Ember
+            </p>
+            <aside class="notes">
+              Fourth move — a composition, so the layout shows the two
+              ingredients separately and then combined. Left top: sort each
+              year's stack by amount — rank reads as position, but sorting
+              re-purposes position from an identity channel to a rank
+              channel, so following one source across years is a color hunt.
+              Left bottom: connect instead — the bands carry "same source"
+              identity across years, but in fixed stacking order they never
+              cross, so there's nothing to read at a crossing. Compose them
+              and the gained clause appears: with rank as position AND
+              identity as continuity, a crossing IS a rank inversion — an
+              overtake event, read directly. Real data: UK share of
+              electricity generation (Our World in Data / Ember). Wind
+              passes Coal between 2014 and 2018 — Coal collapses 29.6% to
+              5.0%, so Nuclear passes it too — then Wind passes Nuclear
+              between 2018 and 2022, and Solar passes Coal by 2022:
+              renewables overtaking legacy sources one crossing at a time.
+              Contrast with the barley walkthrough this replaced: there the
+              story was sign-of-change (did each variety rise or fall?), and
+              the ribbon answered an adjacent rank question — the slope
+              panels carry that beat now. Rank change is the query ribbons
+              are actually FOR, so the ribbon lives here.
             </aside>
           </section>
 
@@ -246,7 +389,7 @@
                 </p>
                 <div class="viz-query" style="font-size: 0.5em; margin-top: 0.2rem">
                   <span class="q-line"><span class="q-kw">for each</span> bottle</span>
-                  <span class="q-line"><span class="q-kw">share</span> of full</span>
+                  <span class="q-line"><span class="q-val">share</span> of full</span>
                 </div>
               </div>
               <div style="font-size: 1.6em; color: #4a7fb5">→</div>
@@ -262,7 +405,7 @@
                 </p>
                 <div class="viz-query" style="font-size: 0.5em; margin-top: 0.2rem">
                   <span class="q-line"><span class="q-kw">for each</span> bottle</span>
-                  <span class="q-line"><span class="q-kw">share</span> of full</span>
+                  <span class="q-line"><span class="q-val">share</span> of full</span>
                 </div>
               </div>
             </div>
@@ -464,9 +607,9 @@ chart(titanic)
               <div style="flex: 1; text-align: center">
                 <img src="gallery-images/pulley-diagram.png" alt="Pulley diagram of the Larkin and Simon problem: pulleys A, B, C, rope segments x, y, z, p, q, s, weights W1 and W2, rendered with GoFish" style="max-height: 400px; max-width: 100%" />
                 <div class="viz-query fragment" style="margin-top: 0.4rem; font-size: 0.5em">
-                  <span class="q-line"><span class="q-kw">look up</span> what this rope attaches to</span>
-                  <span class="q-line"><span class="q-kw">follow</span> the rope through the pulleys</span>
-                  <span class="q-line"><span class="q-kw">compare</span> which side is heavier</span>
+                  <span class="q-line"><span class="q-val">look up</span> what this rope attaches to</span>
+                  <span class="q-line"><span class="q-val">follow</span> the rope through the pulleys</span>
+                  <span class="q-line"><span class="q-val">compare</span> which side is heavier</span>
                 </div>
               </div>
             </div>

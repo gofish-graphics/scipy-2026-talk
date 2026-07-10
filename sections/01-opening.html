@@ -683,7 +683,7 @@
                 <div class="viz-query" style="margin-top: 0.5rem; font-size: 0.85em">
                   <span class="q-line"><span class="q-kw">for each</span> city</span>
                   <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-line"><span class="q-kw">compare</span> sales</span>
+                  <span class="q-line"><span class="q-val">compare</span> sales</span>
                 </div>
               </div>
             </div>
@@ -1137,17 +1137,30 @@
                   class="chart-container viz-ex-tile"
                   style="zoom: 0.6; align-self: center"
                 ></div>
-                <pre
-                  style="margin: 0; font-size: 0.9em"
-                ><code class="language-python">chart(sales).flow(
-  spread("year", dir="x"),
-  spread("city", dir="x"),
-).mark(rect(h="sales", fill="city"))</code></pre>
                 <div class="viz-query fragment" data-fragment-index="1">
                   <span class="q-line"><span class="q-kw">for each</span> year</span>
                   <span class="q-line"><span class="q-kw">for each</span> city</span>
-                  <span class="q-line"><span class="q-kw">compare</span> sales</span>
-                  <span class="q-gloss">which city leads, within each year?</span>
+                  <span class="q-cases">
+                    <span class="q-kw">encode</span>
+                    <span class="q-brace">{</span>
+                    <span class="q-case-lines">
+                      <span>sales <span class="q-arrow">→</span> height</span>
+                      <span>city <span class="q-arrow">→</span> color</span>
+                    </span>
+                  </span>
+                  <span class="q-gloss">years grouped on the axis, cities side by side within each</span>
+                </div>
+                <div class="viz-query fragment" data-fragment-index="2" style="align-self: center">
+                  <span class="q-line"><span class="q-val">compare</span> sales across cities</span>
+                  <span class="q-gloss">year held fixed</span>
+                </div>
+                <div
+                  class="viz-query q-weak fragment"
+                  data-fragment-index="3"
+                  style="align-self: center"
+                >
+                  <span class="q-line"><span class="q-val">compare</span> sales across years</span>
+                  <span class="q-gloss">carried by color — weaker than adjacency</span>
                 </div>
               </div>
 
@@ -1176,42 +1189,69 @@
                   class="chart-container viz-ex-tile"
                   style="zoom: 0.6; align-self: center"
                 ></div>
-                <pre
-                  style="margin: 0; font-size: 0.9em"
-                ><code class="language-python">chart(sales).flow(
-  spread("city", dir="x"),
-  spread("year", dir="x"),
-).mark(rect(h="sales", fill="city"))</code></pre>
                 <div class="viz-query fragment" data-fragment-index="1">
                   <span class="q-line"><span class="q-kw">for each</span> city</span>
                   <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-line"><span class="q-kw">compare</span> sales</span>
-                  <span class="q-gloss">how did each city's sales change?</span>
+                  <span class="q-cases">
+                    <span class="q-kw">encode</span>
+                    <span class="q-brace">{</span>
+                    <span class="q-case-lines">
+                      <span>sales <span class="q-arrow">→</span> height</span>
+                      <span>city <span class="q-arrow">→</span> color</span>
+                    </span>
+                  </span>
+                  <span class="q-gloss">cities grouped on the axis, years side by side within each</span>
+                </div>
+                <div class="viz-query fragment" data-fragment-index="2" style="align-self: center">
+                  <span class="q-line"><span class="q-val">compare</span> sales across years</span>
+                  <span class="q-gloss">city held fixed</span>
+                </div>
+                <div
+                  class="viz-query q-weak fragment"
+                  data-fragment-index="3"
+                  style="align-self: center"
+                >
+                  <span class="q-line"><span class="q-val">compare</span> sales across cities</span>
+                  <span class="q-gloss">a scan across groups — weaker than adjacency</span>
                 </div>
               </div>
             </div>
             <p
               class="viz-step-copy fragment"
-              data-fragment-index="2"
+              data-fragment-index="4"
               style="margin-top: 0.6rem; text-align: center"
             >
-              same query — two plans. order changes what's cheap.
+              the plan doesn't forbid queries — it prices them
             </p>
             <p
               class="viz-step-copy fragment"
-              data-fragment-index="3"
+              data-fragment-index="5"
               style="margin-top: 0.6rem; text-align: center"
             >
-              same structure, swapped — and the cheap query swaps with it
+              swap the plan, and the cheap query swaps with it
             </p>
             <aside class="notes">
               Now we can say precisely what happened at the start of the talk. The
-              two grouped bar charts are the same two nested spreads in a different
-              order. And reading the spec top to bottom reads out the query the
-              chart makes cheap: the outer spread is the outer for-each, and the
-              inner spread is what ends up adjacent — what you compare first. Swap
-              the spreads and you swap the question the reader answers without
-              trying.
+              orange chip is the plan the chart fixes: two nested for-eaches (the
+              scan order) plus the case block of encodings. The blue chip under
+              each column is the query that plan makes cheap. On the left, cities
+              sit adjacent inside each year block, so comparing sales across
+              cities with the year held fixed is one glance; on the right, each
+              city's years sit adjacent, so comparing sales across years with the
+              city held fixed is the easy one. In each case the other comparison
+              turns into a scan across a group boundary. And the "held fixed"
+              conditioning language is deliberate — it foreshadows the Simpson's
+              paradox slide later in the deck, where what you hold fixed changes
+              the answer.
+
+              But the faded chips matter just as much: neither plan forbids the
+              other query. The second encode mapping — city → color — is
+              precisely what keeps the cross-group comparison alive. On the
+              left, a city's bars are scattered across the year blocks and only
+              their color tracks them; on the right, color confirms identity
+              across the long scan between groups. Structure prices queries
+              rather than forbidding them: adjacency makes one cheap, color
+              keeps the other admissible.
 
               These chips are perceptual query plans, not just queries: the two
               orderings are logically the same question, but perceptually
