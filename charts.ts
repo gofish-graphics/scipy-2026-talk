@@ -978,15 +978,29 @@ function renderVizBarleySlopePoints(
 // HTML overlay div on the slide, is drawn by GoFish itself when `annotate` is
 // set: component-level annotation tiers per AnnotationLayer.stories.tsx —
 // `.layer(mark)` stacks a datumless bare mark over the chart in the chart's
-// own frame, so the box and its text live inside the rendered SVG. The note
-// stays pinned to the chart frame's top-right corner rather than anchored to
-// the Morris panel: that is where the HTML overlay sat (deliberately over
-// Grand Rapids/Duluth's dead space, well clear of Morris — see the slide
-// notes), and a frame-pinned tier cannot perturb the facet layout the way an
-// in-panel constraint layer can (nor trip gofish#753's flaky inner-spread
-// anchoring). `text` is a single-line mark with no fontWeight channel, so the
-// sentence is wrapped by hand into the same three lines the overlay broke
-// into, and the bold "every" is faked with a same-color stroke on a mark of
+// own frame, so the text lives inside the rendered SVG. There is no box: the
+// sentence is plain orange (Morris-orange, #e08214 — same hex the highlight
+// variant uses to fill Morris's points/lines) text sitting directly over the
+// Morris facet, so the callout reads as "this text belongs to that cluster"
+// rather than a caption pinned to a corner. Anchoring uses literal world-frame
+// x/cy rather than a constraint/ref to a named node inside the facet's
+// markLayer — gofish#753 makes inner-spread label anchoring flaky, and an
+// earlier attempt at constraint-anchoring inside the facet clipped and
+// mis-positioned. The Morris facet's world x-extent was read off the
+// rendered SVG rather than derived purely from arithmetic: with six equal-
+// width facets at 20px spacing (site order Univ Farm, Waseca, Morris,
+// Crookston, Grand Rapids, Duluth), Morris's slope lines land at SVG
+// x=[375,515]; subtracting the chart's ~55px y-axis-gutter offset
+// (svg_x = world_x + 55, confirmed against the old box's own placement) gives
+// world x=[320,460], i.e. a 140px-wide facet centered at world x=390. Vertical
+// placement uses the same measured affine map for cy (svg_y = 260 - world_cy
+// at this w=940,h=220 — read off the three lines of the old corner note),
+// placed above the Morris cluster (whose slope lines occupy SVG y=124..214)
+// so the three short lines mostly clear the lines rather than sit under them.
+// `text` is a single-line mark with no fontWeight channel, so the sentence is
+// wrapped by hand to fit the ~140px-wide facet at 15px Shantell Sans (three
+// lines, each individually centered on the facet by its measured pixel
+// width), and the bold "every" is faked with a same-color stroke on a mark of
 // its own, x-offset by the measured width of "Morris rose for ".
 function renderVizBarleySlopePanels(
   id = "chart-viz-barley-slope",
@@ -1023,61 +1037,45 @@ function renderVizBarleySlopePanels(
     panels.render(el, { w, h, axes: true, legend: false });
     return;
   }
-  // Coordinates are the chart's world frame: origin at the plot's lower-left,
-  // y-up, px units. `render({ w })` spends ~57px of that width on the y-axis
-  // gutter to the LEFT of the origin, so the frame's usable right edge is
-  // w - 57, not w (measured against the rendered SVG; marks placed past it
-  // get clipped). Everything is positioned via `cy` — the rect's `y2` alias
-  // resolved off-target in this build where `cy` lands exactly. Metrics
-  // mirror the old overlay: ~250x100 box, 12px corner radius, cream fill,
-  // Morris-orange border, three ~19px Shantell Sans lines of slide ink.
   const noteFont = "'Shantell Sans', sans-serif";
-  const noteInk = "#222";
-  const noteW = 250;
-  const noteH = 100;
-  const noteLeft = w - 65 - noteW;
-  const noteTop = h + 8;
-  const noteTextX = noteLeft + 14;
-  const noteLineCy = (i: number) => noteTop - 17 - 26.5 * (i + 0.5);
-  const noteLine = (t: string, i: number) =>
+  const noteColor = "#e08214"; // Morris orange (same hex the highlight variant fills Morris with)
+  const noteFontSize = 15;
+  const noteLineHeight = 21;
+  // Empirically-measured cy<->SVG-y affine map for this w=940,h=220 chart
+  // (see the comment above the function): svg_y = 260 - world_cy. 205 puts
+  // the first line's SVG y around 55 — just inside the plot's top edge and
+  // well clear of the Morris cluster, which sits at SVG y=124..214.
+  const noteCy = (i: number) => 205 - noteLineHeight * i;
+  const noteLine = (t: string, x: number, i: number) =>
     text({
       text: t,
-      fontSize: 19,
-      fill: noteInk,
+      fontSize: noteFontSize,
+      fill: noteColor,
       fontFamily: noteFont,
-      x: noteTextX,
-      cy: noteLineCy(i),
+      x,
+      cy: noteCy(i),
     });
   panels
-    .layer(
-      rect({
-        x: noteLeft,
-        cy: noteTop - noteH / 2,
-        w: noteW,
-        h: noteH,
-        rx: 12,
-        fill: "#fff6e6",
-        stroke: "#e08214",
-        strokeWidth: 2,
-      })
-    )
-    .layer(noteLine("Morris rose for", 0))
+    // Each x is that line's measured pixel width at 15px Shantell Sans,
+    // centered on the Morris facet's world x=[320,460] (center 390).
+    .layer(noteLine("Morris rose for", 313, 0))
     .layer(
       text({
         text: "every",
-        fontSize: 19,
-        fill: noteInk,
-        stroke: noteInk,
+        fontSize: noteFontSize,
+        fill: noteColor,
+        stroke: noteColor,
         strokeWidth: 0.7,
         fontFamily: noteFont,
-        // Measured width of "Morris rose for " at 19px Shantell Sans (~140px
-        // + word space) — text has no inline bold, so "every" is its own mark.
-        x: noteTextX + 146,
-        cy: noteLineCy(0),
+        // Measured width of "Morris rose for " at 15px Shantell Sans (~115px
+        // incl. trailing space) — text has no inline bold, so "every" is its
+        // own same-color-stroked mark, immediately after on the same line.
+        x: 428,
+        cy: noteCy(0),
       })
     )
-    .layer(noteLine("variety, the only site", 1))
-    .layer(noteLine("that did.", 2))
+    .layer(noteLine("variety, the only", 330, 1))
+    .layer(noteLine("site that did.", 343, 2))
     .render(el, { w, h, axes: true, legend: false });
 }
 
