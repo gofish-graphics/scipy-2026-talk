@@ -358,7 +358,7 @@
 <span class="cut-line cut-collapsed">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
               <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
-                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each site's year pattern⟩</span> across sites</span>
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
                 <span class="q-gloss">groups sit apart — a scan</span>
               </div>
             </div>
@@ -428,8 +428,8 @@
 <span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
               <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
-                <span class="q-ctx">site = Morris</span>
-                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨yield heights⟩</span> across years</span>
+                <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> heights⟩</span> across <em class="q-field">years</em></span>
                 <span class="q-gloss">bars sit adjacent — one glance</span>
               </div>
             </div>
@@ -468,8 +468,8 @@
 <span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line cut-highlight">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
               <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
-                <span class="q-ctx">site = Morris · year = 1932</span>
-                <span class="q-line">yield <span class="q-arrow">→</span> height · site <span class="q-arrow">→</span> color</span>
+                <span class="q-ctx"><em class="q-field">site</em> = Morris · <em class="q-field">year</em> = 1932</span>
+                <span class="q-line"><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em> <span class="q-arrow">→</span> color</span>
                 <span class="q-gloss">a single bar — a lookup</span>
               </div>
             </div>
@@ -508,11 +508,11 @@
                     >⟨<span class="q-hole-swap"
                       ><span class="fragment fade-out" data-fragment-index="2">?</span
                       ><span class="fragment fade-in" data-fragment-index="2"
-                        >each site's year pattern</span
+                        >each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern</span
                       ></span
                     >⟩</span
                   >
-                  across sites</span
+                  across <em class="q-field">sites</em></span
                 >
                 <span class="q-gloss fragment" data-fragment-index="3"
                   >groups sit apart — a scan</span
@@ -524,18 +524,18 @@
                 data-fragment-index="2"
                 style="font-size: 1.1em; max-width: 560px"
               >
-                <span class="q-ctx">site = Morris</span>
+                <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
                 <span class="q-line"
                   ><span class="q-val">compare</span>
                   <span class="q-hole"
                     >⟨<span class="q-hole-swap"
                       ><span class="fragment fade-out" data-fragment-index="1">?</span
                       ><span class="fragment fade-in" data-fragment-index="1"
-                        >yield heights</span
+                        ><em class="q-field">yield</em> heights</span
                       ></span
                     >⟩</span
                   >
-                  across years</span
+                  across <em class="q-field">years</em></span
                 >
               </div>
 
@@ -544,9 +544,9 @@
                 data-fragment-index="1"
                 style="font-size: 1.1em; max-width: 560px"
               >
-                <span class="q-ctx">site = Morris · year = 1932</span>
+                <span class="q-ctx"><em class="q-field">site</em> = Morris · <em class="q-field">year</em> = 1932</span>
                 <span class="q-line"
-                  >yield <span class="q-arrow">→</span> height · site
+                  ><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em>
                   <span class="q-arrow">→</span> color</span
                 >
               </div>
@@ -619,7 +619,7 @@
   spread(by="year", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
                 <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
-                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each site's year pattern⟩</span> across sites</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
                   <span class="q-gloss">groups sit apart — a scan</span>
                 </div>
               </div>
@@ -652,7 +652,7 @@
   spread(by="site", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
                 <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
-                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each year's site profile⟩</span> across years</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">year</em>'s <em class="q-field">site</em> profile⟩</span> across <em class="q-field">years</em></span>
                   <span class="q-gloss">groups sit apart — a scan</span>
                 </div>
               </div>
@@ -684,7 +684,7 @@
   table("site", "year"),
 ).mark(rect(fill="yield"))</code></pre>
                 <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
-                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨yield colors⟩</span> across site × year</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> colors⟩</span> across <em class="q-field">site</em> × <em class="q-field">year</em></span>
                   <span class="q-gloss">cells align in rows and columns — a scan either way</span>
                 </div>
               </div>
@@ -736,7 +736,7 @@
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2>is it one variety, or all of them?</h2>
             <div class="viz-query fragment" style="margin-top: 1.4rem; font-size: 0.5em">
-              <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨site-by-site Δ yield (1931 → 1932)⟩</span> across varieties</span>
+              <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">site</em>-by-<em class="q-field">site</em> Δ <em class="q-field">yield</em> (1931 → 1932)⟩</span> across <em class="q-field">varieties</em></span>
             </div>
             <p class="fragment" style="margin-top: 1rem; font-size: 0.55em; color: #555">
               this time, start from the query — then build the structure that answers it
@@ -756,7 +756,7 @@
             <h2><code>stack()</code></h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
-                <span class="q-line"><span class="q-val">read</span> <span class="q-hole" style="white-space: nowrap">⟨total yield across sites⟩</span> for each variety × year</span>
+                <span class="q-line"><span class="q-val">read</span> <span class="q-hole" style="white-space: nowrap">⟨total <em class="q-field">yield</em> across <em class="q-field">sites</em>⟩</span> for each <em class="q-field">variety</em> × <em class="q-field">year</em></span>
                 <span class="q-gloss">a cheaper query than the Δ one — worth trying first</span>
               </div>
               <pre class="viz-code">chart(barley)

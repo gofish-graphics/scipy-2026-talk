@@ -1350,6 +1350,17 @@
   font-weight: 700;
 }
 
+/* Field/key token style: purple italics for a field/key name reference
+   (key, value, x, y, row, col, or a concrete dataset field like site/
+   year/variety/yield/species/...). Shared with the operator-table
+   signature <code> cells, which sit outside .viz-query, hence the bare
+   .q-field fallback below. */
+.viz-query .q-field,
+.q-field {
+  font-style: italic;
+  color: #8a5fbf;
+}
+
 /* Value-operation words (what the reader runs against the structure),
    as opposed to .q-kw's structural/arrangement words. Same weight/size
    as .q-kw — only the color differs. A darkened solid version of the

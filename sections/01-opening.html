@@ -22,6 +22,154 @@
             </aside>
           </section>
 
+          <!-- ═══ AI OPENING (new beat, VizChitra-inspired; videos are placeholders from Arvind's VizChitra keynote, to be re-recorded with a scientific dataset) ═══ -->
+
+          <section>
+            <h2>you can one-shot a dashboard now</h2>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <video
+                src="motivational-images/vizchitra/claude-dashboard.mp4"
+                controls
+                muted
+                playsinline
+                style="max-width: 88%; max-height: 60vh; border-radius: 4px;"
+              ></video>
+              <p style="font-size: 0.72em; color: #555;">
+                *Sped up 2–4×; actual time ~2.5 min. Placeholder: Arvind's
+                VizChitra demo — to re-record with a scientific dataset.
+              </p>
+            </div>
+            <aside class="notes">
+              Here's a chat with Claude, asked to summarize a dataset of
+              cricket matches. Over about two and a half minutes it built this
+              interactive dashboard — and it even computed sensible
+              domain-specific metrics along the way, like runs per innings and
+              whether chasing beats defending. No code written by a human.
+            </aside>
+          </section>
+
+          <section>
+            <h2>…or even a scrollytelling narrative</h2>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <video
+                src="motivational-images/vizchitra/codex-scrolly.mp4"
+                controls
+                muted
+                playsinline
+                style="max-width: 88%; max-height: 60vh; border-radius: 4px;"
+              ></video>
+              <p style="font-size: 0.72em; color: #555;">
+                *Actual time ~15 min. Placeholder: Arvind's VizChitra demo.
+              </p>
+            </div>
+            <aside class="notes">
+              And it's not just dashboards. Same dataset, one short prompt to
+              an AI coding agent: "make a scrollytelling narrative." Fifteen
+              minutes later, a step-by-step interactive story with color
+              highlighting and textual annotations. Implementation is no
+              longer the bottleneck.
+            </aside>
+          </section>
+
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <p class="part">The catch</p>
+            <h2>ok — but is it actually good?</h2>
+            <p class="big-claim">
+              How do you know the figure shows what your reader needs? How do
+              you know what you want in the first place?
+            </p>
+            <p>
+              For a scientific figure, "impressive" isn't the bar. The bar is:
+              does it support the comparisons your argument depends on?
+            </p>
+            <aside class="notes">
+              This is the real question. The agent will hand you something
+              polished either way. Judging it — and knowing what to ask for —
+              is now the whole game.
+            </aside>
+          </section>
+
+          <section>
+            <h2>chart pickers aren't much help — and now they're baked into AI skills</h2>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <img
+                src="motivational-images/vizchitra/claude-viz-skill.png"
+                alt="Screenshot of Claude's data-visualization skill file, a task-to-chart-type lookup table"
+                style="max-height: min(60vh, 460px); max-width: 100%; border-radius: 4px; object-fit: contain;"
+              />
+              <p style="font-size: 0.72em; color: #555;">
+                Claude's actual data-visualization skill: a task → chart-type
+                lookup table.
+              </p>
+            </div>
+            <aside class="notes">
+              You might hope the AI has some deep theory of visualization.
+              Here's the actual skill file Claude uses: a table mapping
+              coarse task descriptions to chart types. The chart picker
+              didn't go away — it got baked in. And because the conventional
+              chart types are where the training data is, the agent quietly
+              pulls every figure toward the mean.
+            </aside>
+          </section>
+
+          <section>
+            <h2>but scientists live in the long tail</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; height: 420px;">
+              <img
+                src="motivational-images/vizchitra/jointplot.png"
+                alt="Seaborn jointplot"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+              <img
+                src="motivational-images/vizchitra/upset-plot.png"
+                alt="UpSet plot"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+              <img
+                src="motivational-images/vizchitra/scatterpie.png"
+                alt="Oceanography scatterplot of pie charts"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+              <img
+                src="motivational-images/vizchitra/christiansen-coxcomb-scatter.png"
+                alt="Jen Christiansen's scatterplot of coxcomb glyphs, Scientific American"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+            </div>
+            <aside class="notes">
+              Look at the graphics scientists actually use and publish. A
+              Seaborn jointplot; an UpSet plot; oceanographers plotting
+              scatterplots of pie charts; Jen Christiansen in Scientific
+              American with a scatterplot of coxcombs. These are bespoke,
+              composite, long-tail graphics. What makes them work is how
+              their pieces are arranged — the alignment between the marginals
+              and the scatter, the positioning of glyphs in a shared space.
+              None of that is on a picker menu, and "jointplot" won't be the
+              name of the thing your paper needs next. So: how do we know
+              when one of these is effective for our use case?
+            </aside>
+          </section>
+
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <p class="part">The way out</p>
+            <h2>we need to see structure, not chart types</h2>
+            <p class="big-claim">
+              To judge a figure — yours or the AI's — you need a way to see
+              what it's doing.
+            </p>
+            <p>
+              Not "which chart type is this?" but "what does this arrangement
+              let my reader see?"
+            </p>
+            <aside class="notes">
+              So that's where this talk goes. Instead of judging figures by
+              their chart-type name, we're going to learn to see their
+              structure — and that gives us both a way to evaluate what an
+              agent hands us and a language for asking for what we actually
+              want.
+            </aside>
+          </section>
+
 
           <section class="split lake-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <!-- HIDDEN: the seafood dataset is no longer used -->

@@ -772,7 +772,7 @@ Frame(
               <tbody>
                 <tr style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.18rem 0.7rem">
-                    <code>spread(by=<em style="font-style: italic; color: #8a5fbf">key</em>)</code>
+                    <code>spread(by=<em class="q-field">key</em>)</code>
                   </td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div
@@ -799,19 +799,19 @@ Frame(
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> <span style="white-space: nowrap">at its <em style="font-style: italic; color: #8a5fbf">key</em></span></span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> <span style="white-space: nowrap">at its <em class="q-field">key</em></span></span>
                     </div>
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨summaries⟩</span> across <em style="font-style: italic; color: #8a5fbf">key</em></span>
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨summaries⟩</span> across <em class="q-field">key</em></span>
                       <span class="q-gloss">slots sit side by side — one scan</span>
                     </div>
                   </td>
                 </tr>
-                <tr style="border-bottom: 1px solid #e8e8e8">
+                <tr class="fragment" data-fragment-index="1" style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.18rem 0.7rem">
-                    <code>stack(by=<em style="font-style: italic; color: #8a5fbf">key</em>, size=<em style="font-style: italic; color: #8a5fbf">value</em>)</code>
+                    <code>stack(by=<em class="q-field">key</em>, size=<em class="q-field">value</em>)</code>
                   </td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div
@@ -838,20 +838,20 @@ Frame(
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨<em style="font-style: italic; color: #8a5fbf">key</em>'s segment⟩</span> in order</span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨<em class="q-field">key</em>'s segment⟩</span> in order</span>
                     </div>
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨sizes⟩</span> across <em style="font-style: italic; color: #8a5fbf">key</em></span>
-                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total = Σ <em style="font-style: italic; color: #8a5fbf">size</em>⟩</span> at <span style="white-space: nowrap">the far edge</span></span>
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨sizes⟩</span> across <em class="q-field">key</em></span>
+                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total = Σ <em class="q-field">size</em>⟩</span> at <span style="white-space: nowrap">the far edge</span></span>
                       <span class="q-gloss">segments tile end to end — a boundary read</span>
                     </div>
                   </td>
                 </tr>
-                <tr style="border-bottom: 1px solid #e8e8e8">
+                <tr class="fragment" data-fragment-index="2" style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.18rem 0.7rem">
-                    <code>scatter(by=<em style="font-style: italic; color: #8a5fbf">key</em>, x=<em style="font-style: italic; color: #8a5fbf">x</em>, y=<em style="font-style: italic; color: #8a5fbf">y</em>)</code>
+                    <code>scatter(by=<em class="q-field">key</em>, x=<em class="q-field">x</em>, y=<em class="q-field">y</em>)</code>
                   </td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div
@@ -877,7 +877,7 @@ Frame(
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> at <span style="white-space: nowrap">(<em style="font-style: italic; color: #8a5fbf">x</em>, <em style="font-style: italic; color: #8a5fbf">y</em>)</span></span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> at <span style="white-space: nowrap">(<em class="q-field">x</em>, <em class="q-field">y</em>)</span></span>
                     </div>
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
@@ -887,9 +887,9 @@ Frame(
                     </div>
                   </td>
                 </tr>
-                <tr style="border-bottom: 1px solid #e8e8e8">
+                <tr class="fragment" data-fragment-index="3" style="border-bottom: 1px solid #e8e8e8">
                   <td style="padding: 0.18rem 0.7rem">
-                    <code>table(by=<span style="white-space: nowrap">(<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</span>)</code>
+                    <code>table(by=<span style="white-space: nowrap">(<em class="q-field">row</em>, <em class="q-field">col</em>)</span>)</code>
                   </td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div
@@ -923,7 +923,7 @@ Frame(
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at <span style="white-space: nowrap">(<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</span></span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at <span style="white-space: nowrap">(<em class="q-field">row</em>, <em class="q-field">col</em>)</span></span>
                     </div>
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
@@ -944,7 +944,7 @@ Frame(
                     alignment &amp; uniform density
                   </td>
                 </tr> -->
-                <tr>
+                <tr class="fragment" data-fragment-index="4">
                   <td
                     colspan="4"
                     style="
@@ -959,7 +959,7 @@ Frame(
                     relational — draws over an index, builds none
                   </td>
                 </tr>
-                <tr>
+                <tr class="fragment" data-fragment-index="4">
                   <td style="padding: 0.18rem 0.7rem">
                     <code>line() / ribbon()</code>
                   </td>
