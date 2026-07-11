@@ -1279,6 +1279,13 @@
 .viz-gofish-chart {
   min-height: 340px;
   width: 100%;
+  /* fitContainerToSvg (main.ts) sets an inline pixel width sized to the
+     rendered svg, which overrides the width:100% above and can leave the
+     container narrower than its slide (e.g. the bars/heatmap slides, whose
+     svgs render at 560/960px against a ~984px slide column). Centering here
+     is a no-op when the container is already full width, and recenters it
+     when the inline width is narrower. */
+  margin: 0 auto;
 }
 
 .viz-gofish-chart > svg {

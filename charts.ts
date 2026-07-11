@@ -935,6 +935,31 @@ function renderVizRibbon(id = "chart-viz-ribbon", highlight = false) {
 
 const SLOPE_W = 940;
 const SLOPE_H = 220;
+// Gap between site facets for the SLOPE and ANCHORED SLOPE charts (see the
+// comment above `renderVizBarleySlopePanels`'s flow — the outer (site)
+// spread's `spacing` only controls the GAP BETWEEN facets, not a facet's own
+// inner width, so this is the lever against site-label overlap/clipping, not
+// against readable tilt — see `SLOPE_YEAR_SPACING` below for that). Wide
+// enough to clear "University Farm", the widest site label, with room either
+// side.
+const SITE_SLOPE_SPACING = 66;
+// Gap between the two year columns WITHIN each site facet, for the SLOPE and
+// ANCHORED SLOPE charts. The original (pre-port) spec placed the two years
+// with a bare `scatter({ x: "year", y: "yield" })`, which spread them across
+// the full facet width — each variety's line got a long horizontal run and
+// an obvious tilt. Porting to the two-nested-spreads flow (`spread(site)` ->
+// `spread(year)` -> `scatter`, needed to dodge gofish#770's panel-collapse
+// bug, see `slopeLineBy`'s comment) initially kept the OLD spacing value (6),
+// a leftover from when it just nudged two dots apart inside a
+// scatter-defined width. At `spacing: 6` the two year columns sit almost on
+// top of each other, so every line renders nearly vertical — the tilt (the
+// entire point of a slope chart) became unreadable, a visual regression
+// confirmed against the pre-port screenshot. Fix: widen this spread's own
+// spacing so the facet's inner content is wide enough to read the slope,
+// independent of `SITE_SLOPE_SPACING` above (which only governs inter-facet
+// gap). 60 gives each panel a long horizontal run comparable to the
+// original's `scatter(x=year)` spread, without the panels touching.
+const SLOPE_YEAR_SPACING = 60;
 
 // Same facet skeleton as the stacked-bar charts (renderVizSiteYear above:
 // spread site 24 / year 4), just with the mark swapped from a stacked rect
@@ -961,19 +986,84 @@ function renderVizBarleySlopePoints(
     .render(el, { w, h, axes: true, legend: false });
 }
 
-// One line per variety per site, connecting its 1931 -> 1932 yield. Facets
-// by site with the mark-as-function pattern (see FacetedChart.stories.tsx);
-// within each site's facet, points are named then re-selected and grouped by
-// variety to draw the connecting line — the same "name it, select it, group
-// it, connect it" idiom as the ribbon (renderVizRibbon above), just with
-// `line` standing in for `area`. The installed `gofish-graphics` build's
-// `markLayer` mark-combinator form does NOT give each facet call its own
-// local name registry — it inherits the enclosing chart's `layerContext`, so
-// a single literal name like "slope-pts" would collide across all six site
-// facets (each `selectAll` picking up all 6 sites' points, not just its own
-// panel's). Naming the points per site (`slope-pts-${site}`) keeps each
-// panel's connecting line scoped to that panel even though the registry
-// itself is effectively global.
+// ── Site short codes: workaround for gofish#770 ─────────────────────────
+// One line per variety per site, connecting its 1931 -> 1932 yield — ported
+// off the old "name it, select it, group it, connect it" `markLayer` idiom
+// (see git history) onto gofish-graphics 0.1.0-nightly.20260711's fused
+// relational marks: `.connect()` is gone, and `line({ by })` now consumes a
+// scatter's placement directly as its own `.mark()`, no `blank()` scaffold
+// or `.name()`/`select()` two-layer indirection needed.
+//
+// Two nested spreads (site, then year) sit upstream of the scatter that
+// places each variety's points, and a fused relational mark does NOT inherit
+// the flow's grouping (gofish #752): `by: "variety"` alone would connect
+// every site's same-named variety into ONE long cross-panel polyline (ten
+// continuous zigzags spanning all six sites, confirmed by rendering it), not
+// six independent 2-point slopes. `slopeLineBy` below folds site back into
+// the key. Its function form does NOT receive the plain data row either — it
+// receives an internal render node, and the actual datum lives at
+// `.directNode.datum[0]` (undocumented, found by logging `Object.keys()` on
+// the callback's argument; gofish #768). Both are worth reporting upstream.
+//
+// This flow (spread, spread, scatter) is NOT hit by gofish#770 (the
+// spread+scatter panel-collapse bug documented below on the delta-dots
+// chart) — confirmed by rendering: nesting a second spread ahead of the
+// scatter sidesteps whatever sizing computation the single-spread case gets
+// wrong. So this chart keeps the real site names, no short-code relabeling
+// needed.
+//
+// `legend: false` is a no-op for a categorical `fill` (gofish #686) — an
+// unsuppressable variety/site legend would eat about half the canvas, so
+// `stripLegend` (see above) removes it by DOM surgery after render.
+const slopeLineBy = (r: any) => {
+  const d = r.directNode?.datum?.[0] ?? r;
+  return `${d.site}|${d.variety}`;
+};
+
+// The inner (year) spread's two tick labels ("1931", "1932") sit close
+// enough together (spacing: 6) that they render on top of each other,
+// smearing into an unreadable "1931932"/"19332"-looking mess — the exact
+// bug called out in this port's brief. Suppressed the same way the variety
+// ticks are suppressed on the delta charts: DOM removal after render, rather
+// than fighting the operator's own tick-placement math.
+async function stripYearTicks(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  svg.querySelectorAll("text").forEach((t) => {
+    const txt = t.textContent?.trim() ?? "";
+    if (txt === "1931" || txt === "1932") t.remove();
+  });
+}
+
+// NEW BUG (not in the known list, and CSS-side rather than GoFish's):
+// `.viz-gofish-chart > svg` in style.css forces `width: 91% !important` on
+// every rendered chart's <svg> (presumably to trim a bit of dead space on
+// charts whose real content was already narrower than the requested render
+// width). GoFish's emitted <svg> carries no `viewBox` (see the `stripLegend`
+// comment above), so shrinking its CSS width does NOT rescale the content —
+// it just narrows the visible viewport, and `.chart-container`'s own
+// `overflow: hidden` then hard-clips whatever falls outside that narrower
+// box. For a chart whose real content already fills its full declared
+// width (the slope/anchored panels here, once `SITE_SLOPE_SPACING` gave
+// them enough room — see that comment), the 91% rule silently guillotines
+// the rightmost ~9% of the chart (Duluth). HACK: after
+// `fitContainerToSvg` (main.ts) has already sized the container to the
+// svg's true content width, override the 91% down to 100% inline — an
+// inline `!important` beats the external stylesheet's `!important` by
+// cascade order — so the container's full (already-correct) width is what
+// actually gets shown instead of being clipped for a spacing reason that
+// doesn't apply to this chart.
+function unclipSvgWidth(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  waitForChild(el, "svg").then((svg) => {
+    if (!svg) return;
+    svg.style.setProperty("width", "100%", "important");
+  });
+}
+
 // The "call it out" slide's takeaway note, formerly an absolutely-positioned
 // HTML overlay div on the slide, is drawn by GoFish itself when `annotate` is
 // set: component-level annotation tiers per AnnotationLayer.stories.tsx —
@@ -1002,6 +1092,16 @@ function renderVizBarleySlopePoints(
 // lines, each individually centered on the facet by its measured pixel
 // width), and the bold "every" is faked with a same-color stroke on a mark of
 // its own, x-offset by the measured width of "Morris rose for ".
+//
+// (1) SLOPE — the spec we wish we could write, hacks marked:
+//   Chart(barley, vizChartOptions)
+//     .flow(
+//       spread({ by: "site", dir: "x", spacing: SITE_SLOPE_SPACING }),
+//       spread({ by: "year", dir: "x", spacing: SLOPE_YEAR_SPACING }),
+//       scatter({ by: "variety", y: "yield" })
+//     )
+//     .mark(line({ by: slopeLineBy /* HACK: gofish#752/#768 */, fill: "variety", strokeWidth: 2 }))
+//     .render(el, { w, h, axes: true, legend: false /* HACK: gofish#686, see stripLegend */ });
 function renderVizBarleySlopePanels(
   id = "chart-viz-barley-slope",
   highlight = false,
@@ -1011,74 +1111,210 @@ function renderVizBarleySlopePanels(
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  const panels = Chart(barley, vizChartOptions)
-    .flow(spread("site", { dir: "x", spacing: 20 }))
-    .mark((data) => {
-      const site = (data as BarleyRow[])[0].site;
-      const pointName = `slope-pts-${site}${highlight ? "-hl" : ""}`;
-      // Lines inherit their color from the point rects. Highlight colors each
-      // panel's points by its site with the Morris-green palette from the ribbon
-      // (Morris green, every other site gray); default colors by variety.
-      const pointFill = highlight
-        ? site === "Morris"
-          ? "#e08214"
-          : "#d7dadd"
-        : "variety";
-      return markLayer([
-        Chart(data, vizChartOptions)
-          .flow(group("variety"), scatter({ x: "year", y: "yield" }))
-          .mark(rect({ w: 0, h: 0, fill: pointFill }).name(pointName)),
-        Chart(select(pointName), vizChartOptions)
-          .flow(group("variety"))
-          .mark(line({ strokeWidth: 2 })),
-      ]);
-    });
-  if (!annotate) {
-    panels.render(el, { w, h, axes: true, legend: false });
-    return;
-  }
-  const noteFont = "'Shantell Sans', sans-serif";
-  const noteColor = "#e08214"; // Morris orange (same hex the highlight variant fills Morris with)
-  const noteFontSize = 15;
-  const noteLineHeight = 21;
-  // Empirically-measured cy<->SVG-y affine map for this w=940,h=220 chart
-  // (see the comment above the function): svg_y = 260 - world_cy. 205 puts
-  // the first line's SVG y around 55 — just inside the plot's top edge and
-  // well clear of the Morris cluster, which sits at SVG y=124..214.
-  const noteCy = (i: number) => 205 - noteLineHeight * i;
-  const noteLine = (t: string, x: number, i: number) =>
-    text({
-      text: t,
-      fontSize: noteFontSize,
-      fill: noteColor,
-      fontFamily: noteFont,
-      x,
-      cy: noteCy(i),
-    });
-  panels
-    // Each x is that line's measured pixel width at 15px Shantell Sans,
-    // centered on the Morris facet's world x=[320,460] (center 390).
-    .layer(noteLine("Morris rose for", 313, 0))
-    .layer(
-      text({
-        text: "every",
-        fontSize: noteFontSize,
-        fill: noteColor,
-        stroke: noteColor,
-        strokeWidth: 0.7,
-        fontFamily: noteFont,
-        // Measured width of "Morris rose for " at 15px Shantell Sans (~115px
-        // incl. trailing space) — text has no inline bold, so "every" is its
-        // own same-color-stroked mark, immediately after on the same line.
-        x: 428,
-        cy: noteCy(0),
-      })
+  const chartOptions = highlight
+    ? { color: palette({ Morris: "#e08214" }), legend: false }
+    : vizChartOptions;
+  const panels = Chart(barley, chartOptions)
+    .flow(
+      // `spacing: 20` (the original value) packs facets ~49px apart center to
+      // center — narrower than "University Farm"'s own rendered label width
+      // (~75px), so adjacent site labels overprinted ("University
+      // FarmWaseca") and the last facet (Duluth) ran past the canvas's
+      // auto-fit width. `spacing` here sets the GAP BETWEEN facets, not
+      // facet width (that's `SLOPE_YEAR_SPACING` on the inner spread below).
+      // `SITE_SLOPE_SPACING` is picked to clear the widest site label with
+      // room to spare; it's the same constant this chart and (2) ANCHORED
+      // SLOPE share, so both stay in sync.
+      spread({ by: "site", dir: "x", spacing: SITE_SLOPE_SPACING }),
+      spread({ by: "year", dir: "x", spacing: SLOPE_YEAR_SPACING }), // see SLOPE_YEAR_SPACING comment above
+      scatter({ by: "variety", y: "yield" })
     )
-    .layer(noteLine("variety, the only", 330, 1))
-    .layer(noteLine("site that did.", 343, 2))
-    .render(el, { w, h, axes: true, legend: false });
+    .mark(
+      line({
+        by: slopeLineBy,
+        fill: highlight ? "site" : "variety",
+        strokeWidth: 2,
+      })
+    );
+  // `highlight`'s color scale only distinguishes Morris from "every other
+  // site" (2 effective groups already named by the slide's own color-key
+  // sentence/callout) — a 10-variety legend would be non-sequitur there, so
+  // that variant keeps suppressing it via `stripLegend`. The base
+  // (non-highlight) variety-colored chart gets its legend back for real:
+  // gofish#686 turned out to only block the *render-level* `legend: false`
+  // no-op reported in the earlier port; passing `legend: true` at the
+  // `.render()` call (rather than trying to un-suppress it via the
+  // `Chart()`-level `vizChartOptions`, which still says `legend: false` and
+  // is left alone since other charts share that constant) does render a
+  // real legend, and — confirmed by screenshot — GoFish already lays it out
+  // as a compact swatch column at the right without ballooning the canvas,
+  // so no hand-drawn DOM replacement was needed after all.
+  panels.render(el, { w, h, axes: true, legend: !highlight });
+  if (highlight) stripLegend(id);
+  stripYearTicks(id);
+  unclipSvgWidth(id); // HACK: see unclipSvgWidth above
+  if (annotate) addSlopeCallout(id);
 }
 
+// The callout text used to be positioned with hardcoded literal x/cy pixel
+// values, hand-measured once against the OLD `markLayer`-based
+// implementation's rendered output (see git history). Porting to the fused
+// `line({ by })` mark changed the chart's internal frame/margins enough that
+// those literals now land completely wrong — in our testing, off the plot
+// entirely, into the dead space beside a `legend: false`-defying auto
+// legend (gofish#686 again). Worse, `stripLegend`'s heuristic (small colored
+// rect immediately followed by a text sibling) then deleted the misplaced
+// annotation text outright, having mistaken it for a legend label sitting
+// next to a swatch. NEW BUG, not in the known list: `.layer(text({x, cy}))`
+// component-level annotations are only as stable as the chart's internal
+// coordinate frame, which isn't part of the public API and shifted under an
+// otherwise-unrelated mark-API change.
+// HACK: skip GoFish's own coordinate system for this note entirely. Measure
+// the Morris line paths' actual rendered SVG bounding box (stroke/fill
+// "#e08214", the highlight color) — the same DOM-measurement trick
+// `addFocusBox`/`addOuterGroupBoxes` already use elsewhere in this file —
+// and draw the three lines of plain SVG `<text>` above it directly, using
+// `text-anchor: middle` instead of hand-measured per-line pixel widths. The
+// "every" bold-by-stroke fakeout is dropped for the same reason: not worth
+// re-deriving a per-run pixel offset against a frame that isn't guaranteed
+// stable across versions.
+// NEW BUG (not in the known list): `renderCharts()` eagerly renders every
+// chart on every slide right after `deck.initialize()` — including slides
+// that aren't the current one, which Reveal keeps in the DOM but hidden
+// (`display: none` on the containing `<section>`/stack). `getBBox()` on an
+// element inside a `display: none` subtree returns an all-zero rect (no
+// layout box exists to measure), so measuring the Morris paths' bbox while
+// this slide is still hidden silently yields `minX = maxX = 0` — the
+// callout still gets drawn (so `morrisPaths.length === 0` doesn't catch it),
+// just centered on x=0 instead of the Morris facet, so it spills off the
+// left edge of the chart with only its tail end visible. That's the actual
+// mechanism behind the "callout overlaps Waseca" symptom this port's brief
+// flagged: the text isn't too WIDE, it's centered on the wrong point
+// entirely, and its right half happens to land in Waseca's territory.
+// HACK: poll (rAF) for a non-degenerate bbox instead of measuring once —
+// this naturally waits out both the hidden-slide case (resolves once the
+// user navigates here and the section becomes visible) and any ordinary
+// render-not-settled-yet race, without depending on Reveal's own
+// slide-visibility events.
+// Polls (rAF) until `el` is actually laid out — `getClientRects()` comes
+// back empty for anything under a `display: none` ancestor, which is
+// exactly the "still on a slide the presenter hasn't navigated to yet"
+// case this exists for. Uncapped in practice (a ~33-minute rAF budget):
+// a real presentation may sit on an earlier slide far longer than any
+// small timeout would tolerate, and rAF costs nothing while idle.
+function waitForVisible(el: Element, maxFrames = 120000): Promise<void> {
+  return new Promise((resolve) => {
+    let frame = 0;
+    function tick() {
+      if (el.getClientRects().length > 0 || frame++ >= maxFrames) {
+        resolve();
+        return;
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  });
+}
+
+async function addSlopeCallout(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  const morrisPaths = Array.from(svg.querySelectorAll("path")).filter(
+    (p) =>
+      p.getAttribute("stroke") === "#e08214" ||
+      p.getAttribute("fill") === "#e08214"
+  ) as unknown as SVGGraphicsElement[];
+  if (morrisPaths.length === 0) return;
+  await waitForVisible(svg);
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  morrisPaths.forEach((p) => {
+    const b = p.getBBox();
+    minX = Math.min(minX, b.x);
+    maxX = Math.max(maxX, b.x + b.width);
+    minY = Math.min(minY, b.y);
+  });
+  const centerX = (minX + maxX) / 2;
+  const noteColor = "#e08214"; // Morris orange, same hex the highlight variant fills Morris with
+  const lines = ["Morris rose for every", "variety, the only", "site that did."];
+  const lineHeight = 18;
+  const startY = Math.max(16, minY - lineHeight * lines.length - 6);
+  const ns = "http://www.w3.org/2000/svg";
+  lines.forEach((lineText, i) => {
+    const t = document.createElementNS(ns, "text");
+    t.setAttribute("x", String(centerX));
+    t.setAttribute("y", String(startY + i * lineHeight));
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("fill", noteColor);
+    t.setAttribute("font-family", "'Shantell Sans', sans-serif");
+    t.setAttribute("font-size", "14");
+    t.setAttribute("font-weight", i === 0 ? "700" : "400");
+    t.textContent = lineText;
+    svg.appendChild(t);
+  });
+}
+
+// (2) ANCHORED SLOPE — same skeleton as (1); the ONLY diff is what `y` is
+// bound to. Each variety's 1931 yield is normalized to 0 so its line runs
+// from 0 to its delta — still a line (still "up is more"), but the length
+// already IS the delta the next two charts extract on their own. Precomputed
+// once as `barleyAnchored` rather than inline in `derive`, so the flow below
+// reads identically to (1) apart from the data variable and the y field name.
+function anchorYears(rows: BarleyRow[]): (BarleyRow & { yieldAnchored: number })[] {
+  const y1931 = new Map<string, number>();
+  for (const r of rows) {
+    if (r.year === 1931) y1931.set(`${r.site}|${r.variety}`, r.yield);
+  }
+  return rows.map((r) => ({
+    ...r,
+    yieldAnchored: r.yield - y1931.get(`${r.site}|${r.variety}`)!,
+  }));
+}
+const barleyAnchored = anchorYears(barley);
+
+function renderVizBarleySlopeAnchored(
+  id = "chart-viz-barley-slope-anchored",
+  w = SLOPE_W,
+  h = SLOPE_H
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barleyAnchored, vizChartOptions)
+    .flow(
+      spread({ by: "site", dir: "x", spacing: SITE_SLOPE_SPACING }), // see SITE_SLOPE_SPACING comment above (1)
+      spread({ by: "year", dir: "x", spacing: SLOPE_YEAR_SPACING }), // see SLOPE_YEAR_SPACING comment above (1)
+      scatter({ by: "variety", y: "yieldAnchored" }) // <- only diff from (1): y field
+    )
+    .mark(line({ by: slopeLineBy, fill: "variety", strokeWidth: 2 }))
+    // `yieldAnchored` is the internal derived-field name (see `anchorYears`)
+    // — it must not leak onto the axis, so the title is overridden with what
+    // the quantity actually is. `legend: true` restores the real
+    // variety legend (see the comment above `renderVizBarleySlopePanels`'s
+    // own `panels.render` call — same fix, same reasoning).
+    .render(el, { w, h, axes: { x: true, y: { title: "Δ from 1931" } }, legend: true });
+  stripYearTicks(id);
+  unclipSvgWidth(id); // HACK: see unclipSvgWidth above
+}
+
+// ── gofish#770: single spread + scatter collapses the panels ────────────
+// A nested spread + scatter renders cleanly (see (1)/(2) above), but a
+// SINGLE spread's split field feeding straight into a scatter with no
+// explicit `x` — no second facet spread ahead of it — collapses all six
+// site panels into an ~80px sliver of a 940px canvas, tick labels smeared
+// on top of each other. We first assumed (following an earlier, unverified
+// experiment's notes) that this was purely a long-label sizing bug, fixable
+// by feeding short site codes ("A".."F") to the spread/scatter and
+// relabeling the axis text afterward. That did NOT fix it in our testing —
+// the collapse reproduced identically with codes, with and without an
+// intervening `derive`, so whatever's wrong is not (only) about label
+// length. That's a discrepancy from the earlier notes worth flagging
+// upstream alongside the bug itself. The DOTS/BARS charts below dodge the
+// whole bug by never calling `scatter` in the first place (see the comment
+// above `deltaPanelsFlow`).
+//
 // Δyield(site, variety) = yield(1932) - yield(1931), then a diverging color
 // for it. `gradient()` only interpolates a config over its data's actual
 // min/max (see createGradientScale in colorSchemes.ts) — there's no domain
@@ -1115,6 +1351,21 @@ function pairYears(rows: BarleyRow[]) {
         variety: pair[0].variety,
         delta,
         deltaColor: barleyDeltaScale(delta).hex(),
+        // For a SIGNED bar (renderVizBarleyDeltaBars): rect's `h` channel
+        // does not grow a bar upward from a zero baseline for a negative
+        // value the way every other (always-positive) `h`-bound rect in
+        // this file assumes — confirmed by rendering: a plain
+        // `rect({ h: "delta" })` hangs every bar from the domain's top edge
+        // instead, so Morris's positive deltas render as near-invisible
+        // slivers and every negative-delta bar looks the same regardless of
+        // magnitude (a real gofish bug, not covered by the known-bugs list).
+        // HACK: bypass `h`'s baseline handling entirely — precompute an
+        // explicit top edge (`barTop`, 0 for a rise, the delta itself for a
+        // fall) and a magnitude (`barHeight`), and bind `y`/`h` to those
+        // instead. `y: "<field>"` as a literal position channel is already
+        // proven correct (see the DOTS chart's zero-baseline rect above).
+        barTop: Math.min(0, delta),
+        barHeight: Math.abs(delta),
       };
     }
   );
@@ -1127,6 +1378,394 @@ function renderVizBarleyDeltaHeatmap(id = "chart-viz-barley-delta", w = 960, h =
     .flow(derive(pairYears), table("variety", "site", { spacing: 4 }))
     .mark(rect({ fill: "deltaColor" }))
     .render(el, { w, h, axes: true, legend: false });
+  // Same 91%-width CSS clip as the slope/anchored charts (see the
+  // `unclipSvgWidth` comment) — confirmed at the -cmp variant's narrower
+  // (820x230) size, where it clipped "Wisconsin No. 38", the rightmost
+  // column. Applied unconditionally since it's a no-op whenever content
+  // already has slack under 91%.
+  unclipSvgWidth(id); // HACK: see unclipSvgWidth above
+}
+
+// (3) DELTA DOTS / (4) DELTA BARS — the year spread collapses into
+// `pairYears`'s computed delta; one mark per (site, variety), with a dashed
+// zero baseline so "above the line" reads as "rose". The connecting line
+// from (1)/(2) is gone: with only one point left per (site, variety), there
+// is nothing left to connect.
+//
+// The spec we WISH we could write for the dots is a single spread (site)
+// feeding a scatter (variety, y: delta) — mirroring the heatmap's
+// site-spread/variety-scatter shape one level up. That shape is exactly what
+// gofish#770 collapses: a spread's split field feeding a scatter with no
+// explicit `x` renders all six site panels into an ~80px sliver, and short
+// site codes ("A".."F") did NOT fix it in our testing (confirmed both with
+// and without an intervening `derive`) — contrary to what an earlier
+// experiment's notes claimed, so that's a discrepancy worth flagging
+// upstream too. HACK: sidestep `scatter` entirely. A second nested spread
+// (site, then variety — the same shape (1)/(2)'s slope panels already use
+// safely) positions each variety's slot, and `rect`'s own `y` channel (a
+// literal position, not a size) places a small rounded square at the delta
+// value — same trick a zero-height `rect({ y, h: 0 })` already uses for the
+// dashed baseline below. This also means (3) and (4) end up sharing the
+// EXACT same flow, differing only in the mark: a small rounded rect (dot)
+// positioned by `y`, vs. a full-height signed rect (bar) sized by `h`.
+//
+// The inner (variety) spread's tick labels need suppressing — ten variety
+// names at 2px spacing overlap into an unreadable smear, the same
+// "1931932" problem the slope panels' year ticks have, just worse with ten
+// labels instead of two. The obvious fix, `axes: { x: false }` on the inner
+// spread operator, is a NEW bug of its own: it throws off whatever arithmetic
+// positions the OUTER (site) tick labels, and they drift progressively
+// further right of their own panels the further right the panel is
+// (confirmed by comparing rendered tick-label x to each panel's own bar x
+// extents — verified correct with no override, and increasingly wrong site
+// labels start once `axes: { x: false }` is added to the inner spread).
+// HACK: leave both spreads' axes alone (so the outer labels stay put) and
+// remove the inner tick text nodes by DOM surgery afterward instead — the
+// same strategy `stripLegend` already uses for gofish#686. Variety names are
+// a fixed, known set, so `stripVarietyTicks` below just deletes any tick
+// <text> whose content is one of them — EXCEPT the real legend's own
+// variety labels, which share the exact same strings (see `markLegendSwatches`
+// just below: it tags the legend so `stripVarietyTicks`/`realignSiteTicks`
+// can skip it instead of the old approach of deleting it outright).
+//
+// `stripLegend`'s heuristic (small colored rect immediately followed by a
+// text sibling) misfires on the DOTS chart below: its own data marks ARE
+// small (8x8) colored rects, so whichever one happens to sit right before an
+// axis-tick <text> in DOM order gets mistaken for a legend swatch. A real
+// legend is a vertical STACK of swatches sharing one x (see the raw swatch
+// dump in this file's dev notes); a stray data dot never repeats another
+// mark's exact x. This finder requires >= 3 swatch candidates at the same x
+// before treating them as a legend, which a single coincidental data-dot
+// match can't satisfy.
+//
+// Earlier this DELETED the matched swatches/labels outright (the same
+// "legend eats the canvas" workaround `stripLegend` uses) — but the brief
+// calls for keeping a real legend on this chart, just not letting it corrupt
+// the OTHER DOM-surgery hacks downstream (`stripVarietyTicks` deletes any
+// text matching a variety name, which would eat the legend's own labels
+// too; `realignSiteTicks` clusters colored rects by x-gap to re-derive site
+// centers, which would treat the legend's swatch column as one more
+// "site"). So this now just TAGS matches with `data-legend-swatch` and
+// leaves them in the DOM — the legend renders normally, and the two
+// downstream hacks skip anything carrying that tag.
+async function markLegendSwatches(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  const candidates: { rect: SVGRectElement; text: Element }[] = [];
+  svg.querySelectorAll("text").forEach((t) => {
+    const prev = t.previousElementSibling;
+    const fill = prev?.getAttribute("fill");
+    if (
+      prev instanceof SVGRectElement &&
+      prev.width.baseVal.value < 16 &&
+      prev.height.baseVal.value < 16 &&
+      fill !== "none" &&
+      fill !== "gray"
+    ) {
+      candidates.push({ rect: prev, text: t });
+    }
+  });
+  const byX = _.groupBy(candidates, (c) => c.rect.x.baseVal.value);
+  for (const group of Object.values(byX)) {
+    if (group.length < 3) continue; // a real legend column, not a coincidental data-dot match
+    for (const { rect, text } of group) {
+      rect.setAttribute("data-legend-swatch", "1");
+      text.setAttribute("data-legend-swatch", "1");
+    }
+  }
+}
+
+const BARLEY_VARIETIES = new Set(barley.map((d) => d.variety));
+async function stripVarietyTicks(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  svg.querySelectorAll("text").forEach((t) => {
+    if (t.hasAttribute("data-legend-swatch")) return; // keep the legend's own labels
+    if (BARLEY_VARIETIES.has(t.textContent?.trim() ?? "")) t.remove();
+  });
+}
+
+// NEW BUG (not in the known list): the outer (site) tick label's x position
+// is computed independently of the actual rendered mark geometry. For this
+// two-level spread(site)+spread(variety) flow, whatever per-item slot width
+// the label-placement math assumes doesn't match the marks' real rendered
+// width (an explicit `w: 8` dot vs. an auto-width bar), so each site's label
+// drifts further right of its own panel the further right the panel sits —
+// confirmed by measuring rendered tick x against each panel's own mark
+// cluster: the drift grows roughly monotonically site over site, and by
+// Crookston/Grand Rapids it has drifted a full panel-width, mislabeling
+// Morris's panel as Crookston. HACK: don't trust the emitted tick x at all.
+// Measure each panel's own colored marks (grouped by an x-gap threshold —
+// the same clustering trick `addOuterGroupBoxes` already uses elsewhere in
+// this file) and overwrite each site tick's x with its own panel's measured
+// center instead.
+const BARLEY_SITE_ORDER = [
+  "University Farm",
+  "Waseca",
+  "Morris",
+  "Crookston",
+  "Grand Rapids",
+  "Duluth",
+];
+async function realignSiteTicks(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  const markCenters = Array.from(svg.querySelectorAll("rect"))
+    .filter((r) => {
+      if (r.hasAttribute("data-legend-swatch")) return false; // see markLegendSwatches
+      const fill = r.getAttribute("fill");
+      return !!fill && fill.startsWith("#") && r.width.baseVal.value > 0;
+    })
+    .map((r) => r.x.baseVal.value + r.width.baseVal.value / 2)
+    .sort((a, b) => a - b);
+  if (markCenters.length === 0) return;
+  const GAP_THRESHOLD = 15; // between inner (variety) spacing and outer (site) spacing
+  const clusters: number[][] = [[markCenters[0]]];
+  for (let i = 1; i < markCenters.length; i++) {
+    if (markCenters[i] - markCenters[i - 1] > GAP_THRESHOLD) clusters.push([]);
+    clusters[clusters.length - 1].push(markCenters[i]);
+  }
+  const centers = clusters.map(
+    (c) => c.reduce((a, b) => a + b, 0) / c.length
+  );
+  const ticks = Array.from(svg.querySelectorAll("text"))
+    .filter((t) => BARLEY_SITE_ORDER.includes(t.textContent?.trim() ?? ""))
+    .sort((a, b) => a.x.baseVal.getItem(0).value - b.x.baseVal.getItem(0).value);
+  ticks.forEach((t, i) => {
+    if (centers[i] === undefined) return;
+    const width = t.getBBox().width;
+    t.x.baseVal.getItem(0).value = centers[i] - width / 2;
+  });
+}
+//
+// The zero-reference rows share the SAME field name ("delta", not a
+// differently-named "zero") as the main chart's position channel: gofish's
+// overlay union check rejects two `Layer([...])`d charts whose position
+// channels are backed by different field names (it can't tell whether
+// they're meant to share a scale or are different units).
+// `barTop` is included alongside `delta` (both 0 here) so the BARS chart's
+// zero-baseline overlay can bind the SAME field name its main chart uses
+// (`barTop`) — the union check above cares about the field name, not just
+// its values being compatible.
+const barleyZeroRows = _.uniqBy(barley, "site").map((d) => ({
+  site: d.site,
+  delta: 0,
+  barTop: 0,
+}));
+// TWO stacked bugs conspired to make the zero baseline totally invisible
+// (confirmed by DOM inspection — the emitted <rect> for this mark had
+// `height="0"`, `stroke-width="0"`, and no `stroke-dasharray` attribute at
+// all, so there was nothing to paint even before the dash pattern):
+//   1. `rect`'s channel set (see `Rect`/`baseRect` in ast/shapes/rect.d.ts)
+//      has `strokeWidth` but no `strokeDasharray` — the latter isn't a
+//      recognized prop, so passing it is silently dropped.
+//   2. NEW BUG (not in the known list, and the more fundamental one): a
+//      literal `h: 0` isn't just "zero thickness" — the SVG spec says a
+//      `<rect>` with height (or width) of exactly 0 is excluded from
+//      rendering ENTIRELY, so no stroke would show even with strokeWidth
+//      fixed. `h: 0` cannot be used to draw a hairline; it has to be a real
+//      (if small) positive height.
+// HACK: `h: 1` gives the rect actual (if minimal) area so it paints at all;
+// `strokeWidth` is set for real (it IS a supported channel) as a further
+// belt-and-suspenders fix; `stroke-dasharray` — still not a channel — is
+// patched onto the rendered <rect> by DOM surgery in `dashZeroBaseline`
+// below, the same "GoFish won't take the option, so mutate the emitted SVG"
+// move `stripYearTicks`/`stripVarietyTicks` already use elsewhere in this
+// file.
+const zeroBaselineMark = (field: "delta" | "barTop") =>
+  rect({
+    y: field,
+    h: 1,
+    fill: "none",
+    stroke: "#888",
+    strokeWidth: 1.5,
+  });
+
+// HACK: see the comment on `zeroBaselineMark` above — `strokeDasharray` isn't
+// a real `rect` channel, so the zero-baseline rects render solid; this finds
+// them by their (fill:none, stroke:#888) signature, which no data mark in
+// these charts shares.
+//
+// NEW BUG (not in the known list): stamping `stroke-dasharray` straight onto
+// the `h: 1` rect (the original version of this function) does NOT produce a
+// clean dashed rule. An SVG `<rect>`'s stroke traces its full outline — all
+// four sides — so a 1px-tall rect gets its dash pattern applied to BOTH the
+// top and bottom edges (a hairline apart), and at real render scale those two
+// dashed traces don't line up dash-for-dash (rounding in exactly where each
+// dash starts along the perimeter), so the two nearly-overlapping dashed
+// lines beat against each other into a scruffy zigzag/squiggle rather than a
+// single clean dashed rule — confirmed by screenshot at real slide scale.
+// HACK: don't dash the rect's stroke at all; replace the rect outright with a
+// single hand-drawn `<line>` at its vertical center — a `<line>` has exactly
+// one edge to dash, so `stroke-dasharray` on it can only ever produce one
+// clean dashed trace.
+//
+// NEW BUG (not in the known list, and related to the one `realignSiteTicks`
+// already works around): the zero-baseline overlay is a SEPARATE single-level
+// `spread({ by: "site" })` (see `barleyZeroRows`'s flow) laid over the main
+// chart's two-level `spread(site) -> spread(variety)`. Even with both spreads
+// given the identical `DELTA_SITE_SPACING`, GoFish's per-slot width math
+// comes out slightly different between a single-level and a nested spread —
+// confirmed by measuring both the baseline rects' and the data marks'
+// rendered x-extents: the two start in rough agreement at University Farm but
+// drift apart site over site, and by Duluth the baseline segment is ~30px
+// short of the panel it's supposed to underline. HACK: don't trust the
+// baseline rects' own x-extent at all (same move `realignSiteTicks` already
+// makes for the tick labels) — measure each panel's own colored marks
+// (excluding the legend, tagged by `markLegendSwatches`) clustered by site,
+// and stretch each dashed line to match its own panel's real extent, with a
+// small pad so the line reads as underlining the panel rather than exactly
+// bracketing its outermost mark.
+async function dashZeroBaseline(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  const ns = "http://www.w3.org/2000/svg";
+  const PAD = 10;
+  const markXs = Array.from(svg.querySelectorAll("rect"))
+    .filter((r) => {
+      if (r.hasAttribute("data-legend-swatch")) return false;
+      const fill = r.getAttribute("fill");
+      return !!fill && fill.startsWith("#") && r.width.baseVal.value > 0;
+    })
+    .map((r) => ({
+      x0: r.x.baseVal.value,
+      x1: r.x.baseVal.value + r.width.baseVal.value,
+    }))
+    .sort((a, b) => a.x0 - b.x0);
+  const GAP_THRESHOLD = 15; // between inner (variety) spacing and outer (site) spacing
+  const clusters: (typeof markXs)[number][][] = markXs.length
+    ? [[markXs[0]]]
+    : [];
+  for (let i = 1; i < markXs.length; i++) {
+    if (markXs[i].x0 - clusters[clusters.length - 1].at(-1)!.x1 > GAP_THRESHOLD) {
+      clusters.push([]);
+    }
+    clusters[clusters.length - 1].push(markXs[i]);
+  }
+  const panelRanges = clusters.map((c) => ({
+    x0: Math.min(...c.map((m) => m.x0)),
+    x1: Math.max(...c.map((m) => m.x1)),
+  }));
+  const baselineRects = Array.from(svg.querySelectorAll("rect")).filter(
+    (r) => r.getAttribute("fill") === "none" && r.getAttribute("stroke") === "#888"
+  );
+  baselineRects.sort((a, b) => a.x.baseVal.value - b.x.baseVal.value);
+  baselineRects.forEach((r, i) => {
+    const midY = r.y.baseVal.value + r.height.baseVal.value / 2;
+    const panel = panelRanges[i];
+    const x0 = panel ? panel.x0 - PAD : r.x.baseVal.value;
+    const x1 = panel ? panel.x1 + PAD : r.x.baseVal.value + r.width.baseVal.value;
+    const line = document.createElementNS(ns, "line");
+    line.setAttribute("x1", String(x0));
+    line.setAttribute("x2", String(x1));
+    line.setAttribute("y1", String(midY));
+    line.setAttribute("y2", String(midY));
+    line.setAttribute("stroke", "#888");
+    line.setAttribute("stroke-width", "1.5");
+    line.setAttribute("stroke-dasharray", "4 3");
+    r.replaceWith(line);
+  });
+}
+// Site/variety spacing trimmed from the original 20/2 (see `deltaPanelsFlow`'s
+// former values) once the legend came back (see the comment above
+// `markLegendSwatches`): unlike the SLOPE charts, whose content is 2 fixed
+// points per line regardless of the outer `w`, these panels' own footprint is
+// dominated by 10 fixed-size marks per site (an explicit 8x8 dot, or an
+// auto-width bar) and does NOT shrink just because a smaller `w` is
+// requested — confirmed by measuring the rendered svg's own `width`
+// attribute at several requested `w`s. With the legend now real (not
+// DOM-deleted), the sum of (10-marks-per-site content) + legend overhead
+// pushed the natural rendered width past the 1280px slide (1264px for dots,
+// 1491px for bars at the old spacing/w), so BOTH the per-mark footprint
+// (spacing here, and the dot size in `renderVizBarleyDeltaDots`) and the
+// requested `w` (see the `w` defaults on both render functions below) were
+// trimmed to bring the natural width back under the slide width with the
+// legend included.
+// Shared with the zero-baseline overlay's OWN `spread({ by: "site" })` below
+// (`barleyZeroRows`'s flow, in both renderVizBarleyDeltaDots and
+// renderVizBarleyDeltaBars) — the baseline is a separate `Layer([...])`ed
+// chart, so if its site spacing ever drifted from this one, the dashed
+// zero-baseline would stop lining up under its own panel's marks.
+const DELTA_SITE_SPACING = 14;
+const deltaPanelsFlow = [
+  spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }),
+  spread({ by: "variety", dir: "x", spacing: 1 }),
+] as const;
+
+function renderVizBarleyDeltaDots(
+  id = "chart-viz-barley-delta-dots",
+  w = 780,
+  h = SLOPE_H
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Layer([
+    Chart(barleyZeroRows)
+      .flow(spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }))
+      .mark(zeroBaselineMark("delta")),
+    Chart(barley, vizChartOptions)
+      .flow(derive(pairYears), ...deltaPanelsFlow)
+      // HACK (gofish#770 workaround): a small rounded `rect` positioned by
+      // `y` stands in for a "dot" — `scatter` was the natural mark here,
+      // but it collapses the panels (see comment above).
+      .mark(rect({ w: 6, h: 6, rx: 3, ry: 3, y: "delta", fill: "variety" })),
+  ]).render(el, {
+    w,
+    h,
+    axes: { x: true, y: { title: "Δ yield (bu/acre)" } },
+    legend: true,
+  });
+  // Sequenced (not fire-and-forget) so `realignSiteTicks`/`stripVarietyTicks`
+  // see the legend already tagged before they run.
+  markLegendSwatches(id) // HACK: gofish#686; stripLegend's heuristic misfires on this chart's own dot marks, see comment above — this tags the legend instead of deleting it
+    .then(() => stripVarietyTicks(id)) // HACK: see stripVarietyTicks above
+    .then(() => realignSiteTicks(id)) // HACK: see realignSiteTicks above
+    .then(() => dashZeroBaseline(id)) // HACK: see dashZeroBaseline above
+    .then(() => unclipSvgWidth(id)); // HACK: see unclipSvgWidth above
+}
+
+// Same data, same panel flow as (3) — signed bars from a zero baseline
+// instead of dots (bars read sign faster than dots do). Plain signed bars,
+// NOT stacked, positioned by the precomputed `barTop`/`barHeight` fields
+// (see the comment in `pairYears`) rather than a plain `h: "delta"` — being
+// a spread+spread flow (not spread+scatter), it was never at risk from
+// gofish#770, but it did hit a different, new sign-handling bug (see below).
+function renderVizBarleyDeltaBars(
+  id = "chart-viz-barley-delta-bars",
+  w = 560,
+  h = SLOPE_H
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Layer([
+    Chart(barleyZeroRows)
+      .flow(spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }))
+      .mark(zeroBaselineMark("barTop")),
+    Chart(barley, vizChartOptions)
+      .flow(derive(pairYears), ...deltaPanelsFlow)
+      .mark(rect({ y: "barTop", h: "barHeight", fill: "variety" })), // HACK: see barTop/barHeight comment in pairYears
+  ]).render(el, {
+    w,
+    h,
+    // `barTop` is the internal precomputed-top-edge hack field (see the
+    // `pairYears` comment) — it must never leak onto the axis as a label, so
+    // the axis title is overridden with the real quantity it displays.
+    axes: { x: true, y: { title: "Δ yield (bu/acre)" } },
+    legend: true,
+  });
+  markLegendSwatches(id) // HACK: gofish#686, see the comment above markLegendSwatches
+    .then(() => stripVarietyTicks(id))
+    .then(() => realignSiteTicks(id)) // HACK: see realignSiteTicks above
+    .then(() => dashZeroBaseline(id)) // HACK: see dashZeroBaseline above
+    .then(() => unclipSvgWidth(id)); // HACK: see unclipSvgWidth above
 }
 
 // ── Part 2: Scatter pie ───────────────────────────────────────────────────
@@ -1875,15 +2514,20 @@ function renderConnLine(id = "chart-conn-line", w = 380, h = 280) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   // Same two data points as chart-conn-bars, scattered by an index (scatter
-  // needs a numeric x for the categorical position) and joined by `.connect`
-  // — the LineChart.stories.tsx idiom (`.mark(blank()).connect(line())`).
+  // needs a numeric x for the categorical position) and joined by a fused
+  // relational line mark. gofish-graphics 0.1.0-nightly.20260711 deletes
+  // `.connect()` and the `.mark(scaffold()).connect(line(...))` two-layer
+  // idiom along with it; `line({ by })` now consumes the scatter's placement
+  // directly as its own `.mark()`. Both rows share one `group` key so they
+  // resolve to a single two-point line entry (a fused relational mark does
+  // NOT inherit the flow's grouping — gofish #752 — so `by` must be restated
+  // here even though there's only one group).
   // Axes off: the numeric index axis would read "xIndex 0..1"; the slide
   // overlays female/male labels under the endpoints instead.
-  const indexed = connHeights.map((d, i) => ({ ...d, xIndex: i }));
+  const indexed = connHeights.map((d, i) => ({ ...d, xIndex: i, group: "all" }));
   Chart(indexed, { axes: false })
     .flow(scatter("xIndex", { x: "xIndex", y: "height" }))
-    .mark(scaffold())
-    .connect(line({ strokeWidth: 2.5, stroke: FRANCONERI_BAR_COLOR }))
+    .mark(line({ by: "group", stroke: FRANCONERI_BAR_COLOR, strokeWidth: 2.5 }))
     .render(el, { w, h: h - 40, axes: false });
 }
 
@@ -1972,8 +2616,14 @@ export function renderCharts() {
     true
   );
   renderVizBarleyDeltaHeatmap();
+  renderVizBarleySlopePanels("chart-viz-barley-slope-restate");
   renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180);
   renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230);
+  // Morph waypoints (2026-07-11): slope -> anchored slope -> delta dots/bars
+  // -> heatmap. See charts.ts comments above renderVizBarleySlopePanels.
+  renderVizBarleySlopeAnchored();
+  renderVizBarleyDeltaDots();
+  renderVizBarleyDeltaBars();
   renderFlowerChart();
   renderBalloonChart();
   renderSankeyTree();
@@ -2025,10 +2675,19 @@ export const chartRenderers: Record<string, () => void> = {
       true
     ),
   "chart-viz-barley-delta": renderVizBarleyDeltaHeatmap,
+  // Re-states the same chart as "chart-viz-barley-slope" on the "simplify
+  // your message" slide, right after the section break — same underlying
+  // spec, a second DOM container (duplicate `id`s across slides silently
+  // break `getContainer`'s `getElementById` lookup, see main.ts).
+  "chart-viz-barley-slope-restate": () =>
+    renderVizBarleySlopePanels("chart-viz-barley-slope-restate"),
   "chart-viz-barley-slope-cmp": () =>
     renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180),
   "chart-viz-barley-delta-cmp": () =>
     renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230),
+  "chart-viz-barley-slope-anchored": renderVizBarleySlopeAnchored,
+  "chart-viz-barley-delta-dots": renderVizBarleyDeltaDots,
+  "chart-viz-barley-delta-bars": renderVizBarleyDeltaBars,
   "chart-franconeri-a": renderFranconeriA,
   "chart-viz-agg-site-year": renderAggSiteYear,
   "chart-viz-agg-site-year-highlight": renderAggSiteYearHighlight,

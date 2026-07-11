@@ -218,23 +218,13 @@ chart(barley_scatter_by_year(1931)).flow(
               "Every variety decreased at every site — except Morris, where
               every variety increased."
             </p>
-            <pre class="viz-code compact">def mark_slope(data):
-    point_name = f"slope-pts-{data[0]['site']}"
-    return layer([
-      chart(data)
-        .<span class="viz-op">flow</span>(
-          <span class="viz-op">group</span>(by="variety"),
-          <span class="viz-op">scatter</span>(x="year", y="yield")
-        )
-        .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=0, h=0, fill="variety").name(point_name)),
-      chart(selectAll(point_name))
-        .<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="variety"))
-        .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(strokeWidth=2)),
-    ])
-
-chart(barley)
-  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="site", dir="x", spacing=20))
-  .<span class="viz-mark">mark</span>(mark_slope)</pre>
+            <pre class="viz-code compact">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="viz-op">scatter</span>(by="variety", y="yield"),
+  )
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(stroke="variety"))</pre>
             <div
               id="chart-viz-barley-slope"
               class="chart-container viz-gofish-chart"
@@ -264,10 +254,37 @@ chart(barley)
             </aside>
           </section>
 
+          <!-- ─── SECTION TITLE: CHARTS THAT ARGUE ────────────────── -->
+
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <h2>charts that argue</h2>
+            <p class="big-claim" style="margin-top: 1.1rem">
+              Up to now, every chart was for finding the anomaly. From here
+              on, every chart is for telling someone about it.
+            </p>
+            <p style="margin-top: 0.8rem; font-size: 0.6em; color: #555">
+              Same grammar, different pressure: exploratory charts reward
+              coverage; explanatory charts reward one unmissable reading.
+            </p>
+            <aside class="notes">
+              Punctuation slide — keep it short, let it breathe. Everything
+              up through the last slope panels was built so WE could find
+              Morris: the six-panel Trellis layout is honest and complete,
+              but it makes the reader do the work of aggregating ten slope
+              signs per panel. Everything from here — color, the callout,
+              and the four-step simplification arc that follows — is built
+              so someone ELSE can see Morris without doing that work. Same
+              operators, same data, different design pressure: exploratory
+              charts optimize for not hiding anything; explanatory charts
+              optimize for making one reading cheap, even at the cost of
+              others.
+            </aside>
+          </section>
+
           <!-- ─── COLOR: HIGHLIGHT THE EXCEPTION ──────────────────── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>color names the exception</h2>
+            <h2>use color for emphasis</h2>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               Same panels, now colored by site with Morris in orange. The
               structure already found the exception; color just names it.
@@ -288,13 +305,21 @@ chart(barley)
               stroked by site using the Morris-green palette from the ribbon.
               Everything else goes gray, so the single rising panel reads at a
               glance without any structural change. Same "style is downstream of
-              structure" move as the ribbon highlight.
+              structure" move as the ribbon highlight. Color is the cheapest
+              lever there is for "look here" — cheaper than a structural
+              change, cheaper than an annotation. Own it honestly on stage:
+              GoFish has no `emphasize()` primitive yet. What's on screen is
+              a hand-written conditional in the render function (`highlight
+              ? palette(...) : the default color scale`), not a first-class
+              operator — filed as gofish#641, and worth fixing precisely
+              because "highlight one category, gray out the rest" is common
+              enough to deserve its own name instead of a per-chart if/else.
             </aside>
           </section>
 
           <!-- Labels/annotations: say the takeaway out loud -->
           <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>call it out</h2>
+            <h2>annotations carry the takeaway</h2>
             <div
               id="chart-viz-barley-slope-annotated"
               class="chart-container viz-gofish-chart"
@@ -305,7 +330,9 @@ chart(barley)
               reader doesn't have to find it.
             </p>
             <aside class="notes">
-              The last step of explanatory polish: annotate. Same slope
+              The last step of explanatory polish: annotate. If the sentence
+              is the point, write the sentence on the chart — don't leave the
+              reader to reconstruct it from a color cue alone. Same slope
               panels, same Morris-orange highlight — color already made
               Morris's rising panel pop; the label states the conclusion
               directly instead of leaving the reader to infer it from six
@@ -318,47 +345,194 @@ chart(barley)
             </aside>
           </section>
 
-          <!-- ─── Δ HEATMAP: COMPILE THE SENTENCE ─────────────────── -->
+          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 1 OF 4 — THE SLOPE ──── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>compile the sentence</h2>
-            <pre class="viz-code">chart(barley)
+            <h2>simplify your message</h2>
+            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
+              Same slope panels as before — the starting point for four
+              one-edit steps toward a faster read.
+            </p>
+            <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-transform">derive</span>(pair_years),
-    <span class="viz-op">table</span>(by={"x": "variety", "y": "site"}, spacing=4)
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="viz-op">scatter</span>(by="variety", y="yield"),
   )
-  .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>(fill="deltaColor")
-  )</pre>
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(stroke="variety"))</pre>
+            <div
+              id="chart-viz-barley-slope-restate"
+              class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
+            ></div>
+            <aside class="notes">
+              Same chart, same spec, as the "takeaway is a sentence" slide —
+              deliberately, so it re-anchors the through-line right after the
+              section break. This is the through-line for the next four
+              slides: each step is exactly one edit to this spec, and each
+              edit gives something up in exchange for a faster read of the
+              sign. Nothing changes yet; watch what changes next.
+            </aside>
+          </section>
+
+          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 2 OF 4 — ANCHORED ───── -->
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>anchor the comparison</h2>
+            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
+              One edit: normalize each variety's 1931 yield to zero, so the
+              line's own angle becomes the delta.
+            </p>
+            <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
+><span class="cut-line">  .<span class="viz-op">flow</span>(</span
+><span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(anchor_to_1931),</span
+><span class="cut-line">    <span class="viz-op">spread</span>(by="site", dir="x"),</span
+><span class="cut-line">    <span class="viz-op">spread</span>(by="year", dir="x"),</span
+><span class="cut-line cut-highlight">    <span class="viz-op">scatter</span>(by="variety", y="delta_from_1931"),</span
+><span class="cut-line">  )</span
+><span class="cut-line">  .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(stroke="variety"))</span></pre>
+            <div
+              id="chart-viz-barley-slope-anchored"
+              class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
+            ></div>
+            <aside class="notes">
+              One edit from the last slide: `derive` computes each variety's
+              delta from its own 1931 yield, and `y` is rebound to that delta
+              instead of raw yield. Every line still starts at the same
+              baseline (zero), so nothing about "up is more" is lost — the
+              slope metaphor survives intact. What's new is that the line's
+              ANGLE now IS the delta, not just a byproduct of two absolute
+              values. Nothing is thrown away yet; this step only compresses
+              information that was already implicit in the previous chart.
+            </aside>
+          </section>
+
+          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 3 OF 4 — BARS ───────── -->
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>the line has nothing left to connect</h2>
+            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
+              One edit: <code>derive</code> collapses the year pair into a
+              single delta. The line isn't removed for taste — it becomes
+              ungrammatical.
+            </p>
+            <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
+><span class="cut-line">  .<span class="viz-op">flow</span>(</span
+><span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(delta),</span
+><span class="cut-line">    <span class="viz-op">spread</span>(by="site", dir="x"),</span
+><span class="cut-line cut-highlight">    <span class="viz-op">spread</span>(by="variety", dir="x"),</span
+><span class="cut-line">  )</span
+><span class="cut-line cut-highlight">  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="delta"))</span></pre>
+            <div
+              id="chart-viz-barley-delta-bars"
+              class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
+            ></div>
+            <aside class="notes">
+              The key beat of the whole arc. `derive` now folds each
+              variety's two years into one delta, so the year spread has
+              nothing left to spread over — it's gone, and `variety` takes
+              its place as the inner facet. Once each (site, variety) pair is
+              down to a single value, there is no second point left for a
+              line to connect — the mark isn't swapped from `line` to `rect`
+              because bars look nicer, it's swapped because a line needs two
+              endpoints and this data only has one. The data itself took the
+              line away. A signed bar from a zero baseline keeps the
+              up-is-more read from the slope, just compressed onto one axis.
+            </aside>
+          </section>
+
+          <!-- HIDDEN ALTERNATE: dots instead of bars for the same delta
+               data. Same spec shape as the bars slide, swapping the mark
+               for a small rounded rect standing in for a dot — bars read
+               sign faster, but dots are the more literal "scatter" analog
+               and worth having on hand. To swap it in for the bars slide:
+               remove data-visibility="hidden" here, and either add
+               data-visibility="hidden" to the bars slide above or delete
+               it, keeping the h2/copy from whichever one stays. -->
+          <section
+            class="viz-step"
+            data-background-color="#f7f2e8"
+            data-visibility="hidden"
+          >
+            <h2>the line has nothing left to connect</h2>
+            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
+              Same one-edit step as the bars slide — dots instead of bars for
+              the same collapsed delta.
+            </p>
+            <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
+><span class="cut-line">  .<span class="viz-op">flow</span>(</span
+><span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(delta),</span
+><span class="cut-line">    <span class="viz-op">spread</span>(by="site", dir="x"),</span
+><span class="cut-line cut-highlight">    <span class="viz-op">scatter</span>(by="variety", y="delta"),</span
+><span class="cut-line">  )</span
+><span class="cut-line cut-highlight">  .<span class="viz-mark">mark</span>(<span class="viz-mark">circle</span>(r=4))</span></pre>
+            <div
+              id="chart-viz-barley-delta-dots"
+              class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
+            ></div>
+            <aside class="notes">
+              Same beat as the bars slide: derive collapses the year pair, so
+              there is nothing left for a line to connect. A dot marks each
+              (site, variety)'s single delta against a dashed zero baseline
+              instead of a bar's filled rect — more literally "a scatter with
+              one point," but a signed bar reads the sign faster because its
+              length and its direction from the baseline are the same
+              gesture. Kept as a hideable alternate to flip between on stage.
+            </aside>
+          </section>
+
+          <!-- ─── Δ HEATMAP: LET COLOR CARRY THE SIGN ─────────────── -->
+
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>let color carry the sign</h2>
+            <pre class="viz-code"><span class="cut-line">chart(barley)</span
+><span class="cut-line">  .<span class="viz-op">flow</span>(</span
+><span class="cut-line">    <span class="viz-transform">derive</span>(delta),</span
+><span class="cut-line cut-highlight">    <span class="viz-op">table</span>(by={"x": "variety", "y": "site"}),</span
+><span class="cut-line">  )</span
+><span class="cut-line cut-highlight">  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="delta"))</span></pre>
             <div
               id="chart-viz-barley-delta"
               class="chart-container viz-gofish-chart"
-              style="height: 380px"
+              style="height: 360px"
             ></div>
-            <p class="viz-step-copy" style="font-size: 0.56em">
-              <code>derive</code> computes the compared term — Δyield per
-              (site, variety). <code>table</code> crosses the sentence's two
-              quantifiers, variety and site, into a grid where neither is
-              privileged. The fill is the predicate: sign of Δ, on a
-              diverging scale centered at zero, anchored on Morris orange.
-              One orange row; the rest, blue.
+            <p class="viz-step-copy" style="font-size: 0.52em; max-width: 90%">
+              The mark is <code>rect</code> the whole arc through — only the
+              channel it's bound to changes, and the sentence reads in one
+              glance.
             </p>
             <aside class="notes">
-              One green row (Morris) in an otherwise red matrix. Two other
-              cells buck their row's sign, and they're not faint: Grand
-              Rapids/Velvet rose +9.2 bushels/acre, the largest increase
-              anywhere outside Morris — bigger than several of Morris's own
-              varieties. University Farm/No. 475 rose a more moderate +5.3.
-              Both are real data, not a chart bug; they just aren't uniform
-              the way Morris's whole row is. `derive` is term-level computation:
-              gofish-graphics's built-in `gradient()` color scale always
-              spans the field's actual min/max, so it can't be recentered at
-              0 for an asymmetric spread of deltas — the diverging scale
-              here is hand-built with chroma and baked into a literal
-              per-row hex field instead. `table` is quantifier structure —
-              crossed spreads, neither privileged. `rect`'s fill is
-              predicate evaluation. Choosing a chart is compiling the
-              sentence.
+              Last edit: the site spread and the variety spread — nesting,
+              one inside the other — cross into a `table`, so neither
+              quantifier is privileged over the other anymore. And the
+              delta, which was a bar's height a slide ago, becomes a rect's
+              fill instead. That's the payoff of the whole arc: `rect` was
+              the mark on the bars slide and it's still the mark here — only
+              the channel it's bound to changed, from `h` to `fill`. One
+              orange row (Morris) in an otherwise blue matrix; a couple of
+              cells buck their row's sign without being faint about it —
+              Grand Rapids/Velvet rose +9.2 bushels/acre, University
+              Farm/No. 475 rose a more moderate +5.3 — real data, not a
+              chart bug, they just aren't uniform the way Morris's whole row
+              is. Own the gap between this spec and the real code here:
+              gofish-graphics's `gradient()` scale always spans the field's
+              actual min/max, so it can't be recentered at 0 for an
+              asymmetric spread of deltas — the real chart hand-builds the
+              diverging scale with chroma and bakes it into a precomputed
+              `deltaColor` hex field instead of a live `fill="delta"`
+              binding. The bars slide has its own precomputed `barTop`/
+              `barHeight` fields because `rect`'s `h` doesn't grow a bar
+              upward from a zero baseline for a negative value, and the
+              slope/anchored slides route a composite grouping key through
+              an internal render node (`r.directNode.datum[0]`) because a
+              fused relational mark doesn't inherit the flow's own grouping.
+              These are filed as gofish#752, #765, #768, #769, #770, #772,
+              #773 — real, open, and worth fixing, which is exactly why the
+              slide shows the spec we're fixing GoFish to deserve, not the
+              one it needs today.
             </aside>
           </section>
 
