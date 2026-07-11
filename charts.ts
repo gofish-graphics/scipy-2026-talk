@@ -747,12 +747,15 @@ function renderVizOpScatter(id = "chart-viz-op-scatter") {
 // spacing keeps the two stacks visually distinct little columns; the low
 // ribbon opacity keeps the connecting bands clearly lighter than the solid
 // segment rects so the flow reads as "stacks joined by translucent bands"
-// rather than one mass.
+// rather than one mass. The segment order flips between the sides (blue on
+// the bottom at left, on top at right), so the two bands CROSS in the
+// middle — the rank-change/overtake read that ribbons price, matching the
+// "read crossings as overtakes" line in the chip beside it.
 const opRibbonData = [
   { side: "left", seg: "a", v: 3, fill: opVizColors[0] },
   { side: "left", seg: "b", v: 2, fill: opVizColors[1] },
+  { side: "right", seg: "b", v: 3, fill: opVizColors[1] },
   { side: "right", seg: "a", v: 2, fill: opVizColors[0] },
-  { side: "right", seg: "b", v: 4, fill: opVizColors[1] },
 ];
 
 function renderVizOpRibbon(id = "chart-viz-op-ribbon") {
