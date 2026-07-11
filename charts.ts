@@ -157,6 +157,11 @@ const cityYearData = Object.values(
   sales: _.sumBy(rows, "yield"),
 }));
 
+// The example region the "each line of the spec is a cut" slide's chips and
+// chart boundaries both point at: Boulder, latest year in the data.
+const CUT_FOCUS_CITY = "Boulder";
+const CUT_FOCUS_YEAR = String(Math.max(...Object.values(OPENING_YEAR)));
+
 function getContainer(id: string): HTMLElement | null {
   return document.getElementById(id);
 }
@@ -417,6 +422,129 @@ function renderAggSiteYearCollapsed(
     .flow(spread("city", { dir: "x", spacing: 24 }))
     .mark(rect({ h: "sales", fill: "#9aa5b1" }))
     .render(el, { w, h, axes, legend: false });
+}
+
+// "each line of the spec is a cut" slide: marks the focused region with a
+// DRAWN BOUNDARY (Gestalt common region) instead of graying out the rest of
+// the chart, so the cut is visible as containment rather than as salience.
+// GoFish's rects carry no class/data attributes to select on (verified by
+// inspecting the rendered markup — plain <rect fill="...">, no group
+// transforms), so bars are found by fill/size like addOuterGroupBoxes above,
+// then clustered by the same inner-vs-outer x-gap heuristic. A specific
+// city's cluster (or a specific city+year bar within it) is picked out by
+// matching against GoFish's own axis tick <text> labels — the one reliable
+// per-datum label GoFish does emit — rather than by hardcoding a fill color
+// or a positional index that would silently go stale if the data or the
+// palette changed.
+function addFocusBox(
+  id: string,
+  target: { city?: string; year?: string; allGroups?: boolean } = {}
+) {
+  const el = getContainer(id);
+  if (!el) return;
+  waitForChild(el, "svg").then((svg) => {
+    if (!svg || svg.querySelector(".cut-focus-box")) return;
+    const bars = Array.from(svg.querySelectorAll("rect")).filter((r) => {
+      const fill = r.getAttribute("fill");
+      return fill !== "gray" && fill !== "none" && r.height.baseVal.value > 15;
+    });
+    if (bars.length === 0) return;
+
+    const boxes = bars
+      .map((r) => ({
+        x0: r.x.baseVal.value,
+        x1: r.x.baseVal.value + r.width.baseVal.value,
+        y0: r.y.baseVal.value,
+        y1: r.y.baseVal.value + r.height.baseVal.value,
+      }))
+      .sort((a, b) => a.x0 - b.x0);
+
+    let targets = boxes;
+
+    if (!target.allGroups && target.city) {
+      const GAP_THRESHOLD = 15; // between inner spacing (6px) and outer (24px+)
+      const clusters: (typeof boxes)[number][][] = [[boxes[0]]];
+      for (let i = 1; i < boxes.length; i++) {
+        const prev = boxes[i - 1];
+        const cur = boxes[i];
+        if (cur.x0 - prev.x1 > GAP_THRESHOLD) clusters.push([]);
+        clusters[clusters.length - 1].push(cur);
+      }
+
+      // reveal.js hides every non-active slide with display:none, and these
+      // charts all render eagerly on load — so getBBox() (which needs a
+      // layout box) silently returns 0 for the axis labels here. Read the
+      // "x" attribute GoFish already writes instead: it's the label's
+      // text-anchor-start left edge, a few px before the bar/cluster it
+      // labels. Match each label to its NEAREST candidate by that left
+      // edge rather than a fixed-tolerance window — the inner (year) bars
+      // sit only 6px apart, narrower than a generous tolerance window, so
+      // two neighboring bars' windows can both contain one label's x and a
+      // first-match lookup would silently grab the wrong one.
+      const texts = Array.from(svg.querySelectorAll("text"));
+      const leftEdgeOf = (t: SVGTextElement) =>
+        parseFloat(t.getAttribute("x") ?? "NaN");
+      const nearest = <T extends { x0: number }>(
+        items: T[],
+        labelXs: number[]
+      ): T | undefined =>
+        items.reduce<{ item: T | undefined; dist: number }>(
+          (best, item) => {
+            const dist = Math.min(
+              ...labelXs.map((lx) => Math.abs(item.x0 - lx))
+            );
+            return dist < best.dist ? { item, dist } : best;
+          },
+          { item: undefined, dist: Infinity }
+        ).item;
+
+      const cityLabelXs = texts
+        .filter((t) => t.textContent === target.city)
+        .map(leftEdgeOf);
+      const clusterStarts = clusters.map((c) => ({ x0: c[0].x0, cluster: c }));
+      const matchedStart = nearest(clusterStarts, cityLabelXs);
+      if (!matchedStart) {
+        console.warn(
+          `addFocusBox(${id}): no bar cluster matched city "${target.city}"`
+        );
+        return;
+      }
+      const cluster = matchedStart.cluster;
+      targets = cluster;
+
+      if (target.year) {
+        const yearLabelXs = texts
+          .filter((t) => t.textContent === target.year)
+          .map(leftEdgeOf);
+        const bar = nearest(cluster, yearLabelXs);
+        if (!bar) {
+          console.warn(
+            `addFocusBox(${id}): no bar matched year "${target.year}" within city "${target.city}"`
+          );
+          return;
+        }
+        targets = [bar];
+      }
+    }
+
+    const PAD = 5;
+    const x0 = Math.min(...targets.map((c) => c.x0)) - PAD;
+    const y0 = Math.min(...targets.map((c) => c.y0)) - PAD;
+    const x1 = Math.max(...targets.map((c) => c.x1)) + PAD;
+    const y1 = Math.max(...targets.map((c) => c.y1)) + PAD;
+    const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    box.setAttribute("class", "cut-focus-box");
+    box.setAttribute("x", String(x0));
+    box.setAttribute("y", String(y0));
+    box.setAttribute("width", String(x1 - x0));
+    box.setAttribute("height", String(y1 - y0));
+    box.setAttribute("rx", "4");
+    box.setAttribute("fill", "none");
+    box.setAttribute("stroke", "#4a7fb5");
+    box.setAttribute("stroke-width", "1.5");
+    box.setAttribute("stroke-dasharray", "5 3");
+    svg.appendChild(box);
+  });
 }
 
 // Data-shape reveal: the opening's grouped bars re-shown with the anonymized
@@ -1528,10 +1656,20 @@ export function renderCharts() {
   renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
   addOuterGroupBoxes("chart-viz-agg-site-year-spec", 6);
   addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
-  // "each line of the spec is a cut" slide: one column per cut stop.
+  // "each line of the spec is a cut" slide: one column per cut stop. The
+  // focused region is a drawn boundary (Gestalt common region), not the
+  // gray-fallback dimming renderAggSiteYearHighlight uses elsewhere — it
+  // shrinks from the whole plot (column 1) to one bar (column 3) as the cut
+  // descends, mirroring the chips' bindings growing over the same span.
   renderAggSiteYearCollapsed("chart-viz-cut-city", 300, 220);
-  renderAggSiteYearHighlight("chart-viz-cut-year", 300, 220);
+  addFocusBox("chart-viz-cut-city", { allGroups: true });
+  renderAggSiteYear("chart-viz-cut-year", 300, 220);
+  addFocusBox("chart-viz-cut-year", { city: CUT_FOCUS_CITY });
   renderAggSiteYear("chart-viz-cut-mark", 300, 220);
+  addFocusBox("chart-viz-cut-mark", {
+    city: CUT_FOCUS_CITY,
+    year: CUT_FOCUS_YEAR,
+  });
   renderFranconeriAColor();
   renderFranconeriAColorKey();
   renderFranconeriB();
@@ -1646,11 +1784,21 @@ export const chartRenderers: Record<string, () => void> = {
     renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
     addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
   },
-  "chart-viz-cut-city": () =>
-    renderAggSiteYearCollapsed("chart-viz-cut-city", 300, 220),
-  "chart-viz-cut-year": () =>
-    renderAggSiteYearHighlight("chart-viz-cut-year", 300, 220),
-  "chart-viz-cut-mark": () => renderAggSiteYear("chart-viz-cut-mark", 300, 220),
+  "chart-viz-cut-city": () => {
+    renderAggSiteYearCollapsed("chart-viz-cut-city", 300, 220);
+    addFocusBox("chart-viz-cut-city", { allGroups: true });
+  },
+  "chart-viz-cut-year": () => {
+    renderAggSiteYear("chart-viz-cut-year", 300, 220);
+    addFocusBox("chart-viz-cut-year", { city: CUT_FOCUS_CITY });
+  },
+  "chart-viz-cut-mark": () => {
+    renderAggSiteYear("chart-viz-cut-mark", 300, 220);
+    addFocusBox("chart-viz-cut-mark", {
+      city: CUT_FOCUS_CITY,
+      year: CUT_FOCUS_YEAR,
+    });
+  },
   "chart-franconeri-a-color": renderFranconeriAColor,
   "chart-franconeri-a-color-key": renderFranconeriAColorKey,
   "chart-franconeri-a-key-2": () => {

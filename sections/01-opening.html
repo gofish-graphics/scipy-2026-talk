@@ -1293,7 +1293,8 @@
                   style="align-self: center"
                 ></div>
                 <div class="viz-query" style="align-self: center">
-                  <span class="q-line"><span class="q-val">compare</span> total sales across cities</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each city's year pattern⟩</span> across cities</span>
+                  <span class="q-gloss">groups sit apart — a scan</span>
                 </div>
               </div>
 
@@ -1319,7 +1320,9 @@
                   style="align-self: center"
                 ></div>
                 <div class="viz-query" style="align-self: center">
-                  <span class="q-line"><span class="q-val">compare</span> sales across years — city held fixed</span>
+                  <span class="q-ctx">city = Boulder</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨sales heights⟩</span> across years</span>
+                  <span class="q-gloss">bars sit adjacent — one glance</span>
                 </div>
               </div>
 
@@ -1345,7 +1348,9 @@
                   style="align-self: center"
                 ></div>
                 <div class="viz-query" style="align-self: center">
-                  <span class="q-line"><span class="q-val">read off</span> one sales value</span>
+                  <span class="q-ctx">city = Boulder · year = 2019</span>
+                  <span class="q-line">sales <span class="q-arrow">→</span> height · city <span class="q-arrow">→</span> color</span>
+                  <span class="q-gloss">a single bar — a lookup</span>
                 </div>
               </div>
             </div>
@@ -1361,14 +1366,32 @@
               "back to those bar charts." So the visualization of the idea
               (fade what's below the cut into a summary) is itself an
               instance of the idea (a lower level of the spec, collapsed).
-              Above the cut, everything stays present but dimmed: it's the
-              frame telling you which slice of data you're inside, not a
-              participant in the comparison. Column 2 reuses the same
-              highlight/gray-fallback mechanism as the earlier Boulder slide,
-              just to make the point that "in focus" vs. "collapsed" isn't
-              two different tricks — it's the same cut, applied one level
-              down. Column 3 is the cut at the mark: nothing left to
-              aggregate, so the query degrades to a lookup.
+              Above the cut, everything stays present, and the focused region
+              is now marked by a drawn dashed boundary around the bars in
+              play rather than by graying out the rest — this slide has
+              earned the right to use its own machinery: common region is
+              the strong Gestalt cue (the whole reason grouping/adjacency
+              reads as comparison at all), where dimming was only ever a
+              salience nudge borrowed for the earlier Boulder slide. Watch
+              the boundary itself across the three columns: it starts around
+              the entire plot (column 1 — every city still participates,
+              nothing pinned down yet) and shrinks one enclosure at a time,
+              down to Boulder's pair of bars, down to a single bar. The chip
+              above each boundary states that same shrinking directly — a
+              context header of concrete field = value bindings for ONE
+              example region (city = Boulder; city = Boulder, year = 2019)
+              instead of the abstract "held fixed" language the old chips
+              used — so the header grows exactly as the boundary shrinks:
+              two views of the same narrowing cut. Below the header, the
+              query body has a hole — ⟨sales heights⟩, ⟨each city's year
+              pattern⟩ — for what the boundary is now cheap to compare, and
+              the gloss line underneath is the cost of actually running that
+              query in this arrangement: first the perceptual act the layout
+              affords (groups sitting apart, bars sitting adjacent), then
+              what that act costs the reader (a scan, one glance). Column 3
+              is the cut at the mark: nothing left to aggregate, no hole left
+              in the query, so the body is a direct channel mapping and the
+              gloss degrades to a lookup.
             </aside>
           </section>
         </section>

@@ -1355,6 +1355,30 @@
   display: block;
 }
 
+/* Context header zone of the "each line of the spec is a cut" chips: dimmed
+   field = value bindings for one EXAMPLE region (e.g. "city = Boulder"),
+   sitting above the query body it applies to. Omitted entirely when there's
+   nothing yet bound (the outermost cut). */
+.viz-query .q-ctx {
+  display: block;
+  opacity: 0.45;
+  font-size: 0.85em;
+  margin-bottom: 0.3em;
+}
+
+/* A hole in a query body: the not-yet-filled-in part of the query, wrapped
+   in literal ⟨angle brackets⟩. Dashed outline echoes the chip's own dashed
+   border — "still speculative" at two nesting levels. */
+.viz-query .q-hole {
+  border: 1.5px dashed #4a7fb5;
+  border-radius: 4px;
+  padding: 0 0.3em;
+}
+
+.viz-query .q-arrow {
+  color: #555;
+}
+
 .viz-query .q-gloss {
   display: block;
   font-family: "Shantell Sans", sans-serif;
