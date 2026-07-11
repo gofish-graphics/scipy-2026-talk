@@ -974,15 +974,30 @@ function renderVizBarleySlopePoints(
 // panel's). Naming the points per site (`slope-pts-${site}`) keeps each
 // panel's connecting line scoped to that panel even though the registry
 // itself is effectively global.
+// The "call it out" slide's takeaway note, formerly an absolutely-positioned
+// HTML overlay div on the slide, is drawn by GoFish itself when `annotate` is
+// set: component-level annotation tiers per AnnotationLayer.stories.tsx —
+// `.layer(mark)` stacks a datumless bare mark over the chart in the chart's
+// own frame, so the box and its text live inside the rendered SVG. The note
+// stays pinned to the chart frame's top-right corner rather than anchored to
+// the Morris panel: that is where the HTML overlay sat (deliberately over
+// Grand Rapids/Duluth's dead space, well clear of Morris — see the slide
+// notes), and a frame-pinned tier cannot perturb the facet layout the way an
+// in-panel constraint layer can (nor trip gofish#753's flaky inner-spread
+// anchoring). `text` is a single-line mark with no fontWeight channel, so the
+// sentence is wrapped by hand into the same three lines the overlay broke
+// into, and the bold "every" is faked with a same-color stroke on a mark of
+// its own, x-offset by the measured width of "Morris rose for ".
 function renderVizBarleySlopePanels(
   id = "chart-viz-barley-slope",
   highlight = false,
   w = SLOPE_W,
-  h = SLOPE_H
+  h = SLOPE_H,
+  annotate = false
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(barley, vizChartOptions)
+  const panels = Chart(barley, vizChartOptions)
     .flow(spread("site", { dir: "x", spacing: 20 }))
     .mark((data) => {
       const site = (data as BarleyRow[])[0].site;
@@ -1003,7 +1018,66 @@ function renderVizBarleySlopePanels(
           .flow(group("variety"))
           .mark(line({ strokeWidth: 2 })),
       ]);
-    })
+    });
+  if (!annotate) {
+    panels.render(el, { w, h, axes: true, legend: false });
+    return;
+  }
+  // Coordinates are the chart's world frame: origin at the plot's lower-left,
+  // y-up, px units. `render({ w })` spends ~57px of that width on the y-axis
+  // gutter to the LEFT of the origin, so the frame's usable right edge is
+  // w - 57, not w (measured against the rendered SVG; marks placed past it
+  // get clipped). Everything is positioned via `cy` — the rect's `y2` alias
+  // resolved off-target in this build where `cy` lands exactly. Metrics
+  // mirror the old overlay: ~250x100 box, 12px corner radius, cream fill,
+  // Morris-orange border, three ~19px Shantell Sans lines of slide ink.
+  const noteFont = "'Shantell Sans', sans-serif";
+  const noteInk = "#222";
+  const noteW = 250;
+  const noteH = 100;
+  const noteLeft = w - 65 - noteW;
+  const noteTop = h + 8;
+  const noteTextX = noteLeft + 14;
+  const noteLineCy = (i: number) => noteTop - 17 - 26.5 * (i + 0.5);
+  const noteLine = (t: string, i: number) =>
+    text({
+      text: t,
+      fontSize: 19,
+      fill: noteInk,
+      fontFamily: noteFont,
+      x: noteTextX,
+      cy: noteLineCy(i),
+    });
+  panels
+    .layer(
+      rect({
+        x: noteLeft,
+        cy: noteTop - noteH / 2,
+        w: noteW,
+        h: noteH,
+        rx: 12,
+        fill: "#fff6e6",
+        stroke: "#e08214",
+        strokeWidth: 2,
+      })
+    )
+    .layer(noteLine("Morris rose for", 0))
+    .layer(
+      text({
+        text: "every",
+        fontSize: 19,
+        fill: noteInk,
+        stroke: noteInk,
+        strokeWidth: 0.7,
+        fontFamily: noteFont,
+        // Measured width of "Morris rose for " at 19px Shantell Sans (~140px
+        // + word space) — text has no inline bold, so "every" is its own mark.
+        x: noteTextX + 146,
+        cy: noteLineCy(0),
+      })
+    )
+    .layer(noteLine("variety, the only site", 1))
+    .layer(noteLine("that did.", 2))
     .render(el, { w, h, axes: true, legend: false });
 }
 
@@ -1892,7 +1966,13 @@ export function renderCharts() {
   renderVizBarleySlopePoints();
   renderVizBarleySlopePanels();
   renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true);
-  renderVizBarleySlopePanels("chart-viz-barley-slope-annotated", true);
+  renderVizBarleySlopePanels(
+    "chart-viz-barley-slope-annotated",
+    true,
+    SLOPE_W,
+    SLOPE_H,
+    true
+  );
   renderVizBarleyDeltaHeatmap();
   renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180);
   renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230);
@@ -1939,7 +2019,13 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-barley-slope-highlight": () =>
     renderVizBarleySlopePanels("chart-viz-barley-slope-highlight", true),
   "chart-viz-barley-slope-annotated": () =>
-    renderVizBarleySlopePanels("chart-viz-barley-slope-annotated", true),
+    renderVizBarleySlopePanels(
+      "chart-viz-barley-slope-annotated",
+      true,
+      SLOPE_W,
+      SLOPE_H,
+      true
+    ),
   "chart-viz-barley-delta": renderVizBarleyDeltaHeatmap,
   "chart-viz-barley-slope-cmp": () =>
     renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180),
