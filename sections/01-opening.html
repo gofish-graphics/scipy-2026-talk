@@ -680,11 +680,6 @@
                 <p style="color: #555; margin: 0.2rem 0 0">
                   speculative — cutting-edge research. please push back!
                 </p>
-                <div class="viz-query" style="margin-top: 0.5rem; font-size: 0.85em">
-                  <span class="q-line"><span class="q-kw">for each</span> city</span>
-                  <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-line"><span class="q-val">compare</span> sales</span>
-                </div>
               </div>
             </div>
             <aside class="notes">
@@ -692,8 +687,10 @@
               source, alpha, you can install it today. It's the culmination of a
               PhD spent studying how visual structure conveys meaning and building
               better libraries to take advantage of it. The query language does not
-              exist yet — it is where my current research is, so everything you see
-              in the dashed chips is a proposal, and I genuinely want pushback on it.
+              exist yet — it is where my current research is. I'll introduce it with
+              its own notation once we've built up some GoFish code to read queries
+              off of; for now, hold onto the idea that a chart is something you can
+              query, and I genuinely want pushback on the proposal when it shows up.
             </aside>
           </section>
 
@@ -1108,7 +1105,8 @@
                 display: flex;
                 gap: 1.8rem;
                 justify-content: center;
-                margin-top: 1rem;
+                align-items: center;
+                margin-top: 2rem;
                 font-size: 0.72em;
               "
             >
@@ -1117,6 +1115,7 @@
                   flex: 1;
                   display: flex;
                   flex-direction: column;
+                  align-items: center;
                   gap: 0.6rem;
                   max-width: 400px;
                 "
@@ -1137,31 +1136,6 @@
                   class="chart-container viz-ex-tile"
                   style="zoom: 0.6; align-self: center"
                 ></div>
-                <div class="viz-query fragment" data-fragment-index="1">
-                  <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-line"><span class="q-kw">for each</span> city</span>
-                  <span class="q-cases">
-                    <span class="q-kw">encode</span>
-                    <span class="q-brace">{</span>
-                    <span class="q-case-lines">
-                      <span>sales <span class="q-arrow">→</span> height</span>
-                      <span>city <span class="q-arrow">→</span> color</span>
-                    </span>
-                  </span>
-                  <span class="q-gloss">years grouped on the axis, cities side by side within each</span>
-                </div>
-                <div class="viz-query fragment" data-fragment-index="2" style="align-self: center">
-                  <ul class="q-list">
-                    <li class="q-item">
-                      <span class="q-line"><span class="q-val">compare</span> sales across cities</span>
-                      <span class="q-gloss">year held fixed</span>
-                    </li>
-                    <li class="q-item q-weak-item fragment" data-fragment-index="3">
-                      <span class="q-line"><span class="q-val">compare</span> sales across years</span>
-                      <span class="q-gloss">carried by color — weaker than adjacency</span>
-                    </li>
-                  </ul>
-                </div>
               </div>
 
               <div
@@ -1169,6 +1143,7 @@
                   flex: 1;
                   display: flex;
                   flex-direction: column;
+                  align-items: center;
                   gap: 0.6rem;
                   max-width: 400px;
                 "
@@ -1189,217 +1164,17 @@
                   class="chart-container viz-ex-tile"
                   style="zoom: 0.6; align-self: center"
                 ></div>
-                <div class="viz-query fragment" data-fragment-index="1">
-                  <span class="q-line"><span class="q-kw">for each</span> city</span>
-                  <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-cases">
-                    <span class="q-kw">encode</span>
-                    <span class="q-brace">{</span>
-                    <span class="q-case-lines">
-                      <span>sales <span class="q-arrow">→</span> height</span>
-                      <span>city <span class="q-arrow">→</span> color</span>
-                    </span>
-                  </span>
-                  <span class="q-gloss">cities grouped on the axis, years side by side within each</span>
-                </div>
-                <div class="viz-query fragment" data-fragment-index="2" style="align-self: center">
-                  <ul class="q-list">
-                    <li class="q-item">
-                      <span class="q-line"><span class="q-val">compare</span> sales across years</span>
-                      <span class="q-gloss">city held fixed</span>
-                    </li>
-                    <li class="q-item q-weak-item fragment" data-fragment-index="3">
-                      <span class="q-line"><span class="q-val">compare</span> sales across cities</span>
-                      <span class="q-gloss">a scan across groups — weaker than adjacency</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <p
-              class="viz-step-copy fragment"
-              data-fragment-index="4"
-              style="margin-top: 0.6rem; text-align: center"
-            >
-              the plan doesn't forbid queries — it prices them
-            </p>
-            <p
-              class="viz-step-copy fragment"
-              data-fragment-index="5"
-              style="margin-top: 0.6rem; text-align: center"
-            >
-              swap the plan, and the cheap query swaps with it
-            </p>
-            <aside class="notes">
-              Now we can say precisely what happened at the start of the talk. The
-              orange chip is the plan the chart fixes: two nested for-eaches (the
-              scan order) plus the case block of encodings. The blue chip under
-              each column is the query that plan makes cheap. On the left, cities
-              sit adjacent inside each year block, so comparing sales across
-              cities with the year held fixed is one glance; on the right, each
-              city's years sit adjacent, so comparing sales across years with the
-              city held fixed is the easy one. In each case the other comparison
-              turns into a scan across a group boundary. And the "held fixed"
-              conditioning language is deliberate — it foreshadows the Simpson's
-              paradox slide later in the deck, where what you hold fixed changes
-              the answer.
-
-              But the faded chips matter just as much: neither plan forbids the
-              other query. The second encode mapping — city → color — is
-              precisely what keeps the cross-group comparison alive. On the
-              left, a city's bars are scattered across the year blocks and only
-              their color tracks them; on the right, color confirms identity
-              across the long scan between groups. Structure prices queries
-              rather than forbidding them: adjacency makes one cheap, color
-              keeps the other admissible.
-
-              These chips are perceptual query plans, not just queries: the two
-              orderings are logically the same question, but perceptually
-              different plans — like a database EXPLAIN, order is the whole
-              point.
-            </aside>
-          </section>
-
-          <!-- Step 1: cut at the outer spread(by="city") -->
-          <section data-background-color="#f7f2e8">
-            <h2>each line of the spec is a cut</h2>
-            <div
-              style="
-                display: flex;
-                gap: 1.6rem;
-                justify-content: center;
-                align-items: center;
-                margin-top: 1rem;
-                font-size: 0.72em;
-              "
-            >
-              <div
-                id="chart-viz-cut-city"
-                class="chart-container viz-ex-tile"
-                style="flex: 0 0 auto"
-              ></div>
-              <pre class="viz-code compact" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
-              ><span class="cut-line">chart(sales).flow(</span>
-<span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="city", dir="x"),</span>
-<span class="cut-line cut-collapsed">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
-<span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="sales", fill="city"))</span></pre>
-              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px">
-                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each city's year pattern⟩</span> across cities</span>
-                <span class="q-gloss">groups sit apart — a scan</span>
               </div>
             </div>
             <aside class="notes">
-              Highlighting a line of the spec picks a CUT through the operator
-              tree — Elmqvist-style hierarchical aggregation, but the cut is
-              wherever your eye lands in the code, not a fixed level someone
-              baked into the chart. Below the cut, the tree collapses into a
-              summary glyph: on this first step, an entire city's spread over
-              years is one neutral gray bar of its total, because collapsing
-              IS just an inner substitution GoFish already does whenever a
-              grouping level is left out of the spec — the same auto-summing
-              behind "back to those bar charts." So the visualization of the
-              idea (fade what's below the cut into a summary) is itself an
-              instance of the idea (a lower level of the spec, collapsed).
-              Above the cut, everything stays present, and the focused region
-              is marked by a drawn dashed boundary around the bars in play
-              rather than by graying out the rest — this slide has earned
-              the right to use its own machinery: common region is the
-              strong Gestalt cue (the whole reason grouping/adjacency reads
-              as comparison at all), where dimming was only ever a salience
-              nudge borrowed for the earlier Boulder slide. Watch the
-              boundary as the steps advance: it starts around the entire
-              plot (every city still participates, nothing pinned down yet)
-              and shrinks one enclosure at a time, down to Boulder's pair of
-              bars, down to a single bar. The chip states that same
-              shrinking directly — a context header of concrete field =
-              value bindings for ONE example region (city = Boulder; city =
-              Boulder, year = 2019) instead of the abstract "held fixed"
-              language the old chips used — so the header grows exactly as
-              the boundary shrinks: two views of the same narrowing cut.
-              Below the header, the query body has a hole — ⟨each city's
-              year pattern⟩, ⟨sales heights⟩ — for what the boundary is now
-              cheap to compare, and the gloss line underneath is the cost of
-              actually running that query in this arrangement: first the
-              perceptual act the layout affords (groups sitting apart, bars
-              sitting adjacent), then what that act costs the reader (a
-              scan, one glance).
-            </aside>
-          </section>
-
-          <!-- Step 2: cut at the inner spread(by="year") -->
-          <section data-background-color="#f7f2e8">
-            <h2>each line of the spec is a cut</h2>
-            <div
-              style="
-                display: flex;
-                gap: 1.6rem;
-                justify-content: center;
-                align-items: center;
-                margin-top: 1rem;
-                font-size: 0.72em;
-              "
-            >
-              <div
-                id="chart-viz-cut-year"
-                class="chart-container viz-ex-tile"
-                style="flex: 0 0 auto"
-              ></div>
-              <pre class="viz-code compact" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
-              ><span class="cut-line">chart(sales).flow(</span>
-<span class="cut-line">  <span class="viz-op">spread</span>(by="city", dir="x"),</span>
-<span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
-<span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="sales", fill="city"))</span></pre>
-              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px">
-                <span class="q-ctx">city = Boulder</span>
-                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨sales heights⟩</span> across years</span>
-                <span class="q-gloss">bars sit adjacent — one glance</span>
-              </div>
-            </div>
-            <aside class="notes">
-              One level down: the boundary shrinks from the whole plot to
-              Boulder's pair of bars, and the chip's header grows its first
-              binding (city = Boulder) to match — the boundary and the
-              header are the same narrowing, drawn vs. written. The hole is
-              now ⟨sales heights⟩, compared across years, and the gloss
-              prices it: adjacent bars, one glance.
-            </aside>
-          </section>
-
-          <!-- Step 3: cut at the mark -->
-          <section data-background-color="#f7f2e8">
-            <h2>each line of the spec is a cut</h2>
-            <div
-              style="
-                display: flex;
-                gap: 1.6rem;
-                justify-content: center;
-                align-items: center;
-                margin-top: 1rem;
-                font-size: 0.72em;
-              "
-            >
-              <div
-                id="chart-viz-cut-mark"
-                class="chart-container viz-ex-tile"
-                style="flex: 0 0 auto"
-              ></div>
-              <pre class="viz-code compact" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
-              ><span class="cut-line">chart(sales).flow(</span>
-<span class="cut-line">  <span class="viz-op">spread</span>(by="city", dir="x"),</span>
-<span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
-<span class="cut-line cut-highlight">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="sales", fill="city"))</span></pre>
-              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px">
-                <span class="q-ctx">city = Boulder · year = 2019</span>
-                <span class="q-line">sales <span class="q-arrow">→</span> height · city <span class="q-arrow">→</span> color</span>
-                <span class="q-gloss">a single bar — a lookup</span>
-              </div>
-            </div>
-            <aside class="notes">
-              The cut at the mark: the boundary is down to a single bar, and
-              the header holds a full set of bindings (city = Boulder, year
-              = 2019). Nothing left to aggregate, no hole left in the query
-              — the body is a direct channel mapping, and the gloss degrades
-              to a lookup.
+              Now we can say precisely what happened at the start of the talk, in
+              GoFish's own terms: each column is a spec, and the nesting order of
+              the spread operators is what fixed the swap. On the left, cities sit
+              adjacent inside each year block; on the right, each city's years sit
+              adjacent. This is the bridge into the code: everything from here on
+              is the actual GoFish walkthrough that builds these two specs (and a
+              heat map) from scratch. The perceptual-query notation comes back once
+              we've built up enough spec to hang it on.
             </aside>
           </section>
         </section>

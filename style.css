@@ -1083,6 +1083,15 @@
   margin-top: 0.35em;
 }
 
+/* "each line of the spec is a cut": the spec is the row's visual anchor, so
+   it renders at the same effective size as the plain code blocks on the
+   "nesting order matters" slide (0.72em row x 0.9em pre = ~0.65em of slide
+   base; here 0.95em row x 0.68em = the same). Overrides .viz-code's own
+   !important size. */
+.viz-code.cut-spec {
+  font-size: 0.68em !important;
+}
+
 .viz-op {
   color: var(--viz-op);
   font-weight: 760;

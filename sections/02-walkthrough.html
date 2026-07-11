@@ -188,11 +188,6 @@
               id="chart-viz-nest-grouped-r-solo"
               class="chart-container viz-gofish-chart"
             ></div>
-            <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
-              <span class="q-line"><span class="q-kw">for each</span> site</span>
-              <span class="q-line"><span class="q-kw">for each</span> year</span>
-              <span class="q-line"><span class="q-val">compare</span> yield</span>
-            </div>
             <aside class="notes">
               site → year: each site's two years sit together, so the change per
               site is easy to read.
@@ -205,11 +200,6 @@
               id="chart-viz-nest-grouped-solo"
               class="chart-container viz-gofish-chart"
             ></div>
-            <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
-              <span class="q-line"><span class="q-kw">for each</span> year</span>
-              <span class="q-line"><span class="q-kw">for each</span> site</span>
-              <span class="q-line"><span class="q-val">compare</span> yield</span>
-            </div>
             <aside class="notes">
               year → site: sites sit together within each year, so the per-site
               change is scattered across the two blocks.
@@ -222,10 +212,6 @@
               id="chart-viz-nest-heatmap-solo"
               class="chart-container viz-gofish-chart"
             ></div>
-            <div class="viz-query" style="margin-top: 0.6rem; font-size: 0.62em">
-              <span class="q-line"><span class="q-val">compare</span> yield across site × year</span>
-              <span class="q-gloss">read by color — coarse; the cheap scans are lookup and row/column uniformity</span>
-            </div>
             <aside class="notes">
               site × year as a heatmap: both fields on separable axes, no nesting
               order privileged.
@@ -273,11 +259,6 @@
   spread(by="site", dir="x"),
   spread(by="year", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
-                <div class="viz-query" style="font-size: 0.95em">
-                  <span class="q-line"><span class="q-kw">for each</span> site</span>
-                  <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-line"><span class="q-val">compare</span> yield</span>
-                </div>
               </div>
 
               <!-- Grouped bar -->
@@ -309,11 +290,6 @@
   spread(by="year", dir="x"),
   spread(by="site", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
-                <div class="viz-query" style="font-size: 0.95em">
-                  <span class="q-line"><span class="q-kw">for each</span> year</span>
-                  <span class="q-line"><span class="q-kw">for each</span> site</span>
-                  <span class="q-line"><span class="q-val">compare</span> yield</span>
-                </div>
               </div>
 
               <!-- Grouped bar reversed -->
@@ -344,9 +320,6 @@
                 ><code class="language-python">chart(barley).flow(
   table("site", "year"),
 ).mark(rect(fill="yield"))</code></pre>
-                <div class="viz-query" style="font-size: 0.95em">
-                  <span class="q-val">look up</span> yield at (site, year)
-                </div>
               </div>
             </div>
             <aside class="notes">
@@ -354,10 +327,286 @@
               changes what you compare first. The heatmap flattens both keys onto
               separable axes, so no nesting order is privileged. Advance twice to
               reveal the second and third columns; layout stays fixed (hidden
-              fragments still reserve space). The chips under the specs read the
-              structure back out as a query: the spread order IS the for-each
-              order, and the heatmap trades the for-each nesting for direct
-              lookup.
+              fragments still reserve space). Next, three slides walk the same
+              spec column by column, tying each line to a perceptual-query chip —
+              the notation promised back in the opening.
+            </aside>
+          </section>
+
+          <!-- Step 1: cut at the outer spread(by="site") -->
+          <section data-background-color="#f7f2e8">
+            <h2>each line of the spec is a cut</h2>
+            <div
+              style="
+                display: flex;
+                gap: 1.1rem;
+                justify-content: center;
+                align-items: center;
+                margin-top: 0;
+                min-height: 500px;
+                font-size: 0.95em;
+              "
+            >
+              <div
+                id="chart-viz-cut-site"
+                class="chart-container viz-ex-tile"
+                style="flex: 0 0 auto"
+              ></div>
+              <pre class="viz-code cut-spec" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
+              ><span class="cut-line">chart(barley).flow(</span>
+<span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
+<span class="cut-line cut-collapsed">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
+              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each site's year pattern⟩</span> across sites</span>
+                <span class="q-gloss">groups sit apart — a scan</span>
+              </div>
+            </div>
+            <aside class="notes">
+              Highlighting a line of the spec picks a CUT through the operator
+              tree — Elmqvist-style hierarchical aggregation, but the cut is
+              wherever your eye lands in the code, not a fixed level someone
+              baked into the chart. Below the cut, the tree collapses into a
+              summary glyph: on this first step, an entire site's spread over
+              years is one neutral gray bar of its total, because collapsing
+              IS just an inner substitution GoFish already does whenever a
+              grouping level is left out of the spec — the same auto-summing
+              behind "back to those bar charts." So the visualization of the
+              idea (fade what's below the cut into a summary) is itself an
+              instance of the idea (a lower level of the spec, collapsed).
+              Above the cut, everything stays present, and the focused region
+              is marked by a drawn dashed boundary around the bars in play
+              rather than by graying out the rest — this slide has earned
+              the right to use its own machinery: common region is the
+              strong Gestalt cue (the whole reason grouping/adjacency reads
+              as comparison at all), where dimming was only ever a salience
+              nudge borrowed for the earlier Boulder slide back in the
+              opening. Watch the boundary as the steps advance: it starts
+              around the entire plot (every site still participates, nothing
+              pinned down yet) and shrinks one enclosure at a time, down to
+              Morris's pair of bars, down to a single bar. The chip states
+              that same shrinking directly — a context header of concrete
+              field = value bindings for ONE example region (site = Morris;
+              site = Morris, year = 1932) instead of the abstract "held
+              fixed" language the old chips used — so the header grows
+              exactly as the boundary shrinks: two views of the same
+              narrowing cut. Below the header, the query body has a hole —
+              ⟨each site's year pattern⟩, ⟨yield heights⟩ — for what the
+              boundary is now cheap to compare, and the gloss line
+              underneath is the cost of actually running that query in this
+              arrangement: first the perceptual act the layout affords
+              (groups sitting apart, bars sitting adjacent), then what that
+              act costs the reader (a scan, one glance). This is also the
+              perceptual-query notation itself, introduced properly for the
+              first time: the dashed hole is a placeholder for the reader's
+              own attention, the gloss is a cost estimate, not a verdict.
+            </aside>
+          </section>
+
+          <!-- Step 2: cut at the inner spread(by="year") -->
+          <section data-background-color="#f7f2e8">
+            <h2>each line of the spec is a cut</h2>
+            <div
+              style="
+                display: flex;
+                gap: 1.1rem;
+                justify-content: center;
+                align-items: center;
+                margin-top: 0;
+                min-height: 500px;
+                font-size: 0.95em;
+              "
+            >
+              <div
+                id="chart-viz-cut-year"
+                class="chart-container viz-ex-tile"
+                style="flex: 0 0 auto"
+              ></div>
+              <pre class="viz-code cut-spec" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
+              ><span class="cut-line">chart(barley).flow(</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
+<span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
+              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
+                <span class="q-ctx">site = Morris</span>
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨yield heights⟩</span> across years</span>
+                <span class="q-gloss">bars sit adjacent — one glance</span>
+              </div>
+            </div>
+            <aside class="notes">
+              One level down: the boundary shrinks from the whole plot to
+              Morris's pair of bars, and the chip's header grows its first
+              binding (site = Morris) to match — the boundary and the
+              header are the same narrowing, drawn vs. written. The hole is
+              now ⟨yield heights⟩, compared across years, and the gloss
+              prices it: adjacent bars, one glance.
+            </aside>
+          </section>
+
+          <!-- Step 3: cut at the mark -->
+          <section data-background-color="#f7f2e8">
+            <h2>each line of the spec is a cut</h2>
+            <div
+              style="
+                display: flex;
+                gap: 1.1rem;
+                justify-content: center;
+                align-items: center;
+                margin-top: 0;
+                min-height: 500px;
+                font-size: 0.95em;
+              "
+            >
+              <div
+                id="chart-viz-cut-mark"
+                class="chart-container viz-ex-tile"
+                style="flex: 0 0 auto"
+              ></div>
+              <pre class="viz-code cut-spec" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
+              ><span class="cut-line">chart(barley).flow(</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line cut-highlight">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
+              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
+                <span class="q-ctx">site = Morris · year = 1932</span>
+                <span class="q-line">yield <span class="q-arrow">→</span> height · site <span class="q-arrow">→</span> color</span>
+                <span class="q-gloss">a single bar — a lookup</span>
+              </div>
+            </div>
+            <aside class="notes">
+              The cut at the mark: the boundary is down to a single bar, and
+              the header holds a full set of bindings (site = Morris, year
+              = 1932). Nothing left to aggregate, no hole left in the query
+              — the body is a direct channel mapping, and the gloss degrades
+              to a lookup.
+            </aside>
+          </section>
+
+          <!-- Repeat of "nesting order matters" with the new perceptual-query
+               notation now that it's been introduced by the cut slides. New
+               chart ids: charts render eagerly by id, so reusing
+               chart-viz-nest-grouped-r/-grouped/-heatmap here would leave
+               these containers empty. -->
+          <section>
+            <h2>nesting order matters</h2>
+            <div
+              class="kv-nesting-builder"
+              style="
+                display: flex;
+                gap: 1.6rem;
+                margin-top: 1rem;
+                align-items: flex-start;
+                justify-content: center;
+                font-size: 0.72em;
+              "
+            >
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  site → year
+                </div>
+                <div id="chart-viz-nest-grouped-r-q" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(barley).flow(
+  spread(by="site", dir="x"),
+  spread(by="year", dir="x"),
+).mark(rect(h="yield", fill="site"))</code></pre>
+                <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each site's year pattern⟩</span> across sites</span>
+                  <span class="q-gloss">groups sit apart — a scan</span>
+                </div>
+              </div>
+
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  year → site
+                </div>
+                <div id="chart-viz-nest-grouped-q" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(barley).flow(
+  spread(by="year", dir="x"),
+  spread(by="site", dir="x"),
+).mark(rect(h="yield", fill="site"))</code></pre>
+                <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each year's site profile⟩</span> across years</span>
+                  <span class="q-gloss">groups sit apart — a scan</span>
+                </div>
+              </div>
+
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0.6rem;
+                "
+              >
+                <div
+                  style="
+                    background: #f5f5f5;
+                    border-radius: 6px;
+                    padding: 0.5rem 0.7rem;
+                    font-family: monospace;
+                    font-size: 1.05em;
+                  "
+                >
+                  site × year
+                </div>
+                <div id="chart-viz-nest-heatmap-q" class="chart-container"></div>
+                <pre
+                  style="margin: 0; font-size: 0.9em"
+                ><code class="language-python">chart(barley).flow(
+  table("site", "year"),
+).mark(rect(fill="yield"))</code></pre>
+                <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨yield colors⟩</span> across site × year</span>
+                  <span class="q-gloss">cells align in rows and columns — a scan either way</span>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Same three panels as before, now with the query chips filled in —
+              all three columns visible at once, since the reveal already
+              happened the first time around. The two grouped-bar chips differ
+              by swapping exactly two tokens — site and year — because that's
+              the whole nesting-order move: which field gets the outer
+              for-each. The heatmap chip trades both adjacencies away for
+              direct addressability: no scan at all, just a lookup by (site,
+              year), read coarsely by color.
             </aside>
           </section>
 
@@ -396,9 +645,7 @@
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2>is it one variety, or all of them?</h2>
             <div class="viz-query fragment" style="margin-top: 1.4rem; font-size: 0.5em">
-              <span class="q-line"><span class="q-kw">for each</span> variety</span>
-              <span class="q-line"><span class="q-kw">for each</span> site</span>
-              <span class="q-line"><span class="q-val">compare</span> Δ yield (1931 → 1932)</span>
+              <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨site-by-site Δ yield (1931 → 1932)⟩</span> across varieties</span>
             </div>
             <p class="fragment" style="margin-top: 1rem; font-size: 0.55em; color: #555">
               this time, start from the query — then build the structure that answers it
@@ -418,9 +665,7 @@
             <h2><code>stack()</code></h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
-                <span class="q-line"><span class="q-kw">for each</span> variety</span>
-                <span class="q-line"><span class="q-kw">for each</span> year</span>
-                <span class="q-line"><span class="q-val">total</span> yield across sites</span>
+                <span class="q-line"><span class="q-val">read</span> <span class="q-hole" style="white-space: nowrap">⟨total yield across sites⟩</span> for each variety × year</span>
                 <span class="q-gloss">a cheaper query than the Δ one — worth trying first</span>
               </div>
               <pre class="viz-code">chart(barley)

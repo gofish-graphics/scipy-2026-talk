@@ -158,12 +158,15 @@ const cityYearData = Object.values(
 }));
 
 // The example region the "each line of the spec is a cut" slide's chips and
-// chart boundaries both point at: Boulder, latest year in the data.
-const CUT_FOCUS_CITY = "Boulder";
-const CUT_FOCUS_YEAR = String(Math.max(...Object.values(OPENING_YEAR)));
+// chart boundaries both point at: Morris, the famous 1932 anomaly site (its
+// total yield rises while every other site's falls).
+const CUT_FOCUS_SITE = "Morris";
+const CUT_FOCUS_YEAR = "1932";
 // Chart size on the stepped cut slides: each step is one chart | spec | chip
-// row, so the chart gets most of the width. (GoFish adds axis/legend padding
-// beyond this, so the emitted SVG is wider than CUT_CHART_W.)
+// row, so the chart gets most of the width. (GoFish adds axis padding beyond
+// this, so the emitted SVG is wider than CUT_CHART_W.) The colored cut charts
+// get their legend stripped (see stripLegend) so all three steps share the
+// same footprint and the row fits 1280px with the code at full size.
 const CUT_CHART_W = 400;
 const CUT_CHART_H = 270;
 
@@ -410,23 +413,74 @@ function renderAggYearSite(
 }
 
 // "each line of the spec is a cut" slide, column 1: everything below the
-// outer spread("city") collapses into one neutral gray bar per city — the
-// same auto-summing renderAggSiteYear relies on (height auto-sums over any
+// outer spread("site") collapses into one neutral gray bar per site — the
+// same auto-summing renderVizSiteYear relies on (height auto-sums over any
 // grouping level not given its own spread), just with the year spread
 // dropped entirely instead of only the variety level. One flat fill instead
-// of fill: "city" keeps the collapsed bars visually neutral/summary-like.
-function renderAggSiteYearCollapsed(
-  id = "chart-viz-cut-city",
-  w = CHART_W,
-  h = CHART_H,
+// of fill: "site" keeps the collapsed bars visually neutral/summary-like.
+// Uses the raw barley dataset (real site names, 1931/1932) so the cut slides
+// read as a native continuation of the walkthrough, not the opening's
+// anonymized city/sales stand-in.
+function renderCutSiteCollapsed(
+  id = "chart-viz-cut-site",
+  w = CUT_CHART_W,
+  h = CUT_CHART_H,
   axes: boolean | { x: boolean; y: boolean } = true
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(cityYearData, { axes })
-    .flow(spread("city", { dir: "x", spacing: 24 }))
-    .mark(rect({ h: "sales", fill: "#9aa5b1" }))
+  Chart(barley, { axes })
+    .flow(spread("site", { dir: "x", spacing: 24 }))
+    .mark(rect({ h: "yield", fill: "#9aa5b1" }))
     .render(el, { w, h, axes, legend: false });
+}
+
+// Removes GoFish's auto-seated color legend from a rendered chart. The
+// `legend: false` option is a no-op for categorical fills (see the barley
+// scatter-pie comment further down), and on the cut slides the legend is
+// redundant (site names are already the x-axis labels) and makes the colored
+// steps a wider footprint than the collapsed gray step 1. GoFish emits a FLAT
+// svg — no legend <g> — so legend entries are identified structurally: a
+// legend label is a <text> whose immediately preceding sibling is a small
+// COLORED swatch <rect> (~10px, palette fill). Axis tick marks are also
+// small rects followed by their label text, but they're fill="gray"
+// (verified by DOM inspection), so the fill check keeps them. Removing the
+// elements alone leaves the svg still reserving the legend's width (a
+// phantom ~150px of dead space inside the chart container, since
+// fitContainerToSvg sizes containers off the svg's declared size), so the
+// width attribute and container are trimmed back to just left of where the
+// legend column began. GoFish emits NO viewBox (verified by DOM
+// inspection), so user units are CSS px and shrinking the width attribute
+// simply crops the now-empty right strip — do not synthesize a viewBox
+// here; svg.viewBox.baseVal reports height 0 for the missing attribute and
+// writing that back blanks the chart. Returns a promise so callers can
+// sequence work (e.g. addFocusBox) after the legend text nodes are gone.
+async function stripLegend(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  let minLegendX = Infinity;
+  svg.querySelectorAll("text").forEach((t) => {
+    const prev = t.previousElementSibling;
+    const fill = prev?.getAttribute("fill");
+    if (
+      prev instanceof SVGRectElement &&
+      prev.width.baseVal.value < 16 &&
+      prev.height.baseVal.value < 16 &&
+      fill !== "none" &&
+      fill !== "gray"
+    ) {
+      minLegendX = Math.min(minLegendX, prev.x.baseVal.value);
+      prev.remove();
+      t.remove();
+    }
+  });
+  if (minLegendX !== Infinity) {
+    const newW = Math.max(1, Math.ceil(minLegendX - 6));
+    svg.setAttribute("width", String(newW));
+    el.style.width = `${newW}px`;
+  }
 }
 
 // "each line of the spec is a cut" slide: marks the focused region with a
@@ -436,14 +490,14 @@ function renderAggSiteYearCollapsed(
 // inspecting the rendered markup — plain <rect fill="...">, no group
 // transforms), so bars are found by fill/size like addOuterGroupBoxes above,
 // then clustered by the same inner-vs-outer x-gap heuristic. A specific
-// city's cluster (or a specific city+year bar within it) is picked out by
+// site's cluster (or a specific site+year bar within it) is picked out by
 // matching against GoFish's own axis tick <text> labels — the one reliable
 // per-datum label GoFish does emit — rather than by hardcoding a fill color
 // or a positional index that would silently go stale if the data or the
 // palette changed.
 function addFocusBox(
   id: string,
-  target: { city?: string; year?: string; allGroups?: boolean } = {}
+  target: { site?: string; year?: string; allGroups?: boolean } = {}
 ) {
   const el = getContainer(id);
   if (!el) return;
@@ -466,7 +520,7 @@ function addFocusBox(
 
     let targets = boxes;
 
-    if (!target.allGroups && target.city) {
+    if (!target.allGroups && target.site) {
       const GAP_THRESHOLD = 15; // between inner spacing (6px) and outer (24px+)
       const clusters: (typeof boxes)[number][][] = [[boxes[0]]];
       for (let i = 1; i < boxes.length; i++) {
@@ -503,14 +557,14 @@ function addFocusBox(
           { item: undefined, dist: Infinity }
         ).item;
 
-      const cityLabelXs = texts
-        .filter((t) => t.textContent === target.city)
+      const siteLabelXs = texts
+        .filter((t) => t.textContent === target.site)
         .map(leftEdgeOf);
       const clusterStarts = clusters.map((c) => ({ x0: c[0].x0, cluster: c }));
-      const matchedStart = nearest(clusterStarts, cityLabelXs);
+      const matchedStart = nearest(clusterStarts, siteLabelXs);
       if (!matchedStart) {
         console.warn(
-          `addFocusBox(${id}): no bar cluster matched city "${target.city}"`
+          `addFocusBox(${id}): no bar cluster matched site "${target.site}"`
         );
         return;
       }
@@ -524,7 +578,7 @@ function addFocusBox(
         const bar = nearest(cluster, yearLabelXs);
         if (!bar) {
           console.warn(
-            `addFocusBox(${id}): no bar matched year "${target.year}" within city "${target.city}"`
+            `addFocusBox(${id}): no bar matched year "${target.year}" within site "${target.site}"`
           );
           return;
         }
@@ -648,7 +702,7 @@ function renderVizSiteYield(id = "chart-viz-site-yield") {
     .render(el, VIZ_RENDER_OPTIONS);
 }
 
-function renderVizSiteYear(id = "chart-viz-site-year") {
+function renderVizSiteYear(id = "chart-viz-site-year", w = VIZ_W, h = VIZ_H) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley, vizChartOptions)
@@ -657,7 +711,7 @@ function renderVizSiteYear(id = "chart-viz-site-year") {
       spread("year", { dir: "x", spacing: 4 })
     )
     .mark(rect({ h: "yield", fill: "site" }))
-    .render(el, VIZ_RENDER_OPTIONS);
+    .render(el, { w, h, axes: true, legend: false });
 }
 
 function renderVizSiteVarietyMini() {
@@ -1661,21 +1715,26 @@ export function renderCharts() {
   renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
   addOuterGroupBoxes("chart-viz-agg-site-year-spec", 6);
   addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
-  // "each line of the spec is a cut": one stepped section per cut stop
+  // "each line of the spec is a cut" (now in the walkthrough section, right
+  // after "nesting order matters"): one stepped section per cut stop
   // (chart | spec | chip in a row), advanced top-to-bottom. The focused
   // region is a drawn boundary (Gestalt common region), not the
   // gray-fallback dimming renderAggSiteYearHighlight uses elsewhere — it
   // shrinks from the whole plot (step 1) to one bar (step 3) as the cut
   // descends, mirroring the chips' bindings growing over the same span.
-  renderAggSiteYearCollapsed("chart-viz-cut-city", CUT_CHART_W, CUT_CHART_H);
-  addFocusBox("chart-viz-cut-city", { allGroups: true });
-  renderAggSiteYear("chart-viz-cut-year", CUT_CHART_W, CUT_CHART_H);
-  addFocusBox("chart-viz-cut-year", { city: CUT_FOCUS_CITY });
-  renderAggSiteYear("chart-viz-cut-mark", CUT_CHART_W, CUT_CHART_H);
-  addFocusBox("chart-viz-cut-mark", {
-    city: CUT_FOCUS_CITY,
-    year: CUT_FOCUS_YEAR,
-  });
+  renderCutSiteCollapsed("chart-viz-cut-site", CUT_CHART_W, CUT_CHART_H);
+  addFocusBox("chart-viz-cut-site", { allGroups: true });
+  renderVizSiteYear("chart-viz-cut-year", CUT_CHART_W, CUT_CHART_H);
+  stripLegend("chart-viz-cut-year").then(() =>
+    addFocusBox("chart-viz-cut-year", { site: CUT_FOCUS_SITE })
+  );
+  renderVizSiteYear("chart-viz-cut-mark", CUT_CHART_W, CUT_CHART_H);
+  stripLegend("chart-viz-cut-mark").then(() =>
+    addFocusBox("chart-viz-cut-mark", {
+      site: CUT_FOCUS_SITE,
+      year: CUT_FOCUS_YEAR,
+    })
+  );
   renderFranconeriAColor();
   renderFranconeriAColorKey();
   renderFranconeriB();
@@ -1790,20 +1849,24 @@ export const chartRenderers: Record<string, () => void> = {
     renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
     addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
   },
-  "chart-viz-cut-city": () => {
-    renderAggSiteYearCollapsed("chart-viz-cut-city", CUT_CHART_W, CUT_CHART_H);
-    addFocusBox("chart-viz-cut-city", { allGroups: true });
+  "chart-viz-cut-site": () => {
+    renderCutSiteCollapsed("chart-viz-cut-site", CUT_CHART_W, CUT_CHART_H);
+    addFocusBox("chart-viz-cut-site", { allGroups: true });
   },
   "chart-viz-cut-year": () => {
-    renderAggSiteYear("chart-viz-cut-year", CUT_CHART_W, CUT_CHART_H);
-    addFocusBox("chart-viz-cut-year", { city: CUT_FOCUS_CITY });
+    renderVizSiteYear("chart-viz-cut-year", CUT_CHART_W, CUT_CHART_H);
+    stripLegend("chart-viz-cut-year").then(() =>
+      addFocusBox("chart-viz-cut-year", { site: CUT_FOCUS_SITE })
+    );
   },
   "chart-viz-cut-mark": () => {
-    renderAggSiteYear("chart-viz-cut-mark", CUT_CHART_W, CUT_CHART_H);
-    addFocusBox("chart-viz-cut-mark", {
-      city: CUT_FOCUS_CITY,
-      year: CUT_FOCUS_YEAR,
-    });
+    renderVizSiteYear("chart-viz-cut-mark", CUT_CHART_W, CUT_CHART_H);
+    stripLegend("chart-viz-cut-mark").then(() =>
+      addFocusBox("chart-viz-cut-mark", {
+        site: CUT_FOCUS_SITE,
+        year: CUT_FOCUS_YEAR,
+      })
+    );
   },
   "chart-franconeri-a-color": renderFranconeriAColor,
   "chart-franconeri-a-color-key": renderFranconeriAColorKey,
@@ -1959,6 +2022,41 @@ export const chartRenderers: Record<string, () => void> = {
   },
   "chart-viz-nest-heatmap": () => {
     const el = getContainer("chart-viz-nest-heatmap");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, { color: gradient(["#e8f4f8", "#1a5276"]) })
+      .flow(table("site", "year", { spacing: 4 }))
+      .mark(rect({ fill: "yield" }))
+      .render(el, { w: 280, h: 220, axes: true, legend: false });
+  },
+  // Repeat of the 3-panel "nesting order matters" slide, shown again after
+  // the "each line of the spec is a cut" slides with new-notation chips.
+  // Distinct ids from the first showing — charts render eagerly by id, so
+  // reusing chart-viz-nest-grouped-r/-grouped/-heatmap here would leave this
+  // slide's containers empty (already rendered once = never re-rendered).
+  "chart-viz-nest-grouped-r-q": () => {
+    const el = getContainer("chart-viz-nest-grouped-r-q");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, vizChartOptions)
+      .flow(
+        spread("site", { dir: "x" }),
+        spread("year", { dir: "x", spacing: 2 })
+      )
+      .mark(rect({ h: "yield", fill: "site" }))
+      .render(el, { w: 280, h: 220, axes: true, legend: false });
+  },
+  "chart-viz-nest-grouped-q": () => {
+    const el = getContainer("chart-viz-nest-grouped-q");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, vizChartOptions)
+      .flow(
+        spread("year", { dir: "x" }),
+        spread("site", { dir: "x", spacing: 2 })
+      )
+      .mark(rect({ h: "yield", fill: "site" }))
+      .render(el, { w: 280, h: 220, axes: true, legend: false });
+  },
+  "chart-viz-nest-heatmap-q": () => {
+    const el = getContainer("chart-viz-nest-heatmap-q");
     if (!el || el.children.length > 0) return;
     Chart(barley, { color: gradient(["#e8f4f8", "#1a5276"]) })
       .flow(table("site", "year", { spacing: 4 }))

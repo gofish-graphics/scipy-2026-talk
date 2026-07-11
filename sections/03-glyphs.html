@@ -767,8 +767,8 @@ Frame(
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-kw">for each</span> value</span>
-                      <span class="q-gloss">side by side; comparing across values is one scan</span>
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨…⟩</span> across values</span>
+                      <span class="q-gloss">slots sit side by side — one scan</span>
                     </div>
                   </td>
                 </tr>
@@ -779,9 +779,9 @@ Frame(
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">total</span> measure</span>
-                      <span class="q-line"><span class="q-val">share</span> when normalized</span>
-                      <span class="q-gloss">read the sum at the endpoint</span>
+                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total⟩</span> at the endpoint</span>
+                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨shares⟩</span> when normalized</span>
+                      <span class="q-gloss">segments tile end to end — a boundary read</span>
                     </div>
                   </td>
                 </tr>
@@ -792,8 +792,8 @@ Frame(
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">compare</span> two measures</span>
-                      <span class="q-gloss">how things vary across space, over the whole cloud</span>
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨two measures⟩</span> at once</span>
+                      <span class="q-gloss">points share one frame — a gestalt of the cloud</span>
                     </div>
                   </td>
                 </tr>
@@ -806,7 +806,8 @@ Frame(
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">track</span> an entity across scopes</span>
+                      <span class="q-line"><span class="q-val">follow</span> <span class="q-hole">⟨an entity⟩</span> across scopes</span>
+                      <span class="q-gloss">strokes connect endpoints — a trace</span>
                     </div>
                   </td>
                 </tr>
@@ -817,8 +818,8 @@ Frame(
                   </td>
                   <td style="padding: 0.45rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> by two fields</span>
-                      <span class="q-gloss">scan a row or column for uniformity</span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at field × field</span>
+                      <span class="q-gloss">cells align in rows and columns — a scan either way</span>
                     </div>
                   </td>
                 </tr>
@@ -855,6 +856,9 @@ Frame(
               The scatterpie composes two of these: scatter contributes how
               the distribution varies across space, the pie glyph contributes
               share-within-entity.
+              <br /><br />
+              Connection overrides adjacency at its endpoints (Palmer &amp;
+              Rock) — the strongest carrier, and the most targeted.
             </aside>
           </section>
 
