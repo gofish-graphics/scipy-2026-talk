@@ -96,7 +96,7 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>("site", dir="x")
+    <span class="viz-op">spread</span>(by="site", dir="x")
   )</pre>
               <p class="viz-step-copy">
                 The first operator creates a row of visual neighborhoods.
@@ -116,7 +116,7 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>("site", dir="x")
+    <span class="viz-op">spread</span>(by="site", dir="x")
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(h="yield")
@@ -140,7 +140,7 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>("site", dir="x")
+    <span class="viz-op">spread</span>(by="site", dir="x")
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(h="yield")
@@ -164,8 +164,8 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>("site", dir="x"),
-    <span class="viz-op">spread</span>("year", dir="x")
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x")
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(h="yield", fill="site")
@@ -270,8 +270,8 @@
                 <pre
                   style="margin: 0; font-size: 0.9em"
                 ><code class="language-python">chart(barley).flow(
-  spread("site", dir="x"),
-  spread("year", dir="x"),
+  spread(by="site", dir="x"),
+  spread(by="year", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
                 <div class="viz-query" style="font-size: 0.95em">
                   <span class="q-line"><span class="q-kw">for each</span> site</span>
@@ -306,8 +306,8 @@
                 <pre
                   style="margin: 0; font-size: 0.9em"
                 ><code class="language-python">chart(barley).flow(
-  spread("year", dir="x"),
-  spread("site", dir="x"),
+  spread(by="year", dir="x"),
+  spread(by="site", dir="x"),
 ).mark(rect(h="yield", fill="site"))</code></pre>
                 <div class="viz-query" style="font-size: 0.95em">
                   <span class="q-line"><span class="q-kw">for each</span> year</span>
@@ -368,8 +368,8 @@
               <div class="viz-compare-card">
                 <h3>site → variety</h3>
                 <p>What are the trends across sites?</p>
-                <pre class="viz-code compact"><span class="viz-op">spread</span>("site", dir="x")
-<span class="viz-op">spread</span>("variety", dir="x")</pre>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>(by="site", dir="x")
+<span class="viz-op">spread</span>(by="variety", dir="x")</pre>
                 <div
                   id="chart-viz-site-variety-mini"
                   class="chart-container viz-gofish-compare"
@@ -378,8 +378,8 @@
               <div class="viz-compare-card">
                 <h3>variety → site</h3>
                 <p>What is the most productive site for each variety?</p>
-                <pre class="viz-code compact"><span class="viz-op">spread</span>("variety", dir="x")
-<span class="viz-op">spread</span>("site", dir="x")</pre>
+                <pre class="viz-code compact"><span class="viz-op">spread</span>(by="variety", dir="x")
+<span class="viz-op">spread</span>(by="site", dir="x")</pre>
                 <div
                   id="chart-viz-variety-site-mini"
                   class="chart-container viz-gofish-compare"
@@ -425,8 +425,8 @@
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>("variety", dir="x"),
-    <span class="viz-op">spread</span>("year", dir="x"),
+    <span class="viz-op">spread</span>(by="variety", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
     <span class="viz-op">stack</span>("site", dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
@@ -504,7 +504,7 @@
                 <pre
                   style="margin: 0; font-size: 0.9em"
                 ><code class="language-python">chart(data).flow(
-  spread("lake",    dir="x"),
+  spread(by="lake", dir="x"),
   stack("species",  dir="y", size="count"),
 ).mark(rect(fill="species"))</code></pre>
               </div>
@@ -553,8 +553,8 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>("variety", dir="x", spacing=24),
-    <span class="viz-op">spread</span>("year", dir="x", spacing=4),
+    <span class="viz-op">spread</span>(by="variety", dir="x", spacing=24),
+    <span class="viz-op">spread</span>(by="year", dir="x", spacing=4),
     <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
@@ -581,8 +581,8 @@
             <div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>("variety", dir="x"),
-    <span class="viz-op">spread</span>("year", dir="x"),
+    <span class="viz-op">spread</span>(by="variety", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
     <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
@@ -684,8 +684,8 @@
               <pre class="viz-code">layer([
   chart(barley)
     .<span class="viz-op">flow</span>(
-      <span class="viz-op">spread</span>("variety", dir="x", spacing=24),
-      <span class="viz-op">spread</span>("year", dir="x", spacing=16),
+      <span class="viz-op">spread</span>(by="variety", dir="x", spacing=24),
+      <span class="viz-op">spread</span>(by="year", dir="x", spacing=16),
       <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
     )
     .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, fill="site").name("bars")),
@@ -724,8 +724,8 @@
     "Crookston": "#d7dadd", "Duluth": "#d7dadd",
   }))
     .<span class="viz-op">flow</span>(
-      <span class="viz-op">spread</span>("variety", dir="x", spacing=38),
-      <span class="viz-op">spread</span>("year", dir="x", spacing=8),
+      <span class="viz-op">spread</span>(by="variety", dir="x", spacing=38),
+      <span class="viz-op">spread</span>(by="year", dir="x", spacing=8),
       <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
     )
     .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=16, fill="site").name("bars")),

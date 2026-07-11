@@ -334,8 +334,8 @@
               ></div>
               <pre class="spec-mini"><code class="language-python">chart(heights)
   .flow(
-    spread("age", dir="x"),
-    spread("person", dir="x")
+    spread(by="age", dir="x"),
+    spread(by="person", dir="x")
   )
   .mark(rect(h="height", fill="person"))</code></pre>
             </div>

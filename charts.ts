@@ -607,16 +607,14 @@ function renderVizRibbon(id = "chart-viz-ribbon", highlight = false) {
 const SLOPE_W = 940;
 const SLOPE_H = 220;
 
-// Same facet/group scaffold as renderVizBarleySlopePanels below, minus the
-// connecting-line layer: each site panel is just its ten varieties' two
-// yearly points, plotted as visible circles instead of the invisible
-// rect(w=0,h=0) points the slope version names and re-selects. This is
-// literally the slope chart's first layer, rendered on its own — the bridge
-// slide before the line gets drawn. The between-site spacing is wider than
-// the slope panels' 20 on purpose: narrower panels pull each panel's two
-// year point-columns together so they read as a grouped pair, echoing the
-// stacked-bar slides' rhythm (tight within a site's year pair, wide between
-// sites — cf. renderVizSiteYear's spacing 24/4).
+// Same facet skeleton as the stacked-bar charts (renderVizSiteYear above:
+// spread site 24 / year 4), just with the mark swapped from a stacked rect
+// to a scattered circle: this is literally the slope chart's first layer,
+// rendered on its own — the bridge slide before the connecting line gets
+// drawn. One flat pipeline, no nested chart: spread facets by site, spread
+// facets by year within each site, then scatter positions each remaining
+// row (one per variety) by yield — `by` is omitted because a bare scatter
+// already splits its input one entry per row.
 function renderVizBarleySlopePoints(
   id = "chart-viz-barley-slope-points",
   w = SLOPE_W,
@@ -625,12 +623,12 @@ function renderVizBarleySlopePoints(
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley, vizChartOptions)
-    .flow(spread("site", { dir: "x", spacing: 120 }))
-    .mark((data) =>
-      Chart(data, vizChartOptions)
-        .flow(group("variety"), scatter({ x: "year", y: "yield" }))
-        .mark(circle({ r: 3, fill: "variety" }))
+    .flow(
+      spread("site", { dir: "x", spacing: 24 }),
+      spread("year", { dir: "x", spacing: 6 }),
+      scatter({ y: "yield" })
     )
+    .mark(circle({ r: 3, fill: "variety" }))
     .render(el, { w, h, axes: true, legend: false });
 }
 
