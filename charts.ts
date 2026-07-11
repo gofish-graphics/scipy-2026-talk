@@ -161,6 +161,11 @@ const cityYearData = Object.values(
 // chart boundaries both point at: Boulder, latest year in the data.
 const CUT_FOCUS_CITY = "Boulder";
 const CUT_FOCUS_YEAR = String(Math.max(...Object.values(OPENING_YEAR)));
+// Chart size on the stepped cut slides: each step is one chart | spec | chip
+// row, so the chart gets most of the width. (GoFish adds axis/legend padding
+// beyond this, so the emitted SVG is wider than CUT_CHART_W.)
+const CUT_CHART_W = 400;
+const CUT_CHART_H = 270;
 
 function getContainer(id: string): HTMLElement | null {
   return document.getElementById(id);
@@ -1656,16 +1661,17 @@ export function renderCharts() {
   renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
   addOuterGroupBoxes("chart-viz-agg-site-year-spec", 6);
   addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
-  // "each line of the spec is a cut" slide: one column per cut stop. The
-  // focused region is a drawn boundary (Gestalt common region), not the
+  // "each line of the spec is a cut": one stepped section per cut stop
+  // (chart | spec | chip in a row), advanced top-to-bottom. The focused
+  // region is a drawn boundary (Gestalt common region), not the
   // gray-fallback dimming renderAggSiteYearHighlight uses elsewhere — it
-  // shrinks from the whole plot (column 1) to one bar (column 3) as the cut
+  // shrinks from the whole plot (step 1) to one bar (step 3) as the cut
   // descends, mirroring the chips' bindings growing over the same span.
-  renderAggSiteYearCollapsed("chart-viz-cut-city", 300, 220);
+  renderAggSiteYearCollapsed("chart-viz-cut-city", CUT_CHART_W, CUT_CHART_H);
   addFocusBox("chart-viz-cut-city", { allGroups: true });
-  renderAggSiteYear("chart-viz-cut-year", 300, 220);
+  renderAggSiteYear("chart-viz-cut-year", CUT_CHART_W, CUT_CHART_H);
   addFocusBox("chart-viz-cut-year", { city: CUT_FOCUS_CITY });
-  renderAggSiteYear("chart-viz-cut-mark", 300, 220);
+  renderAggSiteYear("chart-viz-cut-mark", CUT_CHART_W, CUT_CHART_H);
   addFocusBox("chart-viz-cut-mark", {
     city: CUT_FOCUS_CITY,
     year: CUT_FOCUS_YEAR,
@@ -1785,15 +1791,15 @@ export const chartRenderers: Record<string, () => void> = {
     addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
   },
   "chart-viz-cut-city": () => {
-    renderAggSiteYearCollapsed("chart-viz-cut-city", 300, 220);
+    renderAggSiteYearCollapsed("chart-viz-cut-city", CUT_CHART_W, CUT_CHART_H);
     addFocusBox("chart-viz-cut-city", { allGroups: true });
   },
   "chart-viz-cut-year": () => {
-    renderAggSiteYear("chart-viz-cut-year", 300, 220);
+    renderAggSiteYear("chart-viz-cut-year", CUT_CHART_W, CUT_CHART_H);
     addFocusBox("chart-viz-cut-year", { city: CUT_FOCUS_CITY });
   },
   "chart-viz-cut-mark": () => {
-    renderAggSiteYear("chart-viz-cut-mark", 300, 220);
+    renderAggSiteYear("chart-viz-cut-mark", CUT_CHART_W, CUT_CHART_H);
     addFocusBox("chart-viz-cut-mark", {
       city: CUT_FOCUS_CITY,
       year: CUT_FOCUS_YEAR,
