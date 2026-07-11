@@ -699,8 +699,8 @@ Frame(
                 width: 100%;
                 margin-top: 0.6rem;
                 border-collapse: collapse;
-                font-size: 0.78em;
-                line-height: 1.5;
+                font-size: 0.76em;
+                line-height: 1.42;
               "
             >
               <thead>
@@ -708,10 +708,10 @@ Frame(
                   <th
                     style="
                       text-align: left;
-                      padding: 0.4rem 0.8rem;
+                      padding: 0.32rem 0.7rem;
                       color: #1a1a2e;
                       font-weight: 700;
-                      width: 22%;
+                      width: 17%;
                     "
                   >
                     Operator
@@ -719,10 +719,10 @@ Frame(
                   <th
                     style="
                       text-align: left;
-                      padding: 0.4rem 0.8rem;
+                      padding: 0.32rem 0.7rem;
                       color: #1a1a2e;
                       font-weight: 700;
-                      width: 26%;
+                      width: 20%;
                     "
                   >
                     shape
@@ -730,21 +730,51 @@ Frame(
                   <th
                     style="
                       text-align: left;
-                      padding: 0.4rem 0.8rem;
+                      padding: 0.32rem 0.7rem;
                       color: #1a1a2e;
                       font-weight: 700;
+                      width: 27%;
                     "
                   >
-                    the query it makes cheap
+                    find
+                    <span
+                      style="
+                        display: block;
+                        font-weight: 400;
+                        font-size: 0.75em;
+                        color: #888;
+                      "
+                      >the index it builds</span
+                    >
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 0.32rem 0.7rem;
+                      color: #1a1a2e;
+                      font-weight: 700;
+                      width: 36%;
+                    "
+                  >
+                    ask
+                    <span
+                      style="
+                        display: block;
+                        font-weight: 400;
+                        font-size: 0.75em;
+                        color: #888;
+                      "
+                      >the query it makes cheap</span
+                    >
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.22rem 0.8rem">
+                  <td style="padding: 0.18rem 0.7rem">
                     <code>spread(by=<em style="font-style: italic; color: #8a5fbf">key</em>)</code>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem">
+                  <td style="padding: 0.18rem 0.7rem">
                     <div
                       style="
                         width: 150px;
@@ -757,19 +787,33 @@ Frame(
                     >
                       <div id="chart-viz-op-spread"></div>
                     </div>
+                    <div
+                      style="
+                        font-size: 0.62em;
+                        color: #999;
+                        text-align: center;
+                      "
+                    >
+                      1 axis · discrete
+                    </div>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem; color: #555">
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨…⟩</span> across <em style="font-style: italic; color: #8a5fbf">key</em></span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> <span style="white-space: nowrap">at its <em style="font-style: italic; color: #8a5fbf">key</em></span></span>
+                    </div>
+                  </td>
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨summaries⟩</span> across <em style="font-style: italic; color: #8a5fbf">key</em></span>
                       <span class="q-gloss">slots sit side by side — one scan</span>
                     </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.22rem 0.8rem">
-                    <code>stack(<em style="font-style: italic; color: #8a5fbf">key</em>)</code>
+                  <td style="padding: 0.18rem 0.7rem">
+                    <code>stack(by=<em style="font-style: italic; color: #8a5fbf">key</em>, size=<em style="font-style: italic; color: #8a5fbf">value</em>)</code>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem">
+                  <td style="padding: 0.18rem 0.7rem">
                     <div
                       style="
                         width: 150px;
@@ -782,20 +826,34 @@ Frame(
                     >
                       <div id="chart-viz-op-stack"></div>
                     </div>
+                    <div
+                      style="
+                        font-size: 0.62em;
+                        color: #999;
+                        text-align: center;
+                      "
+                    >
+                      1 axis · discrete · slots sized by value
+                    </div>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem; color: #555">
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total over <em style="font-style: italic; color: #8a5fbf">key</em>⟩</span> at the endpoint</span>
-                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨each <em style="font-style: italic; color: #8a5fbf">key</em>'s share⟩</span> when normalized</span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨<em style="font-style: italic; color: #8a5fbf">key</em>'s segment⟩</span> in order</span>
+                    </div>
+                  </td>
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨sizes⟩</span> across <em style="font-style: italic; color: #8a5fbf">key</em></span>
+                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total = Σ <em style="font-style: italic; color: #8a5fbf">size</em>⟩</span> at <span style="white-space: nowrap">the far edge</span></span>
                       <span class="q-gloss">segments tile end to end — a boundary read</span>
                     </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.22rem 0.8rem">
-                    <code>scatter(x=<em style="font-style: italic; color: #8a5fbf">x</em>, y=<em style="font-style: italic; color: #8a5fbf">y</em>)</code>
+                  <td style="padding: 0.18rem 0.7rem">
+                    <code>scatter(by=<em style="font-style: italic; color: #8a5fbf">key</em>, x=<em style="font-style: italic; color: #8a5fbf">x</em>, y=<em style="font-style: italic; color: #8a5fbf">y</em>)</code>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem">
+                  <td style="padding: 0.18rem 0.7rem">
                     <div
                       style="
                         width: 150px;
@@ -807,46 +865,33 @@ Frame(
                     >
                       <div id="chart-viz-op-scatter"></div>
                     </div>
+                    <div
+                      style="
+                        font-size: 0.62em;
+                        color: #999;
+                        text-align: center;
+                      "
+                    >
+                      1–2 axes · continuous
+                    </div>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem; color: #555">
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> at (<em style="font-style: italic; color: #8a5fbf">x</em>, <em style="font-style: italic; color: #8a5fbf">y</em>)</span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> at <span style="white-space: nowrap">(<em style="font-style: italic; color: #8a5fbf">x</em>, <em style="font-style: italic; color: #8a5fbf">y</em>)</span></span>
+                    </div>
+                  </td>
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
                       <span class="q-line"><span class="q-val">collect</span> <span class="q-hole">⟨the shape of the crowd⟩</span></span>
                       <span class="q-gloss">points sit at their values — a gestalt read</span>
                     </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.22rem 0.8rem">
-                    <code>line() / ribbon()</code>
+                  <td style="padding: 0.18rem 0.7rem">
+                    <code>table(by=<span style="white-space: nowrap">(<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</span>)</code>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem">
-                    <div
-                      style="
-                        width: 150px;
-                        height: 40px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        overflow: hidden;
-                      "
-                    >
-                      <div id="chart-viz-op-ribbon"></div>
-                    </div>
-                  </td>
-                  <td style="padding: 0.22rem 0.8rem; color: #555">
-                    <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">follow</span> <span class="q-hole">⟨an entity⟩</span> across scopes</span>
-                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨crossings⟩</span> as overtakes</span>
-                      <span class="q-gloss">strokes connect endpoints — a trace</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.22rem 0.8rem">
-                    <code>table(<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</code>
-                  </td>
-                  <td style="padding: 0.22rem 0.8rem">
+                  <td style="padding: 0.18rem 0.7rem">
                     <div
                       style="
                         width: 150px;
@@ -866,10 +911,23 @@ Frame(
                         style="margin-left: -40px"
                       ></div>
                     </div>
+                    <div
+                      style="
+                        font-size: 0.62em;
+                        color: #999;
+                        text-align: center;
+                      "
+                    >
+                      2 axes · discrete
+                    </div>
                   </td>
-                  <td style="padding: 0.22rem 0.8rem; color: #555">
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at (<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at <span style="white-space: nowrap">(<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</span></span>
+                    </div>
+                  </td>
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
                       <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨…⟩</span> along a row or a column</span>
                       <span class="q-gloss">discrete slots both ways — a straight scan</span>
                     </div>
@@ -886,8 +944,72 @@ Frame(
                     alignment &amp; uniform density
                   </td>
                 </tr> -->
+                <tr>
+                  <td
+                    colspan="4"
+                    style="
+                      padding: 0.3rem 0.7rem 0.05rem;
+                      border-top: 2px solid #1a1a2e;
+                      color: #999;
+                      font-size: 0.62em;
+                      letter-spacing: 0.04em;
+                      text-transform: uppercase;
+                    "
+                  >
+                    relational — draws over an index, builds none
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.18rem 0.7rem">
+                    <code>line() / ribbon()</code>
+                  </td>
+                  <td style="padding: 0.18rem 0.7rem">
+                    <div
+                      style="
+                        width: 150px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                      "
+                    >
+                      <div id="chart-viz-op-ribbon"></div>
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.62em;
+                        color: #999;
+                        text-align: center;
+                      "
+                    >
+                      no index — draws over one
+                    </div>
+                  </td>
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-val">follow</span> <span class="q-hole">⟨an entity⟩</span> across scopes</span>
+                    </div>
+                  </td>
+                  <td style="padding: 0.18rem 0.7rem; color: #555">
+                    <div class="viz-query" style="font-size: 0.85em">
+                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨crossings⟩</span> as overtakes</span>
+                      <span class="q-gloss">strokes connect endpoints — a trace</span>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
+            <div
+              style="
+                text-align: right;
+                font-size: 0.55em;
+                color: #aaa;
+                margin-top: 0.15rem;
+              "
+            >
+              find / ask after Brehmer &amp; Munzner (2013)
+            </div>
             <aside class="notes">
               spread — discrete; alignment &amp; uniform density.
               <br />
@@ -909,8 +1031,55 @@ Frame(
               the distribution varies across space, the pie glyph contributes
               share-within-entity.
               <br /><br />
-              Connection overrides adjacency at its endpoints (Palmer &amp;
-              Rock) — the strongest carrier, and the most targeted.
+              Connection is the strongest grouping cue there is — stronger
+              than proximity, stronger than color or shape similarity
+              (Franconeri, Bemis, Burlingham &amp; Kramer 2021, PSPI, Fig. 8).
+              Explicit connecting lines improve relation judgments by
+              25–95% (Nothelfer &amp; Franconeri 2020). Note this is a
+              strength ranking, not Palmer &amp; Rock's 1994 claim about
+              processing priority (which is about order of computation, not
+              which cue wins).
+              <br /><br />
+              That ranking is a default, not a total order: connection >
+              common region/connectedness > proximity > similarity (color >
+              shape). Cue strength is parametric and cues combine additively
+              in log-odds (Kubovy &amp; van den Berg 2008; Brooks 2015), so a
+              strong enough similarity cue can override a weak proximity cue
+              (Quinlan &amp; Wilton 1998). In grouped bar charts specifically,
+              spatial proximity beats color grouping for comparisons about
+              63/37 of the time (Bearfield, Stokes, Lovett &amp; Franconeri
+              2024, TVCG). Full notes: notes/gestalt-grouping-strength.md.
+              <br /><br />
+              find/ask is Brehmer &amp; Munzner's search vs. query
+              distinction. Their identify/compare/summarize ladder maps onto
+              this table three ways: identify is a mark-level read, compare
+              is the operator's ask line, summarize is the hole's own
+              collapsed-chip gloss.
+              <br /><br />
+              spread is align + distribute: distribute builds the index (the
+              find line — one slot per key), align prices the comparison
+              itself (the ask line). Which align anchor you pick decides
+              which comparison is precise: baseline anchoring gives
+              common-scale length comparisons, middle anchoring gives
+              symmetric deviation comparisons.
+              <br /><br />
+              stack trades per-key comparison accuracy — interior segments
+              lose the shared baseline the moment they're not first — for a
+              free read of the total at the far edge. That far edge, Σ size,
+              is itself a size an enclosing operator can consume. Normalize
+              it (size: field(...).normalize()) and the far edge reads as
+              ⟨each key's share⟩ instead of an absolute total.
+              <br /><br />
+              scatter's key is one field, with x/y carried as attributes
+              (by= is optional — omit it for a per-item scatter). A 1D
+              scatter, with only x or only y bound, is a strip plot — hence
+              "1–2 axes" under the preview. table's key is two fields
+              crossed (by={row, col}); that row/col split is what makes it
+              discrete both ways, versus scatter's continuous one-or-two.
+              <br /><br />
+              ⟨the shape of the crowd⟩ = trends, clusters, outliers — the
+              gestalt reads a scatter affords for free. Scagnostics is the
+              formalization of exactly that list.
               <br /><br />
               What each operator's "places" used to say, before the shape
               column replaced the prose: spread — one slot per value of a
