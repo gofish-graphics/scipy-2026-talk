@@ -482,6 +482,97 @@
             </aside>
           </section>
 
+          <!-- Docking: a hole's content is the collapsed form of the chip one
+               level down. Runs bottom-up through the three chips from the
+               cut slides above; ends on the top-level chip from the
+               "nesting order matters" slide that follows. -->
+          <section data-background-color="#f7f2e8">
+            <h2>every hole is a collapsed chip</h2>
+            <div
+              class="dock-column"
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2.2rem;
+                margin-top: 1.6rem;
+              "
+            >
+              <div
+                class="viz-query dock-chip-a"
+                style="font-size: 1.1em; max-width: 660px"
+              >
+                <span class="q-line"
+                  ><span class="q-val">compare</span>
+                  <span class="q-hole"
+                    >⟨<span class="q-hole-swap"
+                      ><span class="fragment fade-out" data-fragment-index="2">?</span
+                      ><span class="fragment fade-in" data-fragment-index="2"
+                        >each site's year pattern</span
+                      ></span
+                    >⟩</span
+                  >
+                  across sites</span
+                >
+                <span class="q-gloss fragment" data-fragment-index="3"
+                  >groups sit apart — a scan</span
+                >
+              </div>
+
+              <div
+                class="viz-query fragment custom dock-away dock-chip-b"
+                data-fragment-index="2"
+                style="font-size: 1.1em; max-width: 560px"
+              >
+                <span class="q-ctx">site = Morris</span>
+                <span class="q-line"
+                  ><span class="q-val">compare</span>
+                  <span class="q-hole"
+                    >⟨<span class="q-hole-swap"
+                      ><span class="fragment fade-out" data-fragment-index="1">?</span
+                      ><span class="fragment fade-in" data-fragment-index="1"
+                        >yield heights</span
+                      ></span
+                    >⟩</span
+                  >
+                  across years</span
+                >
+              </div>
+
+              <div
+                class="viz-query fragment custom dock-away dock-chip-c"
+                data-fragment-index="1"
+                style="font-size: 1.1em; max-width: 560px"
+              >
+                <span class="q-ctx">site = Morris · year = 1932</span>
+                <span class="q-line"
+                  >yield <span class="q-arrow">→</span> height · site
+                  <span class="q-arrow">→</span> color</span
+                >
+              </div>
+            </div>
+            <aside class="notes">
+              Docking is evaluation, not substitution. A chip is a query — an
+              act you can run when you attend inside a region; what crosses
+              the boundary upward is only the act's export. When the mark
+              chip docks into the year chip, its whole body collapses to
+              ⟨yield heights⟩ — and notice the header: C's binding year =
+              1932 is discharged by B's "across years", just as B's site =
+              Morris is discharged by A's "across sites". Headers shrink as
+              you dock upward; on the cut slides they grew as we cut
+              downward — same interface, two directions. The mapping
+              chip-to-summary is many-to-one: a stacked bar and a waffle are
+              different chips exporting the same summary type at different
+              precision, which is exactly why inner substitution preserves
+              the outer query. This is also the magnification and
+              screen-reader result: zooming out of a region replaces the
+              region's query with its export. Scratch's reporter blocks are
+              the visual ancestor, but with collapse-on-dock: the fully
+              nested one-liner exists only mid-flight; the resting state is
+              always collapsed.
+            </aside>
+          </section>
+
           <!-- Repeat of "nesting order matters" with the new perceptual-query
                notation now that it's been introduced by the cut slides. New
                chart ids: charts render eagerly by id, so reusing

@@ -672,6 +672,125 @@ const VIZ_COMPARE_RENDER_OPTIONS = {
 };
 const vizChartOptions = { color: palette(vizStepColors), legend: false };
 
+// ── Operator summary table: tiny horizontal "shape" previews ───────────────
+// One real GoFish render per row of the "each operator makes one query
+// cheap" table (03-glyphs.html). Toy inline data, no axes, ~150x40 — just
+// enough for the operator's characteristic arrangement to read at a glance.
+const OP_VIZ_W = 150;
+const OP_VIZ_H = 40;
+const opVizColors = ["#4190c5", "#a181c8", "#43b780", "#d45e83"];
+
+const opSpreadData = [{ k: "a" }, { k: "b" }, { k: "c" }, { k: "d" }];
+
+function renderVizOpSpread(id = "chart-viz-op-spread") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(opSpreadData, { axes: false, legend: false })
+    .flow(spread("k", { dir: "x", spacing: 10 }))
+    .mark(rect({ h: datum(1), fill: opVizColors[0] }))
+    .render(el, { w: OP_VIZ_W, h: OP_VIZ_H, axes: false, legend: false });
+}
+
+// `fill` carries a literal "#"-prefixed hex value per row rather than a bare
+// category name — GoFish passes literal colors straight through instead of
+// resolving them against a categorical scale, so no legend gets generated
+// (see the barleyDeltaScale comment above for the same literal-vs-scaled
+// distinction).
+const opStackData = [
+  { k: "a", v: 3, fill: opVizColors[0] },
+  { k: "b", v: 2, fill: opVizColors[1] },
+  { k: "c", v: 4, fill: opVizColors[2] },
+  { k: "d", v: 2, fill: opVizColors[3] },
+];
+
+function renderVizOpStack(id = "chart-viz-op-stack") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(opStackData, { axes: false, legend: false })
+    .flow(stack("k", { dir: "x", size: "v" }))
+    .mark(rect({ h: 26, fill: "fill" }))
+    .render(el, { w: OP_VIZ_W, h: OP_VIZ_H, axes: false, legend: false });
+}
+
+// Deliberately clumpy 2-D values — two tight clusters and a loner — so the
+// preview cannot be mistaken for spread's equal slots: scatter's dots sit
+// at their VALUES, unevenly, which is the whole semantic difference.
+const opScatterData = [
+  { x: 2, y: 1 },
+  { x: 3.2, y: 2.4 },
+  { x: 3.8, y: 1.4 },
+  { x: 9, y: 3.4 },
+  { x: 13.5, y: 0.8 },
+  { x: 14, y: 2 },
+];
+
+function renderVizOpScatter(id = "chart-viz-op-scatter") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  // Rendered a touch smaller than the 150x40 preview box: GoFish scales the
+  // domain to the full frame, so the extreme points' circles sit exactly on
+  // the SVG boundary and get half-clipped by the default svg overflow.
+  // Letting the SVG overflow visibly (with slack from the smaller frame)
+  // keeps every dot whole.
+  Chart(opScatterData, { axes: false, legend: false })
+    .flow(scatter({ x: "x", y: "y" }))
+    .mark(circle({ r: 3, fill: opVizColors[2] }))
+    .render(el, { w: 140, h: 30, axes: false, legend: false });
+  waitForChild(el, "svg").then((svg) => {
+    if (svg) svg.style.overflow = "visible";
+  });
+}
+
+// Two short stacks (left/right) connected by a ribbon — the same "name it,
+// select it, group it, connect it" idiom as the barley ribbon slide
+// (renderVizStackChart above), radically simplified to a 2x2 toy. The wide
+// spacing keeps the two stacks visually distinct little columns; the low
+// ribbon opacity keeps the connecting bands clearly lighter than the solid
+// segment rects so the flow reads as "stacks joined by translucent bands"
+// rather than one mass.
+const opRibbonData = [
+  { side: "left", seg: "a", v: 3, fill: opVizColors[0] },
+  { side: "left", seg: "b", v: 2, fill: opVizColors[1] },
+  { side: "right", seg: "a", v: 2, fill: opVizColors[0] },
+  { side: "right", seg: "b", v: 4, fill: opVizColors[1] },
+];
+
+function renderVizOpRibbon(id = "chart-viz-op-ribbon") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Layer([
+    Chart(opRibbonData, { axes: false, legend: false })
+      .flow(
+        spread("side", { dir: "x", spacing: 96 }),
+        stack("seg", { dir: "y", size: "v" })
+      )
+      .mark(rect({ w: 16, fill: "fill" }).name("op-ribbon-bars")),
+    Chart(select("op-ribbon-bars"), { axes: false, legend: false })
+      .flow(group("seg"))
+      .mark(ribbon({ opacity: 0.25 })),
+  ]).render(el, { w: OP_VIZ_W, h: OP_VIZ_H, axes: false, legend: false });
+}
+
+const opTableData = [
+  { row: "r1", col: "c1" },
+  { row: "r1", col: "c2" },
+  { row: "r2", col: "c1" },
+  { row: "r2", col: "c2" },
+];
+
+// Rendered nearly square (not the full 150px row width) so the 2x2 reads as
+// a grid with two independent axes — equal gaps both ways — instead of four
+// wide flat bars; the flex-centered container box supplies the rest of the
+// row width.
+function renderVizOpTable(id = "chart-viz-op-table") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(opTableData, { axes: false, legend: false })
+    .flow(table("row", "col", { spacing: 6 }))
+    .mark(rect({ fill: opVizColors[1] }))
+    .render(el, { w: 42, h: 36, axes: false, legend: false });
+}
+
 function renderVizSiteSlots() {
   const el = getContainer("chart-viz-site-slots");
   if (!el || el.children.length > 0) return;
@@ -1782,6 +1901,11 @@ export function renderCharts() {
   renderBottleChart();
   renderConnBars();
   renderConnLine();
+  renderVizOpSpread();
+  renderVizOpStack();
+  renderVizOpScatter();
+  renderVizOpRibbon();
+  renderVizOpTable();
 }
 
 function renderChartById(id: string) {
@@ -2117,4 +2241,9 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-ex-bottle": () => renderBottleChart(),
   "chart-conn-bars": () => renderConnBars(),
   "chart-conn-line": () => renderConnLine(),
+  "chart-viz-op-spread": renderVizOpSpread,
+  "chart-viz-op-stack": renderVizOpStack,
+  "chart-viz-op-scatter": renderVizOpScatter,
+  "chart-viz-op-ribbon": renderVizOpRibbon,
+  "chart-viz-op-table": renderVizOpTable,
 };

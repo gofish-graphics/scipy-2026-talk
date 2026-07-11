@@ -1388,6 +1388,60 @@
   color: #555;
 }
 
+/* "every hole is a collapsed chip": the hole's ?-placeholder and its filled
+   phrase share one grid cell so the crossfade doesn't jump the layout
+   vertically; the ⟨ ⟩ brackets live outside this element and never move.
+   ~2ch keeps the "?" state from collapsing the hole to nothing; the "?" is
+   centered in the (filled-phrase-sized) cell so it reads as an awaiting
+   slot rather than a left-stranded character. */
+.viz-query .q-hole-swap {
+  display: inline-grid;
+  min-width: 2ch;
+  justify-items: center;
+}
+
+.viz-query .q-hole-swap > span {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* On the docking slide the hole must be one unbreakable inline unit —
+   brackets hugging the swap cell on both sides. Without this, the grid
+   cell (pre-sized to the hidden filled phrase) wraps onto its own line
+   and strands the ⟨ bracket at the end of the verb's line. The q-line
+   may still wrap BETWEEN verb / hole / trailing words, never inside. */
+.dock-column .q-hole {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+/* Docking: an inner chip flies into the outer chip's socket and collapses,
+   landing roughly on the socket it fills. reveal's `fragment custom` ships
+   no default styling, so both the resting and .visible states are defined
+   here; distances are hardcoded against the fixed-size .dock-column layout
+   above and were measured against the rendered slide.
+   Specificity note: reveal.css sets `.reveal .fragment { transition: all
+   .2s ease }` (two classes) — a plain `.dock-away` rule loses that fight
+   and silently collapses this transition to reveal's default 0.2s, so the
+   selector below matches `.reveal .fragment`'s specificity and wins on
+   source order instead. */
+.reveal .fragment.dock-away {
+  transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+  transform: translate(0, 0) scale(1);
+  opacity: 1;
+}
+
+.dock-chip-b.dock-away.visible {
+  transform: translateY(-226px) translateX(64px) scale(0.12);
+  opacity: 0;
+}
+
+.dock-chip-c.dock-away.visible {
+  transform: translateY(-162px) translateX(16px) scale(0.12);
+  opacity: 0;
+}
+
 .viz-query .q-gloss {
   display: block;
   font-family: "Shantell Sans", sans-serif;

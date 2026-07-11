@@ -713,14 +713,14 @@ Frame(
           <!-- ─── OPERATOR / GESTALT TABLE ─────────────────────── -->
 
           <section>
-            <h2>each operator buys a query</h2>
+            <h2>each operator makes one query cheap</h2>
             <table
               style="
                 width: 100%;
-                margin-top: 1.2rem;
+                margin-top: 0.6rem;
                 border-collapse: collapse;
                 font-size: 0.78em;
-                line-height: 1.6;
+                line-height: 1.5;
               "
             >
               <thead>
@@ -731,7 +731,7 @@ Frame(
                       padding: 0.4rem 0.8rem;
                       color: #1a1a2e;
                       font-weight: 700;
-                      width: 18%;
+                      width: 22%;
                     "
                   >
                     Operator
@@ -742,10 +742,10 @@ Frame(
                       padding: 0.4rem 0.8rem;
                       color: #1a1a2e;
                       font-weight: 700;
-                      width: 34%;
+                      width: 26%;
                     "
                   >
-                    places
+                    shape
                   </th>
                   <th
                     style="
@@ -761,50 +761,100 @@ Frame(
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.45rem 0.8rem"><code>spread</code></td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
-                    one slot per value of a field
+                  <td style="padding: 0.22rem 0.8rem">
+                    <code>spread(by=<em style="font-style: italic; color: #8a5fbf">key</em>)</code>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                  <td style="padding: 0.22rem 0.8rem">
+                    <div
+                      style="
+                        width: 150px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                      "
+                    >
+                      <div id="chart-viz-op-spread"></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.22rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨…⟩</span> across values</span>
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨…⟩</span> across <em style="font-style: italic; color: #8a5fbf">key</em></span>
                       <span class="q-gloss">slots sit side by side — one scan</span>
                     </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.45rem 0.8rem"><code>stack</code></td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
-                    scopes tiled end to end; boundaries at the running totals
+                  <td style="padding: 0.22rem 0.8rem">
+                    <code>stack(<em style="font-style: italic; color: #8a5fbf">key</em>)</code>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                  <td style="padding: 0.22rem 0.8rem">
+                    <div
+                      style="
+                        width: 150px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                      "
+                    >
+                      <div id="chart-viz-op-stack"></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.22rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total⟩</span> at the endpoint</span>
-                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨shares⟩</span> when normalized</span>
+                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total over <em style="font-style: italic; color: #8a5fbf">key</em>⟩</span> at the endpoint</span>
+                      <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨each <em style="font-style: italic; color: #8a5fbf">key</em>'s share⟩</span> when normalized</span>
                       <span class="q-gloss">segments tile end to end — a boundary read</span>
                     </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.45rem 0.8rem"><code>scatter</code></td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
-                    each entity at its location in space
+                  <td style="padding: 0.22rem 0.8rem">
+                    <code>scatter(x=<em style="font-style: italic; color: #8a5fbf">x</em>, y=<em style="font-style: italic; color: #8a5fbf">y</em>)</code>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                  <td style="padding: 0.22rem 0.8rem">
+                    <div
+                      style="
+                        width: 150px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <div id="chart-viz-op-scatter"></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.22rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨two measures⟩</span> at once</span>
-                      <span class="q-gloss">points share one frame — a gestalt of the cloud</span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> at (<em style="font-style: italic; color: #8a5fbf">x</em>, <em style="font-style: italic; color: #8a5fbf">y</em>)</span>
+                      <span class="q-line"><span class="q-val">collect</span> <span class="q-hole">⟨the shape of the crowd⟩</span></span>
+                      <span class="q-gloss">points sit at their values — a gestalt read</span>
                     </div>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.45rem 0.8rem">
-                    <code>area / line / ribbon</code>
+                  <td style="padding: 0.22rem 0.8rem">
+                    <code>line() / ribbon()</code>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
-                    <em>nothing new — draws over existing placements</em>
+                  <td style="padding: 0.22rem 0.8rem">
+                    <div
+                      style="
+                        width: 150px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                      "
+                    >
+                      <div id="chart-viz-op-ribbon"></div>
+                    </div>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                  <td style="padding: 0.22rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
                       <span class="q-line"><span class="q-val">follow</span> <span class="q-hole">⟨an entity⟩</span> across scopes</span>
                       <span class="q-gloss">strokes connect endpoints — a trace</span>
@@ -812,25 +862,46 @@ Frame(
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #e8e8e8">
-                  <td style="padding: 0.45rem 0.8rem"><code>table</code></td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
-                    two independently addressable axes
+                  <td style="padding: 0.22rem 0.8rem">
+                    <code>table(<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</code>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                  <td style="padding: 0.22rem 0.8rem">
+                    <div
+                      style="
+                        width: 150px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-start;
+                        overflow: hidden;
+                      "
+                    >
+                      <!-- GoFish pads every side by 40px; pull the svg left so
+                           the grid's left edge aligns with the other rows'
+                           (whose 40px margins are symmetrically clipped by
+                           their centered 150px windows). -->
+                      <div
+                        id="chart-viz-op-table"
+                        style="margin-left: -40px"
+                      ></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.22rem 0.8rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
-                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at field × field</span>
-                      <span class="q-gloss">cells align in rows and columns — a scan either way</span>
+                      <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at (<em style="font-style: italic; color: #8a5fbf">row</em>, <em style="font-style: italic; color: #8a5fbf">col</em>)</span>
+                      <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨…⟩</span> along a row or a column</span>
+                      <span class="q-gloss">discrete slots both ways — a straight scan</span>
                     </div>
                   </td>
                 </tr>
                 <!-- <tr>
-                  <td style="padding: 0.45rem 0.8rem">
+                  <td style="padding: 0.22rem 0.8rem">
                     <code>align / distribute</code>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #aaa">
+                  <td style="padding: 0.22rem 0.8rem; color: #aaa">
                     <em>discrete?</em>
                   </td>
-                  <td style="padding: 0.45rem 0.8rem; color: #555">
+                  <td style="padding: 0.22rem 0.8rem; color: #555">
                     alignment &amp; uniform density
                   </td>
                 </tr> -->
@@ -859,6 +930,13 @@ Frame(
               <br /><br />
               Connection overrides adjacency at its endpoints (Palmer &amp;
               Rock) — the strongest carrier, and the most targeted.
+              <br /><br />
+              What each operator's "places" used to say, before the shape
+              column replaced the prose: spread — one slot per value of a
+              field. stack — scopes tiled end to end; boundaries at the
+              running totals. scatter — each entity at its location in space.
+              area / line / ribbon — nothing new; draws over existing
+              placements. table — two independently addressable axes.
             </aside>
           </section>
 
