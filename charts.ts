@@ -399,6 +399,26 @@ function renderAggYearSite(
     .render(el, { w, h, axes, legend: false });
 }
 
+// "each line of the spec is a cut" slide, column 1: everything below the
+// outer spread("city") collapses into one neutral gray bar per city — the
+// same auto-summing renderAggSiteYear relies on (height auto-sums over any
+// grouping level not given its own spread), just with the year spread
+// dropped entirely instead of only the variety level. One flat fill instead
+// of fill: "city" keeps the collapsed bars visually neutral/summary-like.
+function renderAggSiteYearCollapsed(
+  id = "chart-viz-cut-city",
+  w = CHART_W,
+  h = CHART_H,
+  axes: boolean | { x: boolean; y: boolean } = true
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(cityYearData, { axes })
+    .flow(spread("city", { dir: "x", spacing: 24 }))
+    .mark(rect({ h: "sales", fill: "#9aa5b1" }))
+    .render(el, { w, h, axes, legend: false });
+}
+
 // Data-shape reveal: the opening's grouped bars re-shown with the anonymized
 // city/sales labels, then swapped to the real barley site/yield labels. Same
 // numbers, same layout, neutral fill, so only the labels change.
@@ -1508,6 +1528,10 @@ export function renderCharts() {
   renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
   addOuterGroupBoxes("chart-viz-agg-site-year-spec", 6);
   addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
+  // "each line of the spec is a cut" slide: one column per cut stop.
+  renderAggSiteYearCollapsed("chart-viz-cut-city", 300, 220);
+  renderAggSiteYearHighlight("chart-viz-cut-year", 300, 220);
+  renderAggSiteYear("chart-viz-cut-mark", 300, 220);
   renderFranconeriAColor();
   renderFranconeriAColorKey();
   renderFranconeriB();
@@ -1622,6 +1646,11 @@ export const chartRenderers: Record<string, () => void> = {
     renderAggYearSite("chart-viz-agg-year-site-spec", 300, 210);
     addOuterGroupBoxes("chart-viz-agg-year-site-spec", 2);
   },
+  "chart-viz-cut-city": () =>
+    renderAggSiteYearCollapsed("chart-viz-cut-city", 300, 220),
+  "chart-viz-cut-year": () =>
+    renderAggSiteYearHighlight("chart-viz-cut-year", 300, 220),
+  "chart-viz-cut-mark": () => renderAggSiteYear("chart-viz-cut-mark", 300, 220),
   "chart-franconeri-a-color": renderFranconeriAColor,
   "chart-franconeri-a-color-key": renderFranconeriAColorKey,
   "chart-franconeri-a-key-2": () => {

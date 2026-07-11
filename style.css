@@ -1088,6 +1088,24 @@
   font-weight: 760;
 }
 
+/* "each line of the spec is a cut" slide: the same .viz-code snippet
+   repeated per column, one line singled out per cut stop. .cut-highlight
+   reuses the gained-clause pill blue from the closing section's query
+   chips (rgba(74, 127, 181, 0.18)); .cut-collapsed fades the lines below
+   the cut, standing in for their collapse into the summary glyph. */
+.viz-code .cut-line {
+  display: block;
+}
+
+.viz-code .cut-line.cut-highlight {
+  background: rgba(74, 127, 181, 0.18);
+  border-radius: 3px;
+}
+
+.viz-code .cut-line.cut-collapsed {
+  opacity: 0.35;
+}
+
 /* "place one slot per site": empty placeholder slots are outlined only.
    GoFish's rect mark doesn't forward strokeDasharray through to the SVG
    attribute, so the dash is applied here instead of in the mark spec. */

@@ -1259,6 +1259,118 @@
               point.
             </aside>
           </section>
+
+          <section data-background-color="#f7f2e8">
+            <h2>each line of the spec is a cut</h2>
+            <div
+              style="
+                display: flex;
+                gap: 1.4rem;
+                justify-content: center;
+                margin-top: 1rem;
+                font-size: 0.72em;
+              "
+            >
+              <!-- Column 1: cut at the outer spread(by="city") -->
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0.6rem;
+                  max-width: 320px;
+                "
+              >
+                <pre class="viz-code compact" style="align-self: stretch"
+                ><span class="cut-line">chart(sales).flow(</span>
+<span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="city", dir="x"),</span>
+<span class="cut-line cut-collapsed">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="sales", fill="city"))</span></pre>
+                <div
+                  id="chart-viz-cut-city"
+                  class="chart-container viz-ex-tile"
+                  style="align-self: center"
+                ></div>
+                <div class="viz-query" style="align-self: center">
+                  <span class="q-line"><span class="q-val">compare</span> total sales across cities</span>
+                </div>
+              </div>
+
+              <!-- Column 2: cut at the inner spread(by="year") -->
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0.6rem;
+                  max-width: 320px;
+                "
+              >
+                <pre class="viz-code compact" style="align-self: stretch"
+                ><span class="cut-line">chart(sales).flow(</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="city", dir="x"),</span>
+<span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="sales", fill="city"))</span></pre>
+                <div
+                  id="chart-viz-cut-year"
+                  class="chart-container viz-ex-tile"
+                  style="align-self: center"
+                ></div>
+                <div class="viz-query" style="align-self: center">
+                  <span class="q-line"><span class="q-val">compare</span> sales across years — city held fixed</span>
+                </div>
+              </div>
+
+              <!-- Column 3: cut at the mark -->
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0.6rem;
+                  max-width: 320px;
+                "
+              >
+                <pre class="viz-code compact" style="align-self: stretch"
+                ><span class="cut-line">chart(sales).flow(</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="city", dir="x"),</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line cut-highlight">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="sales", fill="city"))</span></pre>
+                <div
+                  id="chart-viz-cut-mark"
+                  class="chart-container viz-ex-tile"
+                  style="align-self: center"
+                ></div>
+                <div class="viz-query" style="align-self: center">
+                  <span class="q-line"><span class="q-val">read off</span> one sales value</span>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Highlighting a line of the spec picks a CUT through the operator
+              tree — Elmqvist-style hierarchical aggregation, but the cut is
+              wherever your eye lands in the code, not a fixed level someone
+              baked into the chart. Below the cut, the tree collapses into a
+              summary glyph: in column 1, an entire city's spread over years
+              is one neutral gray bar of its total, because collapsing IS just
+              an inner substitution GoFish already does whenever a grouping
+              level is left out of the spec — the same auto-summing behind
+              "back to those bar charts." So the visualization of the idea
+              (fade what's below the cut into a summary) is itself an
+              instance of the idea (a lower level of the spec, collapsed).
+              Above the cut, everything stays present but dimmed: it's the
+              frame telling you which slice of data you're inside, not a
+              participant in the comparison. Column 2 reuses the same
+              highlight/gray-fallback mechanism as the earlier Boulder slide,
+              just to make the point that "in focus" vs. "collapsed" isn't
+              two different tricks — it's the same cut, applied one level
+              down. Column 3 is the cut at the mark: nothing left to
+              aggregate, so the query degrades to a lookup.
+            </aside>
+          </section>
         </section>
         <!-- /COLUMN 1 -->
 
