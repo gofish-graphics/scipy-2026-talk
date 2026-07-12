@@ -107,23 +107,38 @@ const color6 = [
   "#d45e83",
 ];
 
+// Tableau10: any chart with more than five categorical colors uses this
+// palette instead of a hand-picked one.
+const TABLEAU10 = [
+  "#4e79a7",
+  "#f28e2b",
+  "#e15759",
+  "#76b7b2",
+  "#59a14f",
+  "#edc948",
+  "#b07aa1",
+  "#ff9da7",
+  "#9c755f",
+  "#bab0ac",
+];
+
 const vizStepColors = {
-  Manchuria: "#f0bf4d",
-  Glabron: "#e86f5d",
-  Svansota: "#d45e83",
-  Velvet: "#68a9d8",
-  Trebi: "#8fcf8f",
-  "No. 457": "#a181c8",
-  "No. 462": "#ff9666",
-  Peatland: "#b58cd9",
-  "No. 475": "#5aa6a6",
-  "Wisconsin No. 38": "#c78755",
-  "University Farm": "#9aa3ad",
-  Waseca: "#f0bf4d",
-  Morris: "#49a66a",
-  Crookston: "#68a9d8",
-  "Grand Rapids": "#4e79a7",
-  Duluth: "#e86f5d",
+  Manchuria: TABLEAU10[0],
+  Glabron: TABLEAU10[1],
+  Svansota: TABLEAU10[2],
+  Velvet: TABLEAU10[3],
+  Trebi: TABLEAU10[4],
+  "No. 457": TABLEAU10[5],
+  "No. 462": TABLEAU10[6],
+  Peatland: TABLEAU10[7],
+  "No. 475": TABLEAU10[8],
+  "Wisconsin No. 38": TABLEAU10[9],
+  "University Farm": TABLEAU10[0],
+  Waseca: TABLEAU10[1],
+  Morris: TABLEAU10[2],
+  Crookston: TABLEAU10[3],
+  "Grand Rapids": TABLEAU10[4],
+  Duluth: TABLEAU10[5],
 };
 
 type BarleyRow = {

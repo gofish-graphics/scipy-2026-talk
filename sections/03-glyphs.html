@@ -179,7 +179,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <h2>first, just the points</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
-              <span class="q-gloss">no lines yet — trend isn't readable</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               Each site panel scatters every variety's two years as points —
@@ -220,7 +219,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <h2>the takeaway is a sentence</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
-              <span class="q-gloss">each line's slope — one glance per variety</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               "Every variety decreased at every site — except Morris, where
@@ -295,7 +293,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <h2>simplify your message</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
-              <span class="q-gloss">same query — watch it get fewer marks</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               Same slope panels as before — the starting point for four
@@ -329,7 +326,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <h2>anchor the comparison</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨Δ <em class="q-field">yield</em> from 1931⟩</span>, site by site</span>
-              <span class="q-gloss">angle is now the delta — no subtraction needed</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               One edit: normalize each variety's 1931 yield to zero, so the
@@ -366,7 +362,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <h2>the line has nothing left to connect</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
-              <span class="q-gloss">the whole investigation, compiled to one query</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               One edit: <code>derive</code> collapses the year pair into a
@@ -446,7 +441,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <h2>use color for emphasis</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
-              <span class="q-gloss">same query — now the answer is pointed at</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               Same bars, now colored by site with Morris in orange. The sign
@@ -493,7 +487,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <h2>annotations carry the takeaway</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
-              <span class="q-gloss">same query — now stated in words too</span>
             </div>
             <div
               id="chart-viz-barley-delta-bars-annotated"
@@ -925,7 +918,6 @@ Frame(
                     <div class="viz-query" style="font-size: 0.85em">
                       <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> <span style="white-space: nowrap">at its <em class="q-field">key</em></span></span>
                       <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨summaries⟩</span> across <em class="q-field">key</em></span>
-                      <span class="q-gloss">slots sit side by side — one scan</span>
                     </div>
                   </td>
                 </tr>
@@ -964,7 +956,6 @@ Frame(
                       <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨<em class="q-field">key</em>'s segment⟩</span> in order</span>
                       <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨sizes⟩</span> across <em class="q-field">key</em></span>
                       <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨the total = Σ <em class="q-field">size</em>⟩</span> at <span style="white-space: nowrap">the far edge</span></span>
-                      <span class="q-gloss">segments tile end to end — a boundary read</span>
                     </div>
                   </td>
                 </tr>
@@ -1001,7 +992,6 @@ Frame(
                     <div class="viz-query" style="font-size: 0.85em">
                       <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨an entity⟩</span> at <span style="white-space: nowrap">(<em class="q-field">x</em>, <em class="q-field">y</em>)</span></span>
                       <span class="q-line"><span class="q-val">collect</span> <span class="q-hole">⟨the shape of the crowd⟩</span></span>
-                      <span class="q-gloss">points sit at their values — a gestalt read</span>
                     </div>
                   </td>
                 </tr>
@@ -1046,7 +1036,6 @@ Frame(
                     <div class="viz-query" style="font-size: 0.85em">
                       <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a value⟩</span> at <span style="white-space: nowrap">(<em class="q-field">row</em>, <em class="q-field">col</em>)</span></span>
                       <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨…⟩</span> along a row or a column</span>
-                      <span class="q-gloss">discrete slots both ways — a straight scan</span>
                     </div>
                   </td>
                 </tr>
@@ -1110,12 +1099,13 @@ Frame(
                     <div class="viz-query" style="font-size: 0.85em">
                       <span class="q-line"><span class="q-val">follow</span> <span class="q-hole">⟨an entity⟩</span> across scopes</span>
                       <span class="q-line"><span class="q-val">read</span> <span class="q-hole">⟨crossings⟩</span> as overtakes</span>
-                      <span class="q-gloss">strokes connect endpoints — a trace</span>
                     </div>
                   </td>
                 </tr>
               </tbody>
             </table>
+            <!-- DISABLED: color footnote hidden on-slide (speaker notes below still cover it). -->
+            <!--
             <div
               class="fragment"
               data-fragment-index="5"
@@ -1131,6 +1121,7 @@ Frame(
               marks across the layout without building a spatial index;
               weaker than proximity by default
             </div>
+            -->
             <div
               style="
                 text-align: right;
@@ -1194,8 +1185,9 @@ Frame(
               follow are their search actions, compare/read/collect their
               query actions. Their identify/compare/summarize ladder maps onto
               this table three ways: identify is a mark-level read, compare
-              is the operator's ask line, summarize is the hole's own
-              collapsed-chip gloss.
+              is the operator's ask line, summarize is what the hole
+              collapses down to once a scope docks upward — worth saying out
+              loud, since the chip no longer prints a price for it.
               <br /><br />
               spread is align + distribute: distribute builds the index (the
               index cell — one slot per key), align prices the comparison
