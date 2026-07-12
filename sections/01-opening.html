@@ -188,11 +188,13 @@
 
           <!-- Seaborn / gallery example -->
           <section>
+            <h2>how do we decide what chart to use?</h2>
             <div
               style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                flex-direction: column;
                 margin-top: 0.8rem;
               "
             >
@@ -200,25 +202,31 @@
                 src="motivational-images/seaborn-gallery.png"
                 style="
                   max-width: 90%;
-                  max-height: 440px;
+                  max-height: min(60vh, 380px);
                   border-radius: 4px;
                   object-fit: contain;
                 "
                 alt="Seaborn example gallery"
               />
+              <p style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
+                <em>endless</em> chart types
+              </p>
             </div>
             <aside class="notes">
-              We could sift through giant galleries and books of cool examples,
-              seeing if any of them might apply to our problem.
+              The first answer: we could sift through giant galleries and
+              books of cool examples, seeing if any of them might apply to our
+              problem. Endless chart types, and names without reasons.
             </aside>
           </section>
 
           <section>
+            <h2>how do we decide what chart to use?</h2>
             <div
               style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                flex-direction: column;
                 margin-top: 0.8rem;
               "
             >
@@ -226,46 +234,50 @@
                 src="motivational-images/choosing-a-good-chart-09-1.png"
                 style="
                   max-width: 90%;
-                  max-height: min(85vh, 520px);
+                  max-height: min(60vh, 420px);
                   border-radius: 4px;
                   object-fit: contain;
                 "
                 alt="Chart type guide: relationship, comparison, distribution, composition"
               />
+              <p style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
+                <em>vague</em> task flow charts
+              </p>
             </div>
             <aside class="notes">
-              We could consult guides that bucket the problem into
-              "relationship," "comparison," "distribution," "composition," and
-              so on. But those things are still too vague and leave us with
-              dozens of options to try, all of which can be pretty generic.
+              The second answer: we could consult guides that bucket the
+              problem into "relationship," "comparison," "distribution,"
+              "composition," and so on. But those buckets are still too vague
+              to decide anything — they leave us with dozens of options to
+              try, all of which can be pretty generic.
             </aside>
           </section>
 
           <section>
-            <h2>and now the chart pickers are baked into AI skills</h2>
+            <h2>how do we decide what chart to use?</h2>
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <img
                 src="motivational-images/vizchitra/claude-viz-skill.png"
                 alt="Screenshot of Claude's data-visualization skill file, a task-to-chart-type lookup table"
-                style="max-height: min(60vh, 460px); max-width: 100%; border-radius: 4px; object-fit: contain;"
+                style="max-height: min(60vh, 420px); max-width: 100%; border-radius: 4px; object-fit: contain;"
               />
-              <p style="font-size: 0.72em; color: #555;">
-                Claude's actual data-visualization skill: a task → chart-type
-                lookup table.
+              <p style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
+                <em>recycled</em> AI skills
               </p>
             </div>
             <aside class="notes">
-              Most of you are already using AI agents to make your figures, and
-              they're genuinely good at the implementation — writing the code
-              was never going to stay the bottleneck. The problem that remains
-              is picking the graphic you want, judging whether it's good, and
-              steering the design. And here's the catch: this is the actual
-              skill file Claude uses for visualization — a table mapping
-              coarse task descriptions to chart types. The chart picker didn't
-              go away, it got baked in. And because the conventional chart
-              types are where the training data is, the agent quietly pulls
-              every figure toward the mean. Judging the output — and knowing
-              what to ask for — is now the whole game.
+              And the third answer: most of you are already using AI agents to
+              make your figures, and they're genuinely good at the
+              implementation — writing the code was never going to stay the
+              bottleneck. The problem that remains is picking the graphic you
+              want, judging whether it's good, and steering the design. And
+              here's the catch: this is the actual skill file Claude uses for
+              visualization — a table mapping coarse task descriptions to
+              chart types. The chart picker didn't go away, it got baked in.
+              And because the conventional chart types are where the training
+              data is, the agent quietly pulls every figure toward the mean.
+              Judging the output — and knowing what to ask for — is now the
+              whole game.
             </aside>
           </section>
 
