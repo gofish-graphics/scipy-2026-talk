@@ -1001,19 +1001,21 @@ function renderVizVarietyShare(id = "chart-viz-stacked-share") {
 // clearly > variety gap (0) — while landing bar width in the 2-3px range the
 // brief calls for. The ratios hold even if the real plot width is smaller
 // (e.g. at 250px usable, bars still land ~1.5px, just thinner) because the
-// gaps are fixed pixel amounts, not proportional. `axes: true` stays on:
-// only the 6 site ticks actually render on the x axis (year/variety don't
-// get their own tick labels at this nesting depth), so the x axis is still
-// legible even though the bars beneath it aren't — and the y axis is what
-// carries the value this slide is about to lose.
+// gaps are fixed pixel amounts, not proportional. Both inner levels turn their
+// ordinal x axis off, because at these cell sizes their tick labels overdraw
+// into mush: 2.9px variety cells can't carry a label at all, and the year level
+// is 12 cells of ~29px against ~24px-wide "1931"/"1932" labels. Only the
+// outermost site spread has room for its ticks, so it is the only one that
+// keeps an axis. The y axis stays on — it carries the value this slide is
+// about to lose.
 function renderVizVarietySpread(id = "chart-viz-spread-variety") {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley, vizChartOptions)
     .flow(
       spread("site", { dir: "x", spacing: 10 }),
-      spread("year", { dir: "x", spacing: 3 }),
-      spread("variety", { dir: "x", spacing: 0 })
+      spread("year", { dir: "x", spacing: 3, axes: { x: false } }),
+      spread("variety", { dir: "x", spacing: 0, axes: { x: false } })
     )
     .mark(rect({ h: "yield", fill: "variety" }))
     .render(el, { w: VIZ_W, h: VIZ_H, axes: true, legend: true });

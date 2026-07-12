@@ -889,9 +889,11 @@
               <p class="viz-step-copy">
                 The obvious move: nest one more <code>spread</code>. Every
                 variety gets its own bar, so each variety's yield is right
-                there to read. But 120 bars land in one row — each site's
-                group is now ten bars wide — and the total per site-year is
-                gone entirely: nothing sums the varieties back up.
+                there to read. But the bars sit side by side as ten independent
+                heights, and nothing sums them back up — so a variety's
+                <em>share</em> of its site-year is nowhere on the screen.
+                Proportion stops being something you can see and becomes
+                something you have to compute.
               </p>
             </div>
             <div
@@ -904,23 +906,32 @@
               spread by variety too. And it half-works: every variety does
               get its own bar, so a single variety's yield is directly
               readable, which is more than the stack on the next slide will
-              give us. But it fails in two ways. First, 120 bars in one row:
-              each site-year group is ten bars wide, so comparing one
-              variety across its two years means jumping over nine
-              neighbours, and comparing across sites is worse — the thing we
-              asked for is technically on screen and practically unreadable.
-              Second, and this is the real point: spreading throws the total
-              away. There is nothing that sums a site-year's varieties back
-              into one quantity, so the question that started this whole
-              beat — the totals rose at Morris and fell everywhere else, is
-              that one variety or all of them? — can't even be asked of this
-              chart. We lost the thing we were trying to explain. That is
-              exactly what <code>stack</code> buys us: it's the operator
-              that puts the parts back into a whole. The next slide swaps
-              this third <code>spread</code> for a <code>stack</code> and
-              the totals come back. The chip hasn't changed — same query,
-              third structure. That's the beat: hold the question fixed and
-              let the structure move.
+              give us. And then it fails, and the way it fails is the whole
+              reason the next slide exists: you cannot judge relative
+              proportions here. The ten bars in a group are ten independent
+              heights sitting next to each other, and nothing on the screen
+              sums them. So "what share of this site-year is Trebi?" isn't a
+              thing you can look at — you'd have to mentally add up ten bars
+              to get a total and then divide one of them by it. The chart
+              hands you every part and withholds the whole.
+              Say that structurally and it's the same sentence: spreading
+              throws the total away. No total means no denominator, and no
+              denominator means no proportion. Which is also why the question
+              that started this whole beat — the totals rose at Morris and
+              fell everywhere else, is that one variety or all of them? —
+              can't even be asked of this chart. We lost the very thing we
+              were trying to explain. There's a second, cruder problem worth
+              a beat if you have time: 120 bars in one row, each site-year
+              group ten wide, so even comparing one variety across its two
+              years means jumping over nine neighbours. But that one is just
+              crowding. The proportions failure is structural, and it's the
+              one that names the fix. <code>stack</code> is the part-to-whole
+              operator — it puts the parts back into a whole, so that share
+              becomes a thing on the screen rather than arithmetic in the
+              head. The next slide swaps this third <code>spread</code> for a
+              <code>stack</code> and the totals come back. The chip hasn't
+              changed — same query, third structure. That's the beat: hold the
+              question fixed and let the structure move.
             </aside>
           </section>
 
