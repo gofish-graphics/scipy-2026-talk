@@ -538,27 +538,122 @@
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>group by site, then year</h2>
             <div
-              id="chart-viz-nest-grouped-r-solo"
-              class="chart-container viz-gofish-chart"
-            ></div>
+              style="
+                display: flex;
+                gap: 1.1rem;
+                justify-content: center;
+                align-items: center;
+                margin-top: 0;
+                min-height: 440px;
+                font-size: 0.95em;
+              "
+            >
+              <div
+                id="chart-viz-nest-grouped-r-solo"
+                class="chart-container viz-gofish-chart"
+                style="flex: 0 0 auto"
+              ></div>
+              <pre class="viz-code cut-spec" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
+              ><span class="cut-line">chart(barley).flow(</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
+              <div class="cut-chips" style="flex: 0 0 auto; max-width: 300px; display: flex; flex-direction: column; gap: 0.6rem; align-self: stretch; justify-content: center;">
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> heights⟩</span> across <em class="q-field">years</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris · <em class="q-field">year</em> = 1932</span>
+                  <span class="q-line"><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em> <span class="q-arrow">→</span> color</span>
+                </div>
+              </div>
+            </div>
             <aside class="notes">
               site → year: each site's two years sit together, so the change per
-              site is easy to read.
+              site is easy to read. Now that the chips are all up at once,
+              here's what that adjacency buys: the top chip's hole is ⟨each
+              site's year pattern⟩, compared across sites — and it's nesting
+              by site first that puts each site's two years right next to
+              each other, which is the only reason "each site's year
+              pattern" is a single readable shape instead of two bars you'd
+              have to go find on opposite sides of the plot. The middle chip
+              zooms into one site and prices the within-site comparison as a
+              glance — Morris's two years, side by side. The bottom chip is
+              the same lookup it always was: one rect, one color. Same three
+              prices as the cut slides, but now all three are visible
+              together, because there's no single cut being made here — the
+              whole point of this slide is that all three queries are live
+              at once, for this particular nesting order.
             </aside>
           </section>
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>or group by year, then site</h2>
             <div
-              id="chart-viz-nest-grouped-solo"
-              class="chart-container viz-gofish-chart"
-            ></div>
+              style="
+                display: flex;
+                gap: 1.1rem;
+                justify-content: center;
+                align-items: center;
+                margin-top: 0;
+                min-height: 440px;
+                font-size: 0.95em;
+              "
+            >
+              <div
+                id="chart-viz-nest-grouped-solo"
+                class="chart-container viz-gofish-chart"
+                style="flex: 0 0 auto"
+              ></div>
+              <pre class="viz-code cut-spec" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
+              ><span class="cut-line">chart(barley).flow(</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
+<span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
+<span class="cut-line">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
+              <div class="cut-chips" style="flex: 0 0 auto; max-width: 300px; display: flex; flex-direction: column; gap: 0.6rem; align-self: stretch; justify-content: center;">
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">year</em>'s <em class="q-field">site</em> pattern⟩</span> across <em class="q-field">years</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">year</em> = 1932</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> heights⟩</span> across <em class="q-field">sites</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">year</em> = 1932 · <em class="q-field">site</em> = Morris</span>
+                  <span class="q-line"><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em> <span class="q-arrow">→</span> color</span>
+                </div>
+              </div>
+            </div>
             <aside class="notes">
-              year → site: sites sit together within each year, so the per-site
-              change is scattered across the two blocks.
+              year → site: sites sit together within each year, so the
+              per-site change is scattered across the two blocks. Same three
+              chips as the last slide, same data, same operators, only the
+              nesting order has flipped — and you can read that flip
+              straight off the two chip columns if you compare them across
+              this slide advance: same shape, top to bottom, but every site
+              and year token has traded places. The hole at the top is now
+              ⟨each year's site pattern⟩, compared across years — a scan,
+              same as before, but the thing being scanned has changed from
+              "one site's two years" to "one year's six sites." The middle
+              chip zooms into a single year and prices the within-year
+              comparison across sites as a glance, where a moment ago that
+              same glance was across years. The bottom chip hasn't moved at
+              all — one rect is one rect regardless of which spread sits
+              outside the other. That's the whole payoff of "nesting order
+              matters" stated in the chip notation: same data, same
+              operators, same three cuts, only the order changed — and the
+              order is exactly what decides which comparison is a cheap
+              glance and which one is a scan.
             </aside>
           </section>
 
+          <!-- DISABLED: "or flatten it to a grid" — heatmap solo step cut from the
+               nesting build-up; the heatmap/table() still appears later on the
+               "flattening the hierarchy" slide, so it is not lost from the talk.
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>or flatten it to a grid</h2>
             <div
@@ -570,15 +665,28 @@
               order privileged.
             </aside>
           </section>
+          -->
 
-          <!-- The only nesting-order comparison slide. It carries the
+          <!-- DISABLED: "nesting order matters" — 3-panel comparison slide cut
+               from the deck. Its core argument (site → year prices "each
+               site's year pattern" as a scan across sites; year → site
+               prices the same shape the other way, "each year's site
+               pattern" across years — same cost, different grouping) has
+               been redistributed into the notes of the two surviving
+               "group by site, then year" / "or group by year, then site"
+               slides above. The heatmap panel's table()/lookup argument
+               still lives later in the deck on the "flattening the
+               hierarchy" slide, so table() is not lost from the talk.
+
+               Original context comment, kept for history: this was the only
+               nesting-order comparison slide. It carried the
                perceptual-query chips because the three cut slides just
                introduced that notation. The -q chart-id suffix is a
                leftover from when a non-chip original existed alongside it;
-               that original has since been deleted, so the plain ids
-               (chart-viz-nest-grouped-r/-grouped/-heatmap) are free, but
+               that original had since been deleted, so the plain ids
+               (chart-viz-nest-grouped-r/-grouped/-heatmap) were free, but
                renaming these ids would mean touching charts.ts, so they
-               stay as -q. -->
+               stayed as -q.
           <section>
             <h2>nesting order matters</h2>
             <div
@@ -704,9 +812,13 @@
               prices for three different questions.
             </aside>
           </section>
+          -->
 
           <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
-            <!-- HIDDEN: redundant with the barley 3-panel "nesting order matters" below. Restore by removing data-visibility. -->
+            <!-- HIDDEN: was redundant with the barley 3-panel "nesting order matters"
+                 comparison slide above, but that slide is now disabled (see comment
+                 above); this is currently the only place site → variety / variety →
+                 site is shown. Restore by removing data-visibility. -->
             <h2>nesting order changes the question</h2>
             <div class="viz-compare">
               <div class="viz-compare-card">
@@ -901,7 +1013,10 @@
 
 
           <section data-visibility="hidden">
-            <!-- HIDDEN: the heatmap now lives in the 3-panel slide above, so this is redundant. Restore by removing data-visibility. -->
+            <!-- HIDDEN: was redundant with the 3-panel "nesting order matters" slide
+                 above, but that slide is now disabled — this is currently the only
+                 place table()/the heatmap appears in the talk. Restore by removing
+                 data-visibility. -->
             <h2>flattening the hierarchy</h2>
             <div
               style="
