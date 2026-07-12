@@ -22,6 +22,58 @@ if (slidesEl) {
   ].join("\n");
 }
 
+// Mini reference table pinned to the upper-right of the walkthrough slides
+// that build up the GoFish spec incrementally, so the presenter doesn't have
+// to hold the barley fields (variety, site, year, yield) in their head while
+// reading the spec aloud. Same columns/rows as the full .data-table on the
+// "start with the data" slide; injected once per marked section rather than
+// pasted into the HTML source repeatedly.
+const MINI_TABLE_HTML = `
+  <div class="mini-data-table">
+    <table>
+      <thead>
+        <tr>
+          <th>variety</th>
+          <th>site</th>
+          <th>year</th>
+          <th>yield</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Manchuria</td>
+          <td>University Farm</td>
+          <td>1931</td>
+          <td>27.00</td>
+        </tr>
+        <tr>
+          <td>Manchuria</td>
+          <td>Waseca</td>
+          <td>1931</td>
+          <td>48.87</td>
+        </tr>
+        <tr>
+          <td>Manchuria</td>
+          <td>Morris</td>
+          <td>1931</td>
+          <td>27.43</td>
+        </tr>
+        <tr>
+          <td>&hellip;</td>
+          <td>&hellip;</td>
+          <td>&hellip;</td>
+          <td>&hellip;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`;
+if (slidesEl) {
+  slidesEl.querySelectorAll("section.mini-table-slide").forEach((section) => {
+    section.insertAdjacentHTML("beforeend", MINI_TABLE_HTML);
+  });
+}
+
 // GoFish adds padding for axes/labels, so the size passed to render() is not
 // the size of the returned SVG. Size each chart container to its SVG's viewBox
 // (0 0 W H, the actual rendered size) so slides lay out around the real chart.

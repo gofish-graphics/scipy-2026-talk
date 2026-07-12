@@ -387,6 +387,49 @@
   background: #f5f5f5;
 }
 
+/* ─── Mini data table (reference overlay) ────────────────────────────
+   Quiet reminder of the barley fields, pinned to the upper-right corner
+   of the walkthrough slides that build up the spec one operator at a
+   time. Reveal.js sections are position:absolute and sized to the full
+   slide area regardless of a section's own content height or display
+   mode (grid/flex/centered) — the same containing block .timing-note
+   already relies on below — so this anchors the same way. */
+.mini-data-table {
+  position: absolute;
+  top: 0.35em;
+  right: 0.5em;
+  z-index: 2;
+}
+
+.mini-data-table table {
+  font-size: 0.34em;
+  border-collapse: collapse;
+  background: rgba(255, 253, 248, 0.88);
+  border: 1px solid rgba(36, 33, 31, 0.25);
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 rgba(30, 30, 30, 0.06);
+}
+
+.mini-data-table th {
+  background: rgba(15, 52, 96, 0.82);
+  color: white;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  white-space: nowrap;
+}
+
+.mini-data-table td {
+  border: 1px solid rgba(221, 221, 221, 0.8);
+  padding: 0.12em 0.5em;
+  text-align: center;
+  color: #403c37;
+  white-space: nowrap;
+}
+
+.mini-data-table tr:nth-child(even) {
+  background: rgba(245, 245, 245, 0.7);
+}
+
 /* ─── Arch diagram boxes ────────────────────────────────────────────── */
 .arch-row {
   display: flex;
