@@ -694,6 +694,41 @@
             </aside>
           </section>
 
+          <!-- The reveal beat: same bars, real barley labels. Moved 2026-07-12 from the end of the opening to sit right after the Franconeri demo. -->
+          <section data-background-color="#f7f2e8">
+            <h2>by the way: this is real data</h2>
+            <div
+              style="
+                position: relative;
+                min-height: 360px;
+                width: 480px;
+                margin: 1.5rem auto 0;
+              "
+            >
+              <!-- the opening's grouped bars, anonymized labels... -->
+              <div
+                id="chart-viz-reveal-anon"
+                class="chart-container viz-gofish-chart fragment fade-out"
+                data-fragment-index="1"
+                style="position: absolute; top: 0; left: 0"
+              ></div>
+              <!-- ...same bars, real barley labels -->
+              <div
+                id="chart-viz-reveal-real"
+                class="chart-container viz-gofish-chart fragment fade-in"
+                data-fragment-index="1"
+                style="position: absolute; top: 0; left: 0"
+              ></div>
+            </div>
+            <aside class="notes">
+              Quick confession before we move on: I anonymized this data so
+              the grouping would read fresh. [advance] Same bars, real
+              labels — this is the classic 1931–1932 Minnesota barley trial
+              data: ten varieties, six sites, two years. We'll be working
+              with this dataset for the rest of the talk.
+            </aside>
+          </section>
+
           <!-- Marks & channels: related work that doesn't explain the swap -->
           <section data-background-color="#f7f2e8">
             <h2>the grammar of graphics: marks and channels</h2>
@@ -1403,41 +1438,48 @@
             </aside>
           </section>
 
-          <!-- The reveal beat: same bars, real barley labels -->
-          <section data-background-color="#f7f2e8">
-            <h2>back to those bar charts</h2>
+          <!-- The anon->barley reveal slide moved up to sit right after the Franconeri demo (2026-07-12). -->
+
+          <!-- Transition: gestalt theory → GoFish walkthrough -->
+          <section class="scipy-statement" data-background-color="#f7f2e8">
             <div
               style="
-                position: relative;
-                min-height: 360px;
-                width: 480px;
-                margin: 1.5rem auto 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
               "
             >
-              <!-- the opening's grouped bars, anonymized labels... -->
-              <div
-                id="chart-viz-reveal-anon"
-                class="chart-container viz-gofish-chart fragment fade-out"
-                data-fragment-index="1"
-                style="position: absolute; top: 0; left: 0"
-              ></div>
-              <!-- ...same bars, real barley labels -->
-              <div
-                id="chart-viz-reveal-real"
-                class="chart-container viz-gofish-chart fragment fade-in"
-                data-fragment-index="1"
-                style="position: absolute; top: 0; left: 0"
-              ></div>
+              <img
+                src="gofish-logo.png"
+                alt="GoFish logo"
+                style="height: 72px; object-fit: contain"
+              />
+              <h2
+                style="
+                  font-size: 2.4em;
+                  margin: 0;
+                  font-family:
+                    &quot;Shantell Sans&quot;, &quot;Comic Sans MS&quot;,
+                    cursive, sans-serif;
+                "
+              >
+                GoFish
+              </h2>
             </div>
+            <p style="margin-top: 0.8rem; font-size: 1.05em; color: #444">
+              build the structure — then query it
+            </p>
             <aside class="notes">
-              The reveal beat: the cities and "sales" up to now were
-              anonymized so the grouping read fresh. This is the classic
-              1931-1932 Minnesota barley trial data: ten varieties, six sites,
-              two years.
+              Enough theory — let's get into the code. We'll rebuild the bar
+              charts from the opening in GoFish, one operator at a time, and
+              once there's enough structure on screen the perceptual-query
+              notation comes back to run against it.
             </aside>
           </section>
 
-          <section data-background-color="#f7f2e8">
+          <section data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN 2026-07-12: cut the "back to those bar charts" return beat — the talk now flows straight from the Gestalt grouping slides into the GoFish walkthrough, and the barley reveal moved up to the Franconeri demo. Restore by removing data-visibility. -->
             <h2>back to those bar charts</h2>
             <div
               style="
