@@ -196,7 +196,7 @@
                 justify-content: center;
                 align-items: center;
                 margin-top: 0;
-                min-height: 500px;
+                min-height: 440px;
                 font-size: 0.95em;
               "
             >
@@ -210,9 +210,18 @@
 <span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
 <span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line cut-highlight">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
-              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
-                <span class="q-ctx"><em class="q-field">site</em> = Morris · <em class="q-field">year</em> = 1932</span>
-                <span class="q-line"><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em> <span class="q-arrow">→</span> color</span>
+              <div class="cut-chips" style="flex: 0 0 auto; max-width: 300px; display: flex; flex-direction: column; gap: 0.6rem; align-self: stretch; justify-content: center;">
+                <div class="viz-query chip-pending" style="font-size: 0.68em">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
+                </div>
+                <div class="viz-query chip-pending" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> heights⟩</span> across <em class="q-field">years</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris · <em class="q-field">year</em> = 1932</span>
+                  <span class="q-line"><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em> <span class="q-arrow">→</span> color</span>
+                </div>
               </div>
             </div>
             <aside class="notes">
@@ -243,7 +252,11 @@
               query degrades to the cheapest thing on the menu: a lookup.
               As the cut moves up from here, a binding will leave the
               header, a hole will open where it used to be, and that hole
-              is what the next slide's notation is for.
+              is what the next slide's notation is for. The chip that just
+              landed isn't alone on the slide by accident: it's the bottom
+              of a column, and that column will grow upward one chip at a
+              time as the cut climbs the spec, so that by the top step every
+              line of code has its chip sitting beside it at once.
             </aside>
           </section>
 
@@ -257,7 +270,7 @@
                 justify-content: center;
                 align-items: center;
                 margin-top: 0;
-                min-height: 500px;
+                min-height: 440px;
                 font-size: 0.95em;
               "
             >
@@ -271,9 +284,18 @@
 <span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
 <span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
-              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
-                <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
-                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> heights⟩</span> across <em class="q-field">years</em></span>
+              <div class="cut-chips" style="flex: 0 0 auto; max-width: 300px; display: flex; flex-direction: column; gap: 0.6rem; align-self: stretch; justify-content: center;">
+                <div class="viz-query chip-pending" style="font-size: 0.68em">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> heights⟩</span> across <em class="q-field">years</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris · <em class="q-field">year</em> = 1932</span>
+                  <span class="q-line"><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em> <span class="q-arrow">→</span> color</span>
+                </div>
               </div>
             </div>
             <aside class="notes">
@@ -305,7 +327,16 @@
               run it is worth saying out loud rather than printing — here,
               bars sit adjacent, so the estimate is cheap: one glance, not a
               verdict on whether the chart is good, just what this
-              arrangement charges for the comparison.
+              arrangement charges for the comparison. A second chip has now
+              landed above the first, and it's not floating free — it sits
+              directly beside the spread(by="year") line, the way the mark
+              chip below it sits beside the mark line, so the column is
+              starting to read like a legend for the spec itself. Worth
+              noticing in passing: the header just got shorter than the
+              mark chip's, one binding lighter, because year = 1932 dropped
+              out of the address and reappeared as "across years" in the
+              body — that's the same shrink the boundary talk above is
+              describing, just visible in the chip stack now too.
             </aside>
           </section>
 
@@ -319,7 +350,7 @@
                 justify-content: center;
                 align-items: center;
                 margin-top: 0;
-                min-height: 500px;
+                min-height: 440px;
                 font-size: 0.95em;
               "
             >
@@ -333,8 +364,18 @@
 <span class="cut-line cut-highlight">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
 <span class="cut-line cut-collapsed">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line cut-collapsed">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
-              <div class="viz-query" style="flex: 0 0 auto; max-width: 300px; font-size: 0.75em">
-                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
+              <div class="cut-chips" style="flex: 0 0 auto; max-width: 300px; display: flex; flex-direction: column; gap: 0.6rem; align-self: stretch; justify-content: center;">
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> heights⟩</span> across <em class="q-field">years</em></span>
+                </div>
+                <div class="viz-query" style="font-size: 0.68em">
+                  <span class="q-ctx"><em class="q-field">site</em> = Morris · <em class="q-field">year</em> = 1932</span>
+                  <span class="q-line"><em class="q-field">yield</em> <span class="q-arrow">→</span> height · <em class="q-field">site</em> <span class="q-arrow">→</span> color</span>
+                </div>
               </div>
             </div>
             <div class="viz-query" style="margin: 0.9rem auto 0; max-width: 720px; font-size: 0.5em">
@@ -357,7 +398,18 @@
               at one example region, we're looking at all of them at once.
               That's exactly what the query body says without any header
               at all: ⟨each site's year pattern⟩, compared across sites.
-              The hole is bigger than either of the last two steps' holes —
+              All three chips are up now, and the column next to the spec
+              is the whole claim of this slide's title made literal: read
+              down the column and you're reading down the spec, one chip
+              per line, in the same order. Read it top to bottom and two
+              things move in opposite directions — the headers thin out as
+              you go up, a full site = Morris · year = 1932 address at the
+              bottom, down to site = Morris with year gone, down to no
+              header at all at the top — while the holes do the opposite,
+              growing from nothing, to a hole, to a whole shape. And the
+              cost tracks both: a lookup at the bottom, a glance in the
+              middle, a scan at the top. Three chips, three prices, one
+              spec. The hole is bigger than either of the last two steps' holes —
               it's not one number, it's a whole shape, repeated once per
               site — and it's worth pricing that out loud: groups sitting
               apart is a real perceptual act, but reading ten of them

@@ -1406,6 +1406,14 @@
   color: #555;
 }
 
+/* "each line of the spec is a cut" slides: a chip not yet reached in the
+   bottom-up build stays in the DOM (so the site slide's later chips don't
+   shift) but is invisible until its slide reaches it. visibility:hidden,
+   not display:none, so it still reserves its layout space. */
+.chip-pending {
+  visibility: hidden;
+}
+
 /* "every hole is a collapsed chip": the hole's ?-placeholder and its filled
    phrase share one grid cell so the crossfade doesn't jump the layout
    vertically; the ⟨ ⟩ brackets live outside this element and never move.
