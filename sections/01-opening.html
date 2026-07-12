@@ -22,9 +22,10 @@
             </aside>
           </section>
 
-          <!-- ═══ AI OPENING (new beat, VizChitra-inspired; videos are placeholders from Arvind's VizChitra keynote, to be re-recorded with a scientific dataset) ═══ -->
+          <!-- ═══ HIDDEN AI OPENING (cut 2026-07-12, see comments below; slides kept for possible reuse) ═══ -->
 
-          <section>
+          <!-- HIDDEN 2026-07-12: cut the AI one-shotting opener — the SciPy audience already uses AI heavily; no need to demonstrate that AI can build vizzes. The deck now opens directly with the problem. -->
+          <section data-visibility="hidden">
             <h2>you can one-shot a dashboard now</h2>
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <video
@@ -48,7 +49,7 @@
             </aside>
           </section>
 
-          <section>
+          <section data-visibility="hidden">
             <h2>…or even a scrollytelling narrative</h2>
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <video
@@ -71,7 +72,8 @@
             </aside>
           </section>
 
-          <section class="scipy-statement" data-background-color="#f7f2e8">
+          <!-- HIDDEN 2026-07-12: cut with the AI one-shotting beat. Its key line ("judging it — and knowing what to ask for — is now the whole game") was folded into the relocated AI-skill slide's speaker notes. -->
+          <section class="scipy-statement" data-background-color="#f7f2e8" data-visibility="hidden">
             <p class="part">The catch</p>
             <h2>ok — but is it actually good?</h2>
             <p class="big-claim">
@@ -89,68 +91,8 @@
             </aside>
           </section>
 
-          <section>
-            <h2>chart pickers aren't much help — and now they're baked into AI skills</h2>
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-              <img
-                src="motivational-images/vizchitra/claude-viz-skill.png"
-                alt="Screenshot of Claude's data-visualization skill file, a task-to-chart-type lookup table"
-                style="max-height: min(60vh, 460px); max-width: 100%; border-radius: 4px; object-fit: contain;"
-              />
-              <p style="font-size: 0.72em; color: #555;">
-                Claude's actual data-visualization skill: a task → chart-type
-                lookup table.
-              </p>
-            </div>
-            <aside class="notes">
-              You might hope the AI has some deep theory of visualization.
-              Here's the actual skill file Claude uses: a table mapping
-              coarse task descriptions to chart types. The chart picker
-              didn't go away — it got baked in. And because the conventional
-              chart types are where the training data is, the agent quietly
-              pulls every figure toward the mean.
-            </aside>
-          </section>
-
-          <section>
-            <h2>but scientists live in the long tail</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; height: 420px;">
-              <img
-                src="motivational-images/vizchitra/jointplot.png"
-                alt="Seaborn jointplot"
-                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
-              />
-              <img
-                src="motivational-images/vizchitra/upset-plot.png"
-                alt="UpSet plot"
-                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
-              />
-              <img
-                src="motivational-images/vizchitra/scatterpie.png"
-                alt="Oceanography scatterplot of pie charts"
-                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
-              />
-              <img
-                src="motivational-images/vizchitra/christiansen-coxcomb-scatter.png"
-                alt="Jen Christiansen's scatterplot of coxcomb glyphs, Scientific American"
-                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
-              />
-            </div>
-            <aside class="notes">
-              Look at the graphics scientists actually use and publish. A
-              Seaborn jointplot; an UpSet plot; oceanographers plotting
-              scatterplots of pie charts; Jen Christiansen in Scientific
-              American with a scatterplot of coxcombs. These are bespoke,
-              composite, long-tail graphics. What makes them work is how
-              their pieces are arranged — the alignment between the marginals
-              and the scatter, the positioning of glyphs in a shared space.
-              None of that is on a picker menu, and "jointplot" won't be the
-              name of the thing your paper needs next. So: how do we know
-              when one of these is effective for our use case?
-            </aside>
-          </section>
-
-          <section class="scipy-statement" data-background-color="#f7f2e8">
+          <!-- HIDDEN 2026-07-12: the problem intro re-derives this thesis via the Franconeri grouped-bar demo, so stating it up front here is redundant. -->
+          <section class="scipy-statement" data-background-color="#f7f2e8" data-visibility="hidden">
             <p class="part">The way out</p>
             <h2>we need to see structure, not chart types</h2>
             <p class="big-claim">
@@ -299,6 +241,34 @@
             </aside>
           </section>
 
+          <section>
+            <h2>and now the chart pickers are baked into AI skills</h2>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <img
+                src="motivational-images/vizchitra/claude-viz-skill.png"
+                alt="Screenshot of Claude's data-visualization skill file, a task-to-chart-type lookup table"
+                style="max-height: min(60vh, 460px); max-width: 100%; border-radius: 4px; object-fit: contain;"
+              />
+              <p style="font-size: 0.72em; color: #555;">
+                Claude's actual data-visualization skill: a task → chart-type
+                lookup table.
+              </p>
+            </div>
+            <aside class="notes">
+              Most of you are already using AI agents to make your figures, and
+              they're genuinely good at the implementation — writing the code
+              was never going to stay the bottleneck. The problem that remains
+              is picking the graphic you want, judging whether it's good, and
+              steering the design. And here's the catch: this is the actual
+              skill file Claude uses for visualization — a table mapping
+              coarse task descriptions to chart types. The chart picker didn't
+              go away, it got baked in. And because the conventional chart
+              types are where the training data is, the agent quietly pulls
+              every figure toward the mean. Judging the output — and knowing
+              what to ask for — is now the whole game.
+            </aside>
+          </section>
+
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <p class="part">The problem</p>
             <h2>menus become rules</h2>
@@ -314,6 +284,44 @@
               This is the SciPy framing. I am not arguing against heuristics; I
               am arguing that chart typologies should not be the only way we see
               a figure.
+            </aside>
+          </section>
+
+          <section>
+            <h2>but scientists live in the long tail</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; height: 420px;">
+              <img
+                src="motivational-images/vizchitra/jointplot.png"
+                alt="Seaborn jointplot"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+              <img
+                src="motivational-images/vizchitra/upset-plot.png"
+                alt="UpSet plot"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+              <img
+                src="motivational-images/vizchitra/scatterpie.png"
+                alt="Oceanography scatterplot of pie charts"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+              <img
+                src="motivational-images/vizchitra/christiansen-coxcomb-scatter.png"
+                alt="Jen Christiansen's scatterplot of coxcomb glyphs, Scientific American"
+                style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
+              />
+            </div>
+            <aside class="notes">
+              Look at the graphics scientists actually use and publish. A
+              Seaborn jointplot; an UpSet plot; oceanographers plotting
+              scatterplots of pie charts; Jen Christiansen in Scientific
+              American with a scatterplot of coxcombs. These are bespoke,
+              composite, long-tail graphics. What makes them work is how
+              their pieces are arranged — the alignment between the marginals
+              and the scatter, the positioning of glyphs in a shared space.
+              None of that is on a picker menu, and "jointplot" won't be the
+              name of the thing your paper needs next. So: how do we know
+              when one of these is effective for our use case?
             </aside>
           </section>
 
@@ -355,7 +363,8 @@
           </section>
 
           <!-- Montage — bespoke graphics -->
-          <section>
+          <!-- HIDDEN 2026-07-12: superseded by the relocated "scientists live in the long tail" montage, which makes the same point with examples closer to this audience. -->
+          <section data-visibility="hidden">
             <h2>graphics don't always fall into neat taxonomies</h2>
             <div
               style="
