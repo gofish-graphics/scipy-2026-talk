@@ -327,6 +327,9 @@
                 style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
               />
             </div>
+            <p class="fragment" style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
+              how do we know if these are <em>helping</em>?
+            </p>
             <aside class="notes">
               Look at the graphics scientists actually use and publish. A
               Seaborn jointplot; an UpSet plot; oceanographers plotting
@@ -336,8 +339,11 @@
               their pieces are arranged — the alignment between the marginals
               and the scatter, the positioning of glyphs in a shared space.
               None of that is on a picker menu, and "jointplot" won't be the
-              name of the thing your paper needs next. So: how do we know
-              when one of these is effective for our use case?
+              name of the thing your paper needs next. And these charts raise
+              a harder question: how do we know if all this complexity is
+              actually helping? Answering that forces us to ask what the
+              graphic is even trying to accomplish — what we want the reader
+              to be able to see.
             </aside>
           </section>
 
@@ -436,13 +442,16 @@
 
           <!-- Grouped bars — not interchangeable -->
           <section>
-            <h2>grouped bar charts aren't created equal</h2>
+            <h2>let's actually <em>look</em> at the problem</h2>
             <aside class="notes">
-              Even if we think we've found the right chart, our work isn't
-              necessarily done! In a second I'm going to show you three grouped
-              bar charts in sequence visualizing the heights of two children,
-              Charlie and River, over time. Your job is to just tell me the
-              first thing you see. You'll have five seconds per chart.
+              So far we've been judging graphics indirectly — through
+              chart-type names and coarse task buckets. Let's look at the
+              problem directly instead, in detail, on a very toy example —
+              grouped bar charts — before building up any more complex theory.
+              In a second I'm going to show you three grouped bar charts in
+              sequence visualizing the heights of two children, Charlie and
+              River, over time. Your job is to just tell me the first thing
+              you see. You'll have five seconds per chart.
             </aside>
           </section>
 
