@@ -215,7 +215,9 @@
             <aside class="notes">
               The first answer: we could sift through giant galleries and
               books of cool examples, seeing if any of them might apply to our
-              problem. And there's no underlying structure relating these
+              problem. Or we might reach for charts we've used before, or
+              ones that are standard in our field. But it's the same failure
+              either way: there's no underlying structure relating these
               charts, so you kind of have to consider them one by one against
               your problem.
             </aside>
@@ -243,15 +245,18 @@
                 alt="Chart type guide: relationship, comparison, distribution, composition"
               />
               <p style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
-                <em>vague</em> task flow charts
+                <em>vague</em> task taxonomies
               </p>
             </div>
             <aside class="notes">
               The second answer: we could consult guides that bucket the
               problem into "relationship," "comparison," "distribution,"
               "composition," and so on. But those buckets are still too vague
-              to decide anything — they leave us with dozens of options to
-              try, all of which can be pretty generic.
+              to decide anything. For one, they're hard to tell apart — what
+              exactly is the difference between a comparison, a relationship,
+              and a composition? And a real graphic might need several of
+              them at once. So they leave us with dozens of options to try,
+              all of which can be pretty generic.
             </aside>
           </section>
 
@@ -276,7 +281,7 @@
               here's the catch: this is the actual skill file Claude uses for
               visualization — a table mapping coarse task descriptions to
               chart types. The chart picker didn't go away — the chart types
-              and the task flow charts are getting ossified into AI skills,
+              and the task taxonomies are getting ossified into AI skills,
               not improved. And because the conventional chart types are where
               the training data is, the agent quietly pulls every figure
               toward the mean. Judging the output — and knowing what to ask
@@ -300,6 +305,29 @@
               This is the SciPy framing. I am not arguing against heuristics; I
               am arguing that chart typologies should not be the only way we see
               a figure.
+            </aside>
+          </section>
+
+          <!-- The concession: standard charts are often enough -->
+          <section>
+            <h2>and often that's fine</h2>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                margin-top: 1.2rem;
+              "
+            >
+              <div id="chart-plain-scatter" class="chart-container"></div>
+              <div id="chart-plain-bars" class="chart-container"></div>
+            </div>
+            <aside class="notes">
+              And to be fair, all of these approaches are fine if what you
+              need is a standard scatter plot or a bar chart — and a lot of
+              the time, that's exactly what we want. But when our datasets are
+              more complex, they often require more complex graphics.
             </aside>
           </section>
 
@@ -328,7 +356,10 @@
               />
             </div>
             <p class="fragment" style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
-              how do we know if these are <em>helping</em>?
+              how do we figure out <em>what to make</em>?
+            </p>
+            <p class="fragment" style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
+              how do we know if it's <em>helping</em>?
             </p>
             <aside class="notes">
               Look at the graphics scientists actually use and publish. A
@@ -339,11 +370,12 @@
               their pieces are arranged — the alignment between the marginals
               and the scatter, the positioning of glyphs in a shared space.
               None of that is on a picker menu, and "jointplot" won't be the
-              name of the thing your paper needs next. And these charts raise
-              a harder question: how do we know if all this complexity is
-              actually helping? Answering that forces us to ask what the
-              graphic is even trying to accomplish — what we want the reader
-              to be able to see.
+              name of the thing your paper needs next. And these graphics
+              raise two questions. First: how do we even figure out what
+              graphic to make in the first place? And second: once we've made
+              it, how do we know it's helping? That second one forces us to
+              ask what the graphic is even trying to accomplish — what we
+              want the reader to be able to see.
             </aside>
           </section>
 
@@ -444,20 +476,20 @@
           <section>
             <h2>let's actually <em>look</em> at the problem</h2>
             <aside class="notes">
-              So far we've been judging graphics indirectly — through
-              chart-type names and coarse task buckets. Let's look at the
-              problem directly instead, in detail, on a very toy example —
-              grouped bar charts — before building up any more complex theory.
-              In a second I'm going to show you three grouped bar charts in
-              sequence visualizing sales for a handful of cities over two
-              years. Your job is to just tell me the first thing you see.
-              You'll have five seconds per chart.
+              To answer those two questions — especially whether a graphic is
+              helping — we can't reason from chart-type names or task
+              taxonomies. We have to watch what a reader actually notices. So
+              let's strip everything down to the simplest possible example —
+              grouped bar charts — and run the experiment right here. I'll
+              show you a grouped bar chart for about ten seconds — read the
+              axes, take it in — then I'll hide it and ask what you noticed
+              about the data.
             </aside>
           </section>
 
           <!-- Franconeri A — the hook -->
           <section>
-            <h2>what trend do you see here?</h2>
+            <h2>here's a grouped bar chart</h2>
             <div class="chart-spec-slide">
               <div
                 id="chart-viz-agg-year-site"
@@ -466,15 +498,25 @@
               ></div>
             </div>
             <aside class="notes">
-              What trend do you see here? [show ~5 seconds then advance] Boger
-              &amp; Franconeri (2024): "Reading a Graph Is Like Reading a
+              Show this for about ten seconds. Let people read the axes and
+              take it in, then advance. Stimulus adapted from Boger &amp;
+              Franconeri (2024): "Reading a Graph Is Like Reading a
               Paragraph."
+            </aside>
+          </section>
+
+          <!-- Franconeri A — recall question -->
+          <section>
+            <h2>what did you notice about the data?</h2>
+            <aside class="notes">
+              Collect a few answers. Expect things like "Fresno had the most"
+              or "Fresno and Portland were highest, then Fresno and Boulder."
             </aside>
           </section>
 
           <!-- Franconeri B -->
           <section>
-            <h2>what about now?</h2>
+            <h2>here's another one</h2>
             <div class="chart-spec-slide">
               <div
                 id="chart-viz-agg-site-year"
@@ -483,8 +525,18 @@
               ></div>
             </div>
             <aside class="notes">
-              What about now? [show ~5 seconds then advance] Same exact data.
-              Boger &amp; Franconeri (2024).
+              Same drill — about ten seconds, then hide it and ask again. It's
+              the same exact data, regrouped, but don't say so yet. Boger
+              &amp; Franconeri (2024).
+            </aside>
+          </section>
+
+          <!-- Franconeri B — recall question -->
+          <section>
+            <h2>what do you notice now?</h2>
+            <aside class="notes">
+              Give people time. At least some will spot that Boulder goes up
+              while every other city goes down.
             </aside>
           </section>
 
@@ -499,8 +551,10 @@
               ></div>
             </div>
             <aside class="notes">
-              Same grouping again, but color does the pointing: Boulder is the
-              one city whose sales rise. Everything else recedes into gray.
+              For anyone who missed it, here it is in orange: Boulder is the
+              one city whose sales rise while everything else falls. And if
+              you missed it, you're really not alone — which is exactly what
+              the study on the next slide found.
             </aside>
           </section>
 
@@ -686,13 +740,16 @@
               so does that tell us <span class="highlight">which chart to pick?</span>
             </h2>
             <aside class="notes">
-              You've probably seen the grammar of graphics, or marks and channels.
-              Marks are the shapes; channels are how data maps onto them, and
-              there's a famous accuracy ranking: position and length beat angle,
-              area, and color. That tells us how precisely one value can be read.
-              But both of our charts used the same marks and the same channels, so
-              the ranking can't explain why one grouping made the trend pop and
-              the other hid it. Hold that question.
+              This is the strongest answer yet. You might object that the
+              grammar of graphics already gives us first principles: marks and
+              channels. Marks are the shapes; channels are how data maps onto
+              them, and there's a famous accuracy ranking: position and length
+              beat angle, area, and color. That tells us how precisely one
+              value can be read. But you just saw the counterexample: same
+              marks, same channels, same rankings — and you read the three
+              charts differently. Marks and channels are blind to arrangement
+              — how things are grouped and laid out. So we need a way of
+              talking about arrangement.
             </aside>
           </section>
 
@@ -783,7 +840,10 @@
               The whole talk in one sentence. A chart is not a picture of numbers —
               it is a data structure laid out in space, and reading it is running
               queries against that structure with your visual system. [advance]
-              Structure is the first half; the queries are the second.
+              Structure is the first half; the queries are the second. And you
+              just experienced this: you queried those bar charts with your
+              eyes, and changing the grouping changed what your queries
+              returned.
             </aside>
           </section>
 

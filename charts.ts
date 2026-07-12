@@ -371,6 +371,12 @@ function renderFranconeriC() {
 // Opening swap: total yield per site by year (height auto-sums over variety).
 // site -> year makes each site's change two adjacent bars (Morris rises while
 // the other five fall); year -> site scatters the change across two year blocks.
+// The demo bars are colorless — matching the Boger & Franconeri stimuli, and
+// so the audience can't use color to match bars across the two groupings.
+// #ccc is GoFish's palette-fallback gray, the same gray the highlight
+// variant's non-Boulder bars fall back to, so the highlight slide reads as
+// the SAME chart with Boulder painted orange rather than a recolor.
+const DEMO_BAR_GRAY = "#ccc";
 function renderAggSiteYear(
   id = "chart-viz-agg-site-year",
   w = CHART_W,
@@ -387,7 +393,7 @@ function renderAggSiteYear(
       spread("city", { dir: "x", spacing: 24, ...(miniAxes ? { axes: { x: false } } : {}) }),
       spread("year", { dir: "x", spacing: 6, ...(miniAxes ? { axes: { x: false } } : {}) })
     )
-    .mark(rect({ h: "sales", fill: "city" }))
+    .mark(rect({ h: "sales", fill: DEMO_BAR_GRAY }))
     .render(el, { w, h, axes, legend: false });
 }
 // Same site -> year pairing, with Boulder pulled out of the gray field. Every
@@ -423,8 +429,47 @@ function renderAggYearSite(
       spread("year", { dir: "x", spacing: 24, ...(miniAxes ? { axes: { x: false } } : {}) }),
       spread("city", { dir: "x", spacing: 6, ...(miniAxes ? { axes: { x: false } } : {}) })
     )
-    .mark(rect({ h: "sales", fill: "city" }))
+    .mark(rect({ h: "sales", fill: DEMO_BAR_GRAY }))
     .render(el, { w, h, axes, legend: false });
+}
+
+// ── Opening concession: "and often that's fine" — a standard scatter plot
+// and a standard bar chart, deliberately plain, paralleling the complex
+// versions on the long-tail montage that follows (jointplot on the left,
+// UpSet on the right). Hardcoded innocuous data — NOT barley/cityYearData;
+// the audience must not see the demo data before the grouped-bar exercise.
+const plainScatterData = [
+  { x: 1.5, y: 2.4 },
+  { x: 2.2, y: 3.1 },
+  { x: 3.0, y: 2.7 },
+  { x: 3.8, y: 4.2 },
+  { x: 4.5, y: 3.9 },
+  { x: 5.3, y: 5.1 },
+  { x: 6.1, y: 4.7 },
+];
+const plainBarData = [
+  { flavor: "vanilla", scoops: 28 },
+  { flavor: "chocolate", scoops: 35 },
+  { flavor: "strawberry", scoops: 19 },
+  { flavor: "mint", scoops: 24 },
+];
+
+function renderPlainScatter(id = "chart-plain-scatter") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(plainScatterData)
+    .flow(scatter({ x: "x", y: "y" }))
+    .mark(circle({ r: 5, fill: FRANCONERI_BAR_COLOR }))
+    .render(el, { w: 380, h: 260, axes: true, legend: false });
+}
+
+function renderPlainBars(id = "chart-plain-bars") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(plainBarData)
+    .flow(spread("flavor", { dir: "x", spacing: 16 }))
+    .mark(rect({ h: "scoops", fill: FRANCONERI_BAR_COLOR }))
+    .render(el, { w: 380, h: 260, axes: true, legend: false });
 }
 
 // "each line of the spec is a cut" slide, column 1: everything below the
@@ -2917,6 +2962,8 @@ function renderConnLine(id = "chart-conn-line", w = 380, h = 280) {
 // ── Public API ────────────────────────────────────────────────────────────
 export function renderCharts() {
   renderFranconeriA();
+  renderPlainScatter();
+  renderPlainBars();
   renderAggSiteYear();
   renderAggSiteYearHighlight();
   renderAggYearSite();
@@ -3085,6 +3132,8 @@ export const chartRenderers: Record<string, () => void> = {
       annotate: true,
     }),
   "chart-franconeri-a": renderFranconeriA,
+  "chart-plain-scatter": () => renderPlainScatter(),
+  "chart-plain-bars": () => renderPlainBars(),
   "chart-viz-agg-site-year": renderAggSiteYear,
   "chart-viz-agg-site-year-highlight": renderAggSiteYearHighlight,
   "chart-viz-agg-year-site": renderAggYearSite,
