@@ -967,38 +967,31 @@ function renderVizVarietyShare(id = "chart-viz-stacked-share") {
 }
 
 // The pie beat: literally `renderVizVarietyStack`'s normalized flow with ONE
-// option changed, `coord: clock()` — same data, same query, same
-// site-then-year facet nesting, same variety palette. The only structural
-// difference is that `year` spreads DOWN (`dir: "y"`) instead of sideways, so
-// the two years stack into rows (1931 on top, 1932 below) rather than a
-// side-by-side pair — a 6-site-wide x 2-year-tall grid of pies, one per
-// site-year cell, directly under/over its own-site partner for the
-// across-year comparison the query asks for.
+// option changed, `coord: clock()` — same data, same query, same variety
+// palette. `table("site", "year")` lays out a 6-site-wide x 2-year-tall grid
+// of pies, one per site-year cell, directly under/over its own-site partner
+// for the across-year comparison the query asks for.
 //
 // Each cell's pie is built the chart-as-glyph way `renderBarleyScatterPie`
 // uses (see above): `.mark((data) => ...)` receives that leaf facet's own
-// matching barley rows directly (spread's grouping, not a manually-built
-// `.collection` — there's no need to hand-assemble one here since `spread`
-// already partitions `barley` by site and year for us), and the callback
-// resolves a fully independent nested `Chart` in `clock()` coordinates.
-// Every pie gets the SAME fixed radius (`PIE_RADIUS`) — unlike the scatter-pie
-// map, which sizes radius by total yield, this slide is comparing PROPORTIONS
-// only (the same thing the normalized bars compare), so encoding total yield
-// in radius here would smuggle a second, distracting variable back in.
-// `size: "yield"` (not normalized) still gives each wedge the correct SHARE
-// of its own pie: `clock()` maps whatever the stack sums to a full turn
-// regardless of the raw total, so per-cell normalization is already implicit
-// in the coordinate transform — no `field("yield").normalize()` needed here
-// (that normalize call in the bars version earns its keep by controlling bar
-// HEIGHT, a channel pies don't have).
+// matching barley rows directly, and the callback resolves a fully
+// independent nested `Chart` in `clock()` coordinates. Every pie gets the
+// SAME fixed radius (`PIE_RADIUS`) — unlike the scatter-pie map, which sizes
+// radius by total yield, this slide is comparing PROPORTIONS only (the same
+// thing the normalized bars compare), so encoding total yield in radius here
+// would smuggle a second, distracting variable back in. `size: "yield"` (not
+// normalized) still gives each wedge the correct SHARE of its own pie:
+// `clock()` maps whatever the stack sums to a full turn regardless of the
+// raw total, so per-cell normalization is already implicit in the coordinate
+// transform — no `field("yield").normalize()` needed here (that normalize
+// call in the bars version earns its keep by controlling bar HEIGHT, a
+// channel pies don't have).
 const PIE_RADIUS = 15;
 
-// Shared by both pie slides (spread-of-pies and table-of-pies) so the two
-// charts are provably the SAME pie — fixed radius, `size: "yield"` (not
-// normalized; `clock()` already turns whatever the stack sums to into a full
-// turn, so per-cell normalization is implicit), and the same variety
-// palette. The two renderers below differ ONLY in the outer layout operator
-// that positions this glyph.
+// The glyph rendered into each `table()` cell below — fixed radius,
+// `size: "yield"` (not normalized; `clock()` already turns whatever the
+// stack sums to into a full turn, so per-cell normalization is implicit),
+// and the same variety palette as the rest of the barley beat.
 function varietyPieGlyph(data: typeof barley) {
   return Chart(data, {
     coord: clock(),
@@ -1010,30 +1003,11 @@ function varietyPieGlyph(data: typeof barley) {
     .mark(rect({ fill: "variety" }));
 }
 
-function renderVizVarietyPies(
-  id = "chart-viz-variety-pies",
-  { w = 620, h = 190 } = {}
-) {
-  const el = getContainer(id);
-  if (!el || el.children.length > 0) return;
-  Chart(barley, vizChartOptions)
-    .flow(
-      spread("site", { dir: "x", spacing: 64 }),
-      spread("year", { dir: "y", spacing: 46 })
-    )
-    .mark(varietyPieGlyph)
-    .render(el, { w, h, axes: true, legend: true });
-  realignYearPieTicks(id); // HACK: see realignYearPieTicks above
-}
-
-// Same pies, same query, laid out with the `table()` operator instead of two
-// nested `spread`s — rows = year (2), columns = site (6). Placed right after
-// renderVizVarietyPies as a deliberate A/B: both slides stay in the deck for
-// now so we can compare the two layouts and pick one.
+// Rows = year (2), columns = site (6), laid out with a single `table()` call.
 //
-// `table()` does NOT avoid the chart-as-glyph tick bug the `spread` version
-// needed `realignYearPieTicks` for — it has its own version, on both axes
-// (see `realignSitePieTicks` above). So this needs both realign hacks, not
+// `table()` does NOT avoid the chart-as-glyph tick bug a `spread`-based
+// layout would hit — it has its own version, on both axes (see
+// `realignSitePieTicks` above). So this needs both realign hacks, not
 // neither.
 function renderVizVarietyPiesTable(
   id = "chart-viz-variety-pies-table",
@@ -1042,13 +1016,12 @@ function renderVizVarietyPiesTable(
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley, vizChartOptions)
-    // `spacing: 64` matches the site gap `renderVizVarietyPies`'s `spread`
-    // uses — at `table()`'s default (4, tuned for the barley-delta heatmap's
-    // narrow rect cells), the column pitch is just `PIE_RADIUS*2 + spacing`
-    // = 34 units, too narrow for site names like "University Farm" (~75
-    // units wide) to fit without overlapping their neighbors even once
-    // correctly centered — this isn't the tick-position bug below, it's a
-    // real too-many-pixels-of-text-for-too-few-pixels-of-column problem.
+    // `spacing: 64` gives sites like "University Farm" (~75 units wide)
+    // enough room to avoid overlapping their neighbors once correctly
+    // centered — at `table()`'s default (4), the column pitch is just
+    // `PIE_RADIUS*2 + spacing` = 34 units, too narrow for that; this isn't
+    // the tick-position bug below, it's a real
+    // too-many-pixels-of-text-for-too-few-pixels-of-column problem.
     .flow(table("site", "year", { spacing: 64 }))
     .mark(varietyPieGlyph)
     .render(el, { w, h, axes: true, legend: true });
@@ -1627,21 +1600,6 @@ function pairYears(rows: BarleyRow[]) {
       };
     }
   );
-}
-
-function renderVizBarleyDeltaHeatmap(id = "chart-viz-barley-delta", w = 960, h = 300) {
-  const el = getContainer(id);
-  if (!el || el.children.length > 0) return;
-  Chart(barley)
-    .flow(derive(pairYears), table("variety", "site", { spacing: 4 }))
-    .mark(rect({ fill: "deltaColor" }))
-    .render(el, { w, h, axes: true, legend: false });
-  // Same 91%-width CSS clip as the slope/anchored charts (see the
-  // `unclipSvgWidth` comment) — confirmed at the -cmp variant's narrower
-  // (820x230) size, where it clipped "Wisconsin No. 38", the rightmost
-  // column. Applied unconditionally since it's a no-op whenever content
-  // already has slack under 91%.
-  unclipSvgWidth(id); // HACK: see unclipSvgWidth above
 }
 
 // (3) DELTA DOTS / (4) DELTA BARS — the year spread collapses into
@@ -2791,25 +2749,30 @@ const energyPalette = palette({
   Solar: "#f0bf4d",
 });
 
-// One renderer for all three charts on the move-4 slide, mirroring
+// One renderer for all three charts on the move-3 slide, mirroring
 // renderVizStackChart's stack -> sort -> connect idiom: `sort` orders each
 // year's stack by amount (rank-as-position), `connect` adds the area/ribbon
 // layer tracking each source across years (identity-as-continuity). The
 // slide composes the two moves: base = sort only (sorted stacks — rank
-// reads as position, no connection); mid = connect only (stacked area,
-// fixed order — the bands carry identity but never cross); ribbon = both
-// (sorted + connected — now a crossing is a rank inversion, an overtake).
+// reads as position, no connection); mid = area (fixed order + connected,
+// same spec with `area: true` — the bars collapse to zero width and the
+// ribbon goes to full opacity, so the connect layer alone becomes the whole
+// visible mark and reads as a continuous stacked area, bands never
+// crossing); ribbon = sort + connect both (now a crossing is a rank
+// inversion, an overtake).
 function renderEnergyStackChart(
   id: string,
   {
     sort = false,
     connect = false,
+    area = false,
     w = 340,
     h = 260,
     barW = 36,
   }: {
     sort?: boolean;
     connect?: boolean;
+    area?: boolean;
     w?: number;
     h?: number;
     barW?: number;
@@ -2818,6 +2781,11 @@ function renderEnergyStackChart(
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   const chartOptions = { axes: { x: true, y: true }, color: energyPalette };
+  // `area` collapses the bars to a hairline so the ribbon bands between them
+  // become the entire visible mark, and pushes the ribbon to full opacity so
+  // the bands read as solid continuous area rather than a translucent
+  // overlay on visible bars — the same stack+connect spec, degenerate bars.
+  const effectiveBarW = area ? 1 : barW;
   const barsFlow: any[] = [
     spread("year", { dir: "x", spacing: 30 }),
     stack(sort ? field("source").sort("amount") : "source", {
@@ -2828,13 +2796,13 @@ function renderEnergyStackChart(
   const layers: any[] = [
     Chart(energyMix, chartOptions)
       .flow(...barsFlow)
-      .mark(rect({ w: barW, fill: "source" }).name("bars")),
+      .mark(rect({ w: effectiveBarW, fill: "source" }).name("bars")),
   ];
-  if (connect) {
+  if (connect || area) {
     layers.push(
       Chart(select("bars"))
         .flow(group("source"))
-        .mark(ribbon({ opacity: 0.5 }))
+        .mark(ribbon({ opacity: area ? 1 : 0.5 }))
     );
   }
   Layer(layers).render(el, { w, h, axes: { x: true, y: true } });
@@ -2846,7 +2814,7 @@ function renderEnergyRibbonBase(id = "chart-move-ribbon-base") {
   renderEnergyStackChart(id, { sort: true, w: 280, h: 180, barW: 26 });
 }
 function renderEnergyRibbonMid(id = "chart-move-ribbon-mid") {
-  renderEnergyStackChart(id, { connect: true, w: 280, h: 180, barW: 26 });
+  renderEnergyStackChart(id, { area: true, w: 280, h: 180 });
 }
 function renderEnergyRibbon(id = "chart-move-ribbon") {
   renderEnergyStackChart(id, { sort: true, connect: true, w: 400, h: 320 });
@@ -2947,7 +2915,6 @@ export function renderCharts() {
   renderVizVarietySiteMini();
   renderVizVarietyStackRaw();
   renderVizVarietyShare();
-  renderVizVarietyPies();
   renderVizVarietyPiesTable();
   renderVizStackedSorted();
   renderVizYearSorted();
@@ -2978,12 +2945,9 @@ export function renderCharts() {
     SLOPE_H,
     true
   );
-  renderVizBarleyDeltaHeatmap();
   renderVizBarleySlopePanels("chart-viz-barley-slope-restate");
-  renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180);
-  renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230);
-  // Morph waypoints (2026-07-11): slope -> anchored slope -> delta dots/bars
-  // -> heatmap. See charts.ts comments above renderVizBarleySlopePanels.
+  // Morph waypoints (2026-07-11): slope -> anchored slope -> delta dots/bars.
+  // See charts.ts comments above renderVizBarleySlopePanels.
   renderVizBarleySlopeAnchored();
   renderVizBarleyDeltaDots();
   renderVizBarleyDeltaBars();
@@ -3024,7 +2988,6 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-variety-site-mini": renderVizVarietySiteMini,
   "chart-viz-stacked": () => renderVizVarietyStackRaw(),
   "chart-viz-stacked-share": () => renderVizVarietyShare(),
-  "chart-viz-variety-pies": () => renderVizVarietyPies(),
   "chart-viz-variety-pies-table": () => renderVizVarietyPiesTable(),
   "chart-viz-stacked-sorted": () => renderVizStackedSorted(),
   "chart-viz-year-sorted": renderVizYearSorted,
@@ -3047,17 +3010,12 @@ export const chartRenderers: Record<string, () => void> = {
       SLOPE_H,
       true
     ),
-  "chart-viz-barley-delta": renderVizBarleyDeltaHeatmap,
   // Re-states the same chart as "chart-viz-barley-slope" on the "simplify
   // your message" slide, right after the section break — same underlying
   // spec, a second DOM container (duplicate `id`s across slides silently
   // break `getContainer`'s `getElementById` lookup, see main.ts).
   "chart-viz-barley-slope-restate": () =>
     renderVizBarleySlopePanels("chart-viz-barley-slope-restate"),
-  "chart-viz-barley-slope-cmp": () =>
-    renderVizBarleySlopePanels("chart-viz-barley-slope-cmp", false, 820, 180),
-  "chart-viz-barley-delta-cmp": () =>
-    renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230),
   "chart-viz-barley-slope-anchored": renderVizBarleySlopeAnchored,
   "chart-viz-barley-delta-dots": renderVizBarleyDeltaDots,
   "chart-viz-barley-delta-bars": () => renderVizBarleyDeltaBars(),

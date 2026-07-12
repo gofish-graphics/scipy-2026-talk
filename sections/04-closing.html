@@ -4,21 +4,24 @@
              CLOSE
              ══════════════════════════════════════════════════════ -->
 
-          <!-- Query gallery, part 1: four before/after slides, one per move
-               (shared h2, "move N of 4" kicker). Each slide shows the plain
+          <!-- Query gallery, part 1: three before/after slides, one per move
+               (shared h2, "move N of 3" kicker). Each slide shows the plain
                base form (charts.ts: chart-q-*-base) beside the existing
                chart-q-* structure, with query chips underneath showing what
                clause the structural move buys. The gained clause is the
-               highlighted q-line on the "after" side. Move 1 is a triptych:
-               the bars → pies step keeps an IDENTICAL chip (pure restyle —
-               foreshadows the bottle slide), then pies → scatter gains the
-               clause. Move 4 is a composition instead of a before/after:
-               two ingredient charts (sorted stacks; connected areas) on the
-               left, the ribbon that combines them on the right. It replaces
-               the barley ribbon build-up cut from 02-walkthrough.html (that
-               section's query was sign-of-change; ribbons price rank-change
-               queries, which is what this energy dataset is actually for). -->
-          <section data-background-color="#f7f2e8">
+               highlighted q-line on the "after" side. A fourth move (bars →
+               pies → scatter, a triptych where bars → pies keeps an
+               IDENTICAL chip as a pure restyle, then pies → scatter gains
+               the clause) is cut for time — see the HIDDEN slide just below,
+               still numbered "move 1 of 4" internally so it drops back into
+               its original slot if restored. Move 3 here is a composition
+               instead of a before/after: two ingredient charts (sorted
+               stacks; connected areas) on the left, the ribbon that combines
+               them on the right. It replaces the barley ribbon build-up cut
+               from 02-walkthrough.html (that section's query was
+               sign-of-change; ribbons price rank-change queries, which is
+               what this energy dataset is actually for). -->
+          <section data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: move 1 (bars → pies → scatter) cut for time/pacing. Restore by removing data-visibility, and renumber the "move N of 3" kickers below back to "move N of 4" (this slide back to "move 1 of 4"). The renderers (renderScatterPieGridBase, renderScatterPieSpreadMid, renderScatterPieChart) and their chart-q-scatterpie-* containers are untouched in charts.ts. -->
             <h2>moves that change the query</h2>
             <p class="part">move 1 of 4 · bars → pies → scatter</p>
             <div
@@ -95,7 +98,7 @@
 
           <section data-background-color="#f7f2e8">
             <h2>moves that change the query</h2>
-            <p class="part">move 2 of 4 · size → units</p>
+            <p class="part">move 1 of 3 · size → units</p>
             <div
               style="
                 display: flex;
@@ -135,8 +138,17 @@
                 </div>
               </div>
             </div>
+            <pre class="viz-code compact" style="max-width: 30rem; margin-left: auto; margin-right: auto">chart(seafood)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="lake", dir="x"),
+    <span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(row => <span class="viz-transform">repeat</span>(row, "count")),</span>
+    <span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(rows => chunk(rows, 5)),</span>
+    <span class="viz-op">spread</span>(dir="y", reverse=True),
+    <span class="viz-op">spread</span>(dir="x")
+  )
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, h=8, fill="species"))</pre>
             <aside class="notes">
-              Second pair, same seafood data. The left sizes each segment
+              First pair, same seafood data. The left sizes each segment
               continuously; the right chunks the same counts into unit
               squares. The nested for-eaches are identical — what changes is
               the last line: an eyeballed "share of the total" becomes an
@@ -144,13 +156,13 @@
             </aside>
           </section>
 
-          <!-- Move 3 is a Simpson's paradox demo, verified in the packaged
+          <!-- Move 2 is a Simpson's paradox demo, verified in the packaged
                titanic data: the two-level mosaic reads Third (25.2%)
                surviving above Crew (24.0%); adding the sex level reverses
                it within BOTH sexes (the crew is 97% male). -->
           <section data-background-color="#f7f2e8">
             <h2>moves that change the query</h2>
-            <p class="part">move 3 of 4 · one more level</p>
+            <p class="part">move 2 of 3 · one more level</p>
             <div
               style="
                 display: flex;
@@ -190,11 +202,20 @@
                 </div>
               </div>
             </div>
-            <p class="viz-step-copy" style="text-align: center; margin-top: 0.9rem">
+            <pre class="viz-code compact" style="max-width: 26rem; margin-left: auto; margin-right: auto">share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
+
+chart(titanic)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">stack</span>("class", dir="y", size=share),
+    <span class="cut-line cut-highlight">    <span class="viz-op">stack</span>("sex", dir="x", size=share),</span>
+    <span class="viz-op">stack</span>("survived", dir="y", size=share)
+  )
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
+            <p class="viz-step-copy" style="text-align: center; margin-top: 0.5rem">
               one level short, the chart says the opposite. (Simpson's paradox)
             </p>
             <aside class="notes">
-              Third pair, Titanic data — and this one has teeth. The
+              Second pair, Titanic data — and this one has teeth. The
               two-level mosaic answers the class question directly: Third
               class survived at 25.2%, Crew at 24.0%, so third class fared
               better. Add the sex level and the answer flips within BOTH
@@ -208,7 +229,7 @@
             </aside>
           </section>
 
-          <!-- Move 4 is a COMPOSITION, not a before/after sequence: the two
+          <!-- Move 3 is a COMPOSITION, not a before/after sequence: the two
                ingredient charts stack vertically on the left (top: sorted
                stacks — rank as position, no connection; bottom: stacked
                area — fixed order + connected, bands carry identity but
@@ -227,7 +248,7 @@
                Nuclear 2018->2022, Solar passes Coal by 2022. -->
           <section data-background-color="#f7f2e8">
             <h2>moves that change the query</h2>
-            <p class="part">move 4 of 4 · sort + connect</p>
+            <p class="part">move 3 of 3 · sort + connect</p>
             <div
               style="
                 display: flex;
@@ -297,11 +318,18 @@
                 </div>
               </div>
             </div>
-            <p class="source-line" style="margin-top: 0.5em !important">
+            <pre class="viz-code compact" style="max-width: 36rem; margin: 0.25rem auto 0; font-size: 0.3em !important; line-height: 1.2 !important; padding: 0.4em 0.6em !important">layer([
+  chart(energyMix)
+    .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x", spacing=30),
+      <span class="cut-line cut-highlight">      <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y", size="amount"))</span>
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=36, fill="source").name("bars")),
+  <span class="cut-line cut-highlight">  chart(select("bars")).<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="source")).<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.5))</span>
+])</pre>
+            <p class="source-line" style="margin-top: 0.3em !important">
               UK electricity generation · Our World in Data / Ember
             </p>
             <aside class="notes">
-              Fourth move — a composition, so the layout shows the two
+              Third move — a composition, so the layout shows the two
               ingredients separately and then combined. Left top: sort each
               year's stack by amount — rank reads as position, but sorting
               re-purposes position from an identity channel to a rank

@@ -362,6 +362,12 @@
                 <span class="q-gloss">groups sit apart — a scan</span>
               </div>
             </div>
+            <div class="viz-query" style="margin: 0.9rem auto 0; max-width: 720px; font-size: 0.5em">
+              <span class="q-line"><em class="q-field">search</em> — where is it? <span class="q-val">look up</span> <span class="q-val">find</span> <span class="q-val">follow</span></span>
+              <span class="q-gloss"><span class="q-val">look up</span>: you were handed the address. <span class="q-val">find</span>: you weren't — the chart has to make the answer visible. <span class="q-val">follow</span>: trace a link.</span>
+              <span class="q-line" style="margin-top: 0.5em"><em class="q-field">query</em> — what about it? <span class="q-val">read</span> <span class="q-val">compare</span> <span class="q-val">collect</span></span>
+              <span class="q-gloss"><span class="q-val">read</span>: decode one value or event. <span class="q-val">compare</span>: relate two or more located things. <span class="q-val">collect</span>: summarize all of them.</span>
+            </div>
             <aside class="notes">
               Highlighting a line of the spec picks a CUT through the operator
               tree — Elmqvist-style hierarchical aggregation, but the cut is
@@ -400,6 +406,27 @@
               perceptual-query notation itself, introduced properly for the
               first time: the dashed hole is a placeholder for the reader's
               own attention, the gloss is a cost estimate, not a verdict.
+              The new key underneath the chip spells out the six verbs the
+              chips use, and they aren't arbitrary — they split into two
+              tiers. Look up, find, and follow are all "where is it"
+              questions: look up means someone handed you the address (a
+              key, a coordinate) and the index just retrieves it; find means
+              there is no address, you're hunting, and the chart has to make
+              the answer visible; follow means tracing a link, like a line
+              or a ribbon. Read, compare, and collect are all "what about
+              it" questions once you're already looking at the right place:
+              read decodes one value, compare relates two or more things
+              you've found, collect summarizes the whole crowd at once.
+              Worth saying out loud later, when the delta-bars slides come
+              up: that whole four-step arc is the story of turning a find
+              into something close to a look up. Early on, "which way did
+              yield move at this site" is a real hunt — you have to read a
+              line's slope, one of ten per panel, and there's no shortcut.
+              By the time the bars are diverging from a zero baseline, the
+              sign has an address: which side of the baseline the bar falls
+              on. The audience isn't searching anymore, they're just
+              looking. Same query the whole way through, priced cheaper and
+              cheaper.
             </aside>
           </section>
 
@@ -684,8 +711,8 @@
   table("site", "year"),
 ).mark(rect(fill="yield"))</code></pre>
                 <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
-                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">yield</em> colors⟩</span> across <em class="q-field">site</em> × <em class="q-field">year</em></span>
-                  <span class="q-gloss">cells align in rows and columns — a scan either way</span>
+                  <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a <em class="q-field">yield</em> color⟩</span> at <em class="q-field">site</em> × <em class="q-field">year</em></span>
+                  <span class="q-gloss">a direct address — no scan needed</span>
                 </div>
               </div>
             </div>
@@ -846,8 +873,7 @@
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>(by="site", dir="x"),
-    <span class="viz-op">spread</span>(by="year", dir="y"),
+    <span class="viz-op">table</span>(by="site", by="year"),
   )
   .<span class="viz-mark">mark</span>(
     <span class="cut-highlight">chart(coord=clock())</span>
@@ -863,7 +889,7 @@
               </p>
             </div>
             <div
-              id="chart-viz-variety-pies"
+              id="chart-viz-variety-pies-table"
               class="chart-container viz-gofish-chart"
             ></div>
             <aside class="notes">
@@ -883,55 +909,13 @@
               just price the same query much higher. That's the deck's whole
               thesis in miniature: the encoding should be chosen to make the
               query cheap, and here's a case where the "same" chart, one
-              option changed, makes it dearer instead.
-            </aside>
-          </section>
-
-          <section class="split viz-step" data-background-color="#f7f2e8">
-            <h2>same pies, as a table</h2>
-            <div>
-              <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
-                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole" style="white-space: nowrap">⟨each <em class="q-field">variety</em>'s share of <em class="q-field">yield</em>⟩</span> between 1931 and 1932, at each <em class="q-field">site</em></span>
-                <span class="q-gloss">same wedges — one grid operator instead of two nested spreads</span>
-              </div>
-              <pre class="viz-code">chart(barley)
-  .<span class="viz-op">flow</span>(
-    <span class="cut-highlight"><span class="viz-op">table</span>(by="site", by="year")</span>,
-  )
-  .<span class="viz-mark">mark</span>(
-    chart(coord=clock())
-      .<span class="viz-op">flow</span>(<span class="viz-op">stack</span>("variety", dir="x", size="yield"))
-      .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="variety"))
-  )</pre>
-              <p class="viz-step-copy">
-                The two nested <code>spread</code>s become one
-                <code>table</code>: rows for year, columns for site. Same
-                pies, same query — only the operator that lays out the grid
-                changed.
-              </p>
-            </div>
-            <div
-              id="chart-viz-variety-pies-table"
-              class="chart-container viz-gofish-chart"
-            ></div>
-            <aside class="notes">
-              This slide and the one before it are two layouts of the exact
-              same pies — same data, same normalized stack, same wedge-to-
-              wedge comparison. The only thing under test here is the layout
-              operator: two nested spreads vs. a single table() call. The
-              substantive question for the audience is unchanged from the
-              last slide — does angle make "did the mix change between these
-              two rows?" harder than the aligned bands of the normalized bar
-              chart did. The deck will likely keep only one of these two
-              pie slides going forward. Worth knowing for the Q&A but not
-              worth putting on the slide: table() did not turn out to be the
-              free fix it looked like going in — nesting a chart-as-glyph pie
-              inside it mislabels both axes (row ticks float above their
-              row, column ticks bunch up instead of centering over their
-              column), the same class of bug the spread version needed
-              realignYearPieTicks for, just on both axes instead of one. This
-              slide reuses that hack plus a new x-axis counterpart
-              (realignSitePieTicks) rather than hiding the bug.
+              option changed, makes it dearer instead. Worth knowing for the
+              Q&A but not worth putting on the slide: nesting a chart-as-glyph
+              pie inside table() mislabels both axes (row ticks float above
+              their row, column ticks bunch up instead of centering over
+              their column), so this chart leans on two tick-realignment
+              hacks (realignYearPieTicks, realignSitePieTicks) rather than
+              hiding the bug.
             </aside>
           </section>
 
@@ -1049,7 +1033,7 @@
             </aside>
           </section>
 
-          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: the ribbon build-up (this slide, "connect related bars", and the "style is downstream of structure" highlight variant) moved to sections/04-closing.html's move-4 slide. This section's query was sign-of-change; ribbons price rank-change queries, which is what the closing energy dataset is for. The slope chart (03-glyphs.html) now carries the sign-of-change beat. Remove data-visibility to restore. -->
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: the ribbon build-up (this slide, "connect related bars", and the "style is downstream of structure" highlight variant) moved to sections/04-closing.html's sort+connect move slide (move 3 of 3). This section's query was sign-of-change; ribbons price rank-change queries, which is what the closing energy dataset is for. The slope chart (03-glyphs.html) now carries the sign-of-change beat. Remove data-visibility to restore. -->
             <h2>sort each stack</h2>
             <div>
               <pre class="viz-code">chart(barley)
@@ -1146,12 +1130,12 @@
               readings. Sorting a stack by value buys rank-as-position but
               gives up identity — "same site, same slot" is gone — and
               connection is exactly the operator that buys it back. (That
-              trade plays out later, in the closing section's move-4 slide,
+              trade plays out later, in the closing section's sort+connect move slide (move 3 of 3),
               on the energy ribbon.)
             </aside>
           </section>
 
-          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: moved to sections/04-closing.html's move-4 slide (chart-move-ribbon). See the "sort each stack" HIDDEN comment above for why. Remove data-visibility to restore. -->
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: moved to sections/04-closing.html's sort+connect move slide (move 3 of 3) (chart-move-ribbon). See the "sort each stack" HIDDEN comment above for why. Remove data-visibility to restore. -->
             <h2>connect related bars</h2>
             <div>
               <pre class="viz-code">layer([
@@ -1187,7 +1171,7 @@
             </aside>
           </section>
 
-          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: ribbon highlight variant, part of the ribbon build-up moved to sections/04-closing.html's move-4 slide. See the "sort each stack" HIDDEN comment above. Remove data-visibility to restore. -->
+          <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: ribbon highlight variant, part of the ribbon build-up moved to sections/04-closing.html's sort+connect move slide (move 3 of 3). See the "sort each stack" HIDDEN comment above. Remove data-visibility to restore. -->
             <h2>style is downstream of structure</h2>
             <div>
               <pre class="viz-code">layer([
