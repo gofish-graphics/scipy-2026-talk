@@ -903,11 +903,269 @@ function renderVizStackChart(
   Layer(layers).render(el, VIZ_RENDER_OPTIONS);
 }
 
+// `chart-viz-stacked` no longer uses this — see `renderVizVarietyStack` below,
+// which now backs the composition beat's two slides. Left in place because
+// `renderVizStackedSorted` and `renderVizRibbon`/`-highlight` (still live)
+// share this same helper, and `chart-viz-stacked`'s OLD (variety-outer,
+// site-stacked) spec may still back a `data-visibility="hidden"` slide.
 function renderVizStacked(id = "chart-viz-stacked") {
   renderVizStackChart(id, {});
 }
 function renderVizStackedSorted(id = "chart-viz-stacked-sorted") {
   renderVizStackChart(id, { sort: true });
+}
+
+// The composition beat, in TWO slides over ONE structure: spread site ->
+// spread year -> stack variety. The slides are visually identical except for
+// the y-extent, because the ONLY thing that changes between them is `stack`'s
+// `size` argument — normalization reads to the audience as a one-line edit.
+//
+//   1. `chart-viz-stacked` (raw, `size: "yield"`) — introduces `stack()`. Bar
+//      height is the site-year's TOTAL yield, each segment a variety's
+//      contribution: the totals visibly moved between 1931 and 1932.
+//   2. `chart-viz-stacked-share` (`size: field("yield").normalize()`) —
+//      introduces `field().normalize()`, the same `size` idiom the Titanic
+//      mosaic and the `stack("species", ...)` species chart already use.
+//      Every bar is 100% tall, so "the bands line up between a site's 1931 and
+//      1932 bars" now means the variety MIX held — which it did. Answers "did
+//      the mix change, or just the total?".
+//
+// Facet nesting and spacing (64 between sites / 26 between the year pair
+// inside a site — widened from `renderVizSiteYear`'s 24/4 so the "1931"/
+// "1932" tick labels, each ~24px wide, don't overprint into "19311932";
+// the site gap stays clearly bigger than the year gap so the pair still
+// reads as nested inside its site) loosely follows `renderVizSiteYear`
+// above, the deck's other site-then-year chart at this same VIZ_W/VIZ_H
+// canvas. Legend stays on (`legend: true`),
+// matching how the slope panels keep a real variety legend once gofish#686
+// stopped blocking it (see the comment above `renderVizBarleySlopePanels`'s
+// own `panels.render`).
+function renderVizVarietyStack(
+  id: string,
+  { normalize = false, w = VIZ_W, h = VIZ_H } = {}
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(
+      spread("site", { dir: "x", spacing: 64 }),
+      spread("year", { dir: "x", spacing: 26 }),
+      stack("variety", {
+        dir: "y",
+        size: normalize ? field("yield").normalize() : "yield",
+      })
+    )
+    .mark(rect({ w: 10, fill: "variety" }))
+    .render(el, { w, h, axes: true, legend: true });
+}
+
+function renderVizVarietyStackRaw(id = "chart-viz-stacked") {
+  renderVizVarietyStack(id, {});
+}
+function renderVizVarietyShare(id = "chart-viz-stacked-share") {
+  renderVizVarietyStack(id, { normalize: true });
+}
+
+// The pie beat: literally `renderVizVarietyStack`'s normalized flow with ONE
+// option changed, `coord: clock()` — same data, same query, same
+// site-then-year facet nesting, same variety palette. The only structural
+// difference is that `year` spreads DOWN (`dir: "y"`) instead of sideways, so
+// the two years stack into rows (1931 on top, 1932 below) rather than a
+// side-by-side pair — a 6-site-wide x 2-year-tall grid of pies, one per
+// site-year cell, directly under/over its own-site partner for the
+// across-year comparison the query asks for.
+//
+// Each cell's pie is built the chart-as-glyph way `renderBarleyScatterPie`
+// uses (see above): `.mark((data) => ...)` receives that leaf facet's own
+// matching barley rows directly (spread's grouping, not a manually-built
+// `.collection` — there's no need to hand-assemble one here since `spread`
+// already partitions `barley` by site and year for us), and the callback
+// resolves a fully independent nested `Chart` in `clock()` coordinates.
+// Every pie gets the SAME fixed radius (`PIE_RADIUS`) — unlike the scatter-pie
+// map, which sizes radius by total yield, this slide is comparing PROPORTIONS
+// only (the same thing the normalized bars compare), so encoding total yield
+// in radius here would smuggle a second, distracting variable back in.
+// `size: "yield"` (not normalized) still gives each wedge the correct SHARE
+// of its own pie: `clock()` maps whatever the stack sums to a full turn
+// regardless of the raw total, so per-cell normalization is already implicit
+// in the coordinate transform — no `field("yield").normalize()` needed here
+// (that normalize call in the bars version earns its keep by controlling bar
+// HEIGHT, a channel pies don't have).
+const PIE_RADIUS = 15;
+
+// Shared by both pie slides (spread-of-pies and table-of-pies) so the two
+// charts are provably the SAME pie — fixed radius, `size: "yield"` (not
+// normalized; `clock()` already turns whatever the stack sums to into a full
+// turn, so per-cell normalization is implicit), and the same variety
+// palette. The two renderers below differ ONLY in the outer layout operator
+// that positions this glyph.
+function varietyPieGlyph(data: typeof barley) {
+  return Chart(data, {
+    coord: clock(),
+    axes: false,
+    color: palette(vizStepColors),
+    legend: false,
+  })
+    .flow(stack("variety", { dir: "x", h: PIE_RADIUS, size: "yield" }))
+    .mark(rect({ fill: "variety" }));
+}
+
+function renderVizVarietyPies(
+  id = "chart-viz-variety-pies",
+  { w = 620, h = 190 } = {}
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(
+      spread("site", { dir: "x", spacing: 64 }),
+      spread("year", { dir: "y", spacing: 46 })
+    )
+    .mark(varietyPieGlyph)
+    .render(el, { w, h, axes: true, legend: true });
+  realignYearPieTicks(id); // HACK: see realignYearPieTicks above
+}
+
+// Same pies, same query, laid out with the `table()` operator instead of two
+// nested `spread`s — rows = year (2), columns = site (6). Placed right after
+// renderVizVarietyPies as a deliberate A/B: both slides stay in the deck for
+// now so we can compare the two layouts and pick one.
+//
+// `table()` does NOT avoid the chart-as-glyph tick bug the `spread` version
+// needed `realignYearPieTicks` for — it has its own version, on both axes
+// (see `realignSitePieTicks` above). So this needs both realign hacks, not
+// neither.
+function renderVizVarietyPiesTable(
+  id = "chart-viz-variety-pies-table",
+  { w = 620, h = 190 } = {}
+) {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    // `spacing: 64` matches the site gap `renderVizVarietyPies`'s `spread`
+    // uses — at `table()`'s default (4, tuned for the barley-delta heatmap's
+    // narrow rect cells), the column pitch is just `PIE_RADIUS*2 + spacing`
+    // = 34 units, too narrow for site names like "University Farm" (~75
+    // units wide) to fit without overlapping their neighbors even once
+    // correctly centered — this isn't the tick-position bug below, it's a
+    // real too-many-pixels-of-text-for-too-few-pixels-of-column problem.
+    .flow(table("site", "year", { spacing: 64 }))
+    .mark(varietyPieGlyph)
+    .render(el, { w, h, axes: true, legend: true });
+  realignYearPieTicks(id); // HACK: see realignYearPieTicks above
+  realignSitePieTicks(id); // HACK: see realignSitePieTicks above
+}
+
+// NEW BUG (not in the known list): nesting a chart-as-glyph mark (the pie)
+// inside a `spread(..., { dir: "y" })` facet is an untested combination —
+// every OTHER `spread`/`stack` on `year` in this file spreads on "x"; this
+// is the only "y" case paired with a chart-as-glyph mark. Confirmed by DOM
+// inspection: the "1931"/"1932" row tick <text>s land at a fixed y that is
+// ~93 user units above where the pies for that row actually render (both
+// rows off by the same ~93px, regardless of `spread` operator order or an
+// explicit inner `w`/`h`/`padding: 0` on the nested chart — ruled out as
+// causes by direct experiment), so the labels read as floating above empty
+// space while the actual pie rows sit lower, unlabeled. Rather than papering
+// over a GoFish layout bug blindly, this re-measures where the pies
+// ACTUALLY rendered (clustering wedge `<path>` bboxes into two y-bands, the
+// same gap-threshold clustering `realignSiteTicks` above uses for x) and
+// moves each row's tick text down to match — the same "don't trust the
+// emitted tick position, trust the rendered marks" move as
+// `realignSiteTicks`, just on the y axis instead of x.
+async function realignYearPieTicks(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  await waitForVisible(svg);
+  const wedgeCenters = Array.from(svg.querySelectorAll("path"))
+    .filter((p) => (p.getAttribute("fill") ?? "").startsWith("#"))
+    .map((p) => {
+      const b = p.getBBox();
+      return b.y + b.height / 2;
+    })
+    .sort((a, b) => a - b);
+  if (wedgeCenters.length === 0) return;
+  const GAP_THRESHOLD = 20; // between one pie's own wedges and the next row down
+  const rows: number[][] = [[wedgeCenters[0]]];
+  for (let i = 1; i < wedgeCenters.length; i++) {
+    if (wedgeCenters[i] - wedgeCenters[i - 1] > GAP_THRESHOLD) rows.push([]);
+    rows[rows.length - 1].push(wedgeCenters[i]);
+  }
+  const rowCenters = rows.map((r) => r.reduce((a, b) => a + b, 0) / r.length);
+  const yearTexts = Array.from(svg.querySelectorAll("text")).filter((t) =>
+    /^19\d\d$/.test(t.textContent?.trim() ?? "")
+  );
+  const tickYs = [...new Set(yearTexts.map((t) => t.y.baseVal.getItem(0).value))].sort(
+    (a, b) => a - b
+  );
+  yearTexts.forEach((t) => {
+    const tickY = t.y.baseVal.getItem(0).value;
+    const rowIndex = tickYs.indexOf(tickY);
+    const target = rowCenters[rowIndex];
+    if (target === undefined) return;
+    t.y.baseVal.getItem(0).value = target + 4; // +4: roughly centers the text's cap-height on the pie row
+  });
+}
+
+// NEW BUG (not in the known list, and table()'s own version of the bug
+// above): swapping the two nested `spread`s for a single `table("site",
+// "year")` call does NOT sidestep the chart-as-glyph tick problem — it just
+// moves it to BOTH axes. DOM inspection on the table layout: the "1931"/
+// "1932" row ticks land ~70-90 user units above the wedge rows they label
+// (same failure as `realignYearPieTicks` above, so that helper is reused
+// as-is — it already re-measures from rendered wedge geometry rather than
+// trusting either operator's emitted position, so it isn't specific to
+// `spread`). The site COLUMN ticks have a distinct failure: `table()` emits
+// six site labels bunched together near the left edge instead of one per
+// column — evenly-spaced ~34-unit-wide pie columns, but tick x's 38, 91,
+// 128, 153, 179, 230 (uneven gaps, nothing like the columns' actual
+// spacing), so the six names crowd into unreadable overlapping text at the
+// grid's top-left instead of sitting over their own column. Same fix
+// shape as `realignYearPieTicks`: cluster wedge `<path>` bboxes into
+// column x-bands and move each site tick to its own column's measured
+// center, rather than trusting `table()`'s emitted tick x.
+async function realignSitePieTicks(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  await waitForVisible(svg);
+  const wedgeCenters = Array.from(svg.querySelectorAll("path"))
+    .filter((p) => (p.getAttribute("fill") ?? "").startsWith("#"))
+    .map((p) => {
+      const b = p.getBBox();
+      return b.x + b.width / 2;
+    })
+    .sort((a, b) => a - b);
+  if (wedgeCenters.length === 0) return;
+  // table()'s columns sit closer together (~19 units apart) than spread's
+  // rows did, while within-pie wedge spread is ~8 units at most — the 20
+  // threshold `realignYearPieTicks`/`realignSiteTicks` use elsewhere in this
+  // file is tuned for a wider gap and merges all six columns into one
+  // cluster here. 12 sits cleanly between the two (confirmed against the
+  // measured wedge-center gaps for this layout).
+  const GAP_THRESHOLD = 12;
+  const cols: number[][] = [[wedgeCenters[0]]];
+  for (let i = 1; i < wedgeCenters.length; i++) {
+    if (wedgeCenters[i] - wedgeCenters[i - 1] > GAP_THRESHOLD) cols.push([]);
+    cols[cols.length - 1].push(wedgeCenters[i]);
+  }
+  const colCenters = cols.map((c) => c.reduce((a, b) => a + b, 0) / c.length);
+  const siteTexts = Array.from(svg.querySelectorAll("text")).filter((t) =>
+    BARLEY_SITE_ORDER.includes(t.textContent?.trim() ?? "")
+  );
+  const tickXs = [...new Set(siteTexts.map((t) => t.x.baseVal.getItem(0).value))].sort(
+    (a, b) => a - b
+  );
+  siteTexts.forEach((t) => {
+    const tickX = t.x.baseVal.getItem(0).value;
+    const colIndex = tickXs.indexOf(tickX);
+    const target = colCenters[colIndex];
+    if (target === undefined) return;
+    const width = t.getBBox().width;
+    t.x.baseVal.getItem(0).value = target - width / 2;
+  });
 }
 
 function renderVizYearSorted() {
@@ -1738,20 +1996,39 @@ function renderVizBarleyDeltaDots(
 // (see the comment in `pairYears`) rather than a plain `h: "delta"` — being
 // a spread+spread flow (not spread+scatter), it was never at risk from
 // gofish#770, but it did hit a different, new sign-handling bug (see below).
+// The Morris "color for emphasis" and "annotation" beats (previously on the
+// slope panels — see `renderVizBarleySlopePanels`'s `highlight`/`annotate`
+// params and `addSlopeCallout`) moved to THIS chart instead: signed bars read
+// sign faster than slope lines do, so the "every variety rose at Morris,
+// fell everywhere else" sentence lands harder here. `highlight` mirrors the
+// slope panels' own highlight variant move-for-move — `palette({ Morris:
+// "#e08214" })` + `legend: false` at the chart-options level, with the
+// mark's `fill` switched from "variety" to "site" so the palette actually
+// keys on the field it names (non-Morris sites fall back to GoFish's default
+// gray). `markLegendSwatches` only makes sense when a legend is actually
+// rendered, so it's skipped in the no-legend (`highlight`) branch.
 function renderVizBarleyDeltaBars(
   id = "chart-viz-barley-delta-bars",
-  w = 560,
-  h = SLOPE_H
+  { highlight = false, annotate = false, w = 560, h = SLOPE_H } = {}
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
+  const chartOptions = highlight
+    ? { color: palette({ Morris: "#e08214" }), legend: false }
+    : vizChartOptions;
   Layer([
     Chart(barleyZeroRows)
       .flow(spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }))
       .mark(zeroBaselineMark("barTop")),
-    Chart(barley, vizChartOptions)
+    Chart(barley, chartOptions)
       .flow(derive(pairYears), ...deltaPanelsFlow)
-      .mark(rect({ y: "barTop", h: "barHeight", fill: "variety" })), // HACK: see barTop/barHeight comment in pairYears
+      .mark(
+        rect({
+          y: "barTop",
+          h: "barHeight",
+          fill: highlight ? "site" : "variety",
+        })
+      ), // HACK: see barTop/barHeight comment in pairYears
   ]).render(el, {
     w,
     h,
@@ -1759,13 +2036,96 @@ function renderVizBarleyDeltaBars(
     // `pairYears` comment) — it must never leak onto the axis as a label, so
     // the axis title is overridden with the real quantity it displays.
     axes: { x: true, y: { title: "Δ yield (bu/acre)" } },
-    legend: true,
+    legend: !highlight,
   });
-  markLegendSwatches(id) // HACK: gofish#686, see the comment above markLegendSwatches
+  // `highlight`'s legend is suppressed by `legend: !highlight` at the
+  // render() level (a no-op — see `stripLegend`'s own doc comment on why
+  // `legend: false` doesn't hold for categorical fills), so `stripLegend`
+  // is still needed here. BUT calling it *before* `stripVarietyTicks` (the
+  // naive "belt and suspenders, mirror the slope panels" order) crops the
+  // svg to a ~160px sliver showing only the first site — confirmed by
+  // instrumenting `stripLegend`'s own match loop: GoFish emits a stray
+  // per-datum `<text>` (the variety name, e.g. "Manchuria") immediately
+  // after some of THIS chart's small `<rect>` bars, an artifact that
+  // `stripVarietyTicks` (below) is specifically there to strip. Before that
+  // cleanup runs, `stripLegend`'s "small rect followed by text" heuristic
+  // can't tell a real legend swatch (x~1001, 10x10) from one of those
+  // stray bar+label pairs (x~156/312/935, ~7x3-10px, under the same <16
+  // threshold) and matches the leftmost one, cropping everything to its
+  // right. Sequencing `stripLegend` AFTER `stripVarietyTicks` removes the
+  // false positives before the legend heuristic ever sees them — verified
+  // by instrumenting the match loop, which then reports exactly the 6
+  // true legend entries. `markLegendSwatches` still only makes sense when
+  // a legend is actually rendered, so it stays skipped in the `highlight`
+  // branch.
+  const legendStep = highlight ? Promise.resolve() : markLegendSwatches(id); // HACK: gofish#686, see the comment above markLegendSwatches
+  legendStep
     .then(() => stripVarietyTicks(id))
+    .then(() => {
+      if (highlight) return stripLegend(id);
+    })
     .then(() => realignSiteTicks(id)) // HACK: see realignSiteTicks above
     .then(() => dashZeroBaseline(id)) // HACK: see dashZeroBaseline above
-    .then(() => unclipSvgWidth(id)); // HACK: see unclipSvgWidth above
+    .then(() => unclipSvgWidth(id)) // HACK: see unclipSvgWidth above
+    .then(() => {
+      if (annotate) addDeltaBarsCallout(id);
+    });
+}
+
+// Modeled closely on `addSlopeCallout` above — same DOM-measurement move
+// (find the Morris-colored marks' rendered bbox, draw plain SVG `<text>`
+// above them), adapted for `<rect>` marks instead of `<path>` lines: the
+// highlight variant fills Morris's bars (and the zero baseline's `<line>`,
+// which never carries this fill) with the same "#e08214", so `rect` is
+// enough to find them. Positioned above the Morris cluster since its bars
+// are the only ones that go UP (positive delta) — that's the sentence's own
+// point, so the callout sits where the rise is, guarded against running off
+// the canvas top the same way `addSlopeCallout` guards `startY`.
+async function addDeltaBarsCallout(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  const morrisMarks = Array.from(
+    svg.querySelectorAll("rect, path")
+  ).filter(
+    (p) =>
+      p.getAttribute("fill") === "#e08214" ||
+      p.getAttribute("stroke") === "#e08214"
+  ) as unknown as SVGGraphicsElement[];
+  if (morrisMarks.length === 0) return;
+  await waitForVisible(svg);
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  morrisMarks.forEach((p) => {
+    const b = p.getBBox();
+    minX = Math.min(minX, b.x);
+    maxX = Math.max(maxX, b.x + b.width);
+    minY = Math.min(minY, b.y);
+  });
+  const centerX = (minX + maxX) / 2;
+  const noteColor = "#e08214"; // Morris orange, same hex the highlight variant fills Morris with
+  const lines = [
+    "Morris is the only site",
+    "where every variety rose.",
+    "Everywhere else, they fell.",
+  ];
+  const lineHeight = 18;
+  const startY = Math.max(16, minY - lineHeight * lines.length - 6);
+  const ns = "http://www.w3.org/2000/svg";
+  lines.forEach((lineText, i) => {
+    const t = document.createElementNS(ns, "text");
+    t.setAttribute("x", String(centerX));
+    t.setAttribute("y", String(startY + i * lineHeight));
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("fill", noteColor);
+    t.setAttribute("font-family", "'Shantell Sans', sans-serif");
+    t.setAttribute("font-size", "14");
+    t.setAttribute("font-weight", i === 0 ? "700" : "400");
+    t.textContent = lineText;
+    svg.appendChild(t);
+  });
 }
 
 // ── Part 2: Scatter pie ───────────────────────────────────────────────────
@@ -2585,7 +2945,10 @@ export function renderCharts() {
   renderVizSiteYear();
   renderVizSiteVarietyMini();
   renderVizVarietySiteMini();
-  renderVizStacked();
+  renderVizVarietyStackRaw();
+  renderVizVarietyShare();
+  renderVizVarietyPies();
+  renderVizVarietyPiesTable();
   renderVizStackedSorted();
   renderVizYearSorted();
   renderVizRibbon();
@@ -2624,6 +2987,13 @@ export function renderCharts() {
   renderVizBarleySlopeAnchored();
   renderVizBarleyDeltaDots();
   renderVizBarleyDeltaBars();
+  renderVizBarleyDeltaBars("chart-viz-barley-delta-bars-highlight", {
+    highlight: true,
+  });
+  renderVizBarleyDeltaBars("chart-viz-barley-delta-bars-annotated", {
+    highlight: true,
+    annotate: true,
+  });
   renderFlowerChart();
   renderBalloonChart();
   renderSankeyTree();
@@ -2652,7 +3022,10 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-site-year": () => renderVizSiteYear(),
   "chart-viz-site-variety-mini": renderVizSiteVarietyMini,
   "chart-viz-variety-site-mini": renderVizVarietySiteMini,
-  "chart-viz-stacked": () => renderVizStacked(),
+  "chart-viz-stacked": () => renderVizVarietyStackRaw(),
+  "chart-viz-stacked-share": () => renderVizVarietyShare(),
+  "chart-viz-variety-pies": () => renderVizVarietyPies(),
+  "chart-viz-variety-pies-table": () => renderVizVarietyPiesTable(),
   "chart-viz-stacked-sorted": () => renderVizStackedSorted(),
   "chart-viz-year-sorted": renderVizYearSorted,
   "chart-viz-ribbon": () => renderVizRibbon(),
@@ -2687,7 +3060,16 @@ export const chartRenderers: Record<string, () => void> = {
     renderVizBarleyDeltaHeatmap("chart-viz-barley-delta-cmp", 820, 230),
   "chart-viz-barley-slope-anchored": renderVizBarleySlopeAnchored,
   "chart-viz-barley-delta-dots": renderVizBarleyDeltaDots,
-  "chart-viz-barley-delta-bars": renderVizBarleyDeltaBars,
+  "chart-viz-barley-delta-bars": () => renderVizBarleyDeltaBars(),
+  "chart-viz-barley-delta-bars-highlight": () =>
+    renderVizBarleyDeltaBars("chart-viz-barley-delta-bars-highlight", {
+      highlight: true,
+    }),
+  "chart-viz-barley-delta-bars-annotated": () =>
+    renderVizBarleyDeltaBars("chart-viz-barley-delta-bars-annotated", {
+      highlight: true,
+      annotate: true,
+    }),
   "chart-franconeri-a": renderFranconeriA,
   "chart-viz-agg-site-year": renderAggSiteYear,
   "chart-viz-agg-site-year-highlight": renderAggSiteYearHighlight,

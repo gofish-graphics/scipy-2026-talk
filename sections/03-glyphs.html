@@ -177,6 +177,10 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>first, just the points</h2>
+            <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
+              <span class="q-gloss">no lines yet — trend isn't readable</span>
+            </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               Each site panel scatters every variety's two years as points —
               the connecting lines come next.
@@ -214,6 +218,10 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>the takeaway is a sentence</h2>
+            <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
+              <span class="q-gloss">each line's slope — one glance per variety</span>
+            </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               "Every variety decreased at every site — except Morris, where
               every variety increased."
@@ -248,9 +256,9 @@ chart(barley_scatter_by_year(1931)).flow(
               display for this dataset. It's precise on magnitude — you can
               read off exactly how much each variety fell or rose — but the
               reader still has to aggregate ten slope signs per panel to
-              recover the sentence. Compare to the next slide's heatmap,
-              which gives up magnitude precision to make the sign read as a
-              single glance.
+              recover the sentence. The delta-bars slides ahead trade that
+              Trellis precision for a display that lets the sign read in one
+              glance.
             </aside>
           </section>
 
@@ -281,74 +289,14 @@ chart(barley_scatter_by_year(1931)).flow(
             </aside>
           </section>
 
-          <!-- ─── COLOR: HIGHLIGHT THE EXCEPTION ──────────────────── -->
-
-          <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>use color for emphasis</h2>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Same panels, now colored by site with Morris in orange. The
-              structure already found the exception; color just names it.
-            </p>
-            <pre class="viz-code compact">chart(
-  barley,
-  color=<span class="viz-op">palette</span>({"Morris": "orange"}),  # every other site gray
-)
-  <span style="color: #888"># ...same slope panels; lines inherit the point color...</span>
-  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="site").name("pts"))</pre>
-            <div
-              id="chart-viz-barley-slope-highlight"
-              class="chart-container viz-gofish-chart"
-              style="height: 312px; min-height: 312px"
-            ></div>
-            <aside class="notes">
-              Identical to the previous slope slide, but the connecting lines are
-              stroked by site using the Morris-green palette from the ribbon.
-              Everything else goes gray, so the single rising panel reads at a
-              glance without any structural change. Same "style is downstream of
-              structure" move as the ribbon highlight. Color is the cheapest
-              lever there is for "look here" — cheaper than a structural
-              change, cheaper than an annotation. Own it honestly on stage:
-              GoFish has no `emphasize()` primitive yet. What's on screen is
-              a hand-written conditional in the render function (`highlight
-              ? palette(...) : the default color scale`), not a first-class
-              operator — filed as gofish#641, and worth fixing precisely
-              because "highlight one category, gray out the rest" is common
-              enough to deserve its own name instead of a per-chart if/else.
-            </aside>
-          </section>
-
-          <!-- Labels/annotations: say the takeaway out loud -->
-          <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>annotations carry the takeaway</h2>
-            <div
-              id="chart-viz-barley-slope-annotated"
-              class="chart-container viz-gofish-chart"
-              style="height: 312px; min-height: 312px"
-            ></div>
-            <p class="viz-step-copy" style="font-size: 0.6em">
-              Color drew the eye; a label says the takeaway out loud, so the
-              reader doesn't have to find it.
-            </p>
-            <aside class="notes">
-              The last step of explanatory polish: annotate. If the sentence
-              is the point, write the sentence on the chart — don't leave the
-              reader to reconstruct it from a color cue alone. Same slope
-              panels, same Morris-orange highlight — color already made
-              Morris's rising panel pop; the label states the conclusion
-              directly instead of leaving the reader to infer it from six
-              panels of slopes. Morris is the third of six panels
-              (University Farm, Waseca, Morris, Crookston, Grand Rapids,
-              Duluth), so the callout sits in the top-right corner, over
-              Grand Rapids/Duluth's dead space, well clear of Morris.
-              Exploratory charts help you find the story; explanatory
-              charts tell it.
-            </aside>
-          </section>
-
           <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 1 OF 4 — THE SLOPE ──── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>simplify your message</h2>
+            <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
+              <span class="q-gloss">same query — watch it get fewer marks</span>
+            </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               Same slope panels as before — the starting point for four
               one-edit steps toward a faster read.
@@ -379,6 +327,10 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>anchor the comparison</h2>
+            <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
+              <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨Δ <em class="q-field">yield</em> from 1931⟩</span>, site by site</span>
+              <span class="q-gloss">angle is now the delta — no subtraction needed</span>
+            </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               One edit: normalize each variety's 1931 yield to zero, so the
               line's own angle becomes the delta.
@@ -412,6 +364,10 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>the line has nothing left to connect</h2>
+            <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
+              <span class="q-gloss">the whole investigation, compiled to one query</span>
+            </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               One edit: <code>derive</code> collapses the year pair into a
               single delta. The line isn't removed for taste — it becomes
@@ -484,91 +440,82 @@ chart(barley_scatter_by_year(1931)).flow(
             </aside>
           </section>
 
-          <!-- ─── Δ HEATMAP: LET COLOR CARRY THE SIGN ─────────────── -->
+          <!-- ─── COLOR: HIGHLIGHT THE EXCEPTION (now on the delta bars) ── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>let color carry the sign</h2>
-            <pre class="viz-code"><span class="cut-line">chart(barley)</span
-><span class="cut-line">  .<span class="viz-op">flow</span>(</span
-><span class="cut-line">    <span class="viz-transform">derive</span>(delta),</span
-><span class="cut-line cut-highlight">    <span class="viz-op">table</span>(by={"x": "variety", "y": "site"}),</span
-><span class="cut-line">  )</span
-><span class="cut-line cut-highlight">  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="delta"))</span></pre>
-            <div
-              id="chart-viz-barley-delta"
-              class="chart-container viz-gofish-chart"
-              style="height: 360px"
-            ></div>
-            <p class="viz-step-copy" style="font-size: 0.52em; max-width: 90%">
-              The mark is <code>rect</code> the whole arc through — only the
-              channel it's bound to changes, and the sentence reads in one
-              glance.
+            <h2>use color for emphasis</h2>
+            <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
+              <span class="q-gloss">same query — now the answer is pointed at</span>
+            </div>
+            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
+              Same bars, now colored by site with Morris in orange. The sign
+              is already carried by which side of zero a bar sits on, so
+              color is free to spend on emphasis instead of encoding.
             </p>
+            <pre class="viz-code compact">chart(
+  barley,
+  <span class="cut-highlight">color=<span class="viz-op">palette</span>({"Morris": "#e08214"}),  # every other site gray</span>
+)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-transform">derive</span>(delta),
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="variety", dir="x"),
+  )
+  .<span class="viz-mark">mark</span>(<span class="cut-highlight"><span class="viz-mark">rect</span>(h="delta", fill="site")</span>)</pre>
+            <div
+              id="chart-viz-barley-delta-bars-highlight"
+              class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
+            ></div>
             <aside class="notes">
-              Last edit: the site spread and the variety spread — nesting,
-              one inside the other — cross into a `table`, so neither
-              quantifier is privileged over the other anymore. And the
-              delta, which was a bar's height a slide ago, becomes a rect's
-              fill instead. That's the payoff of the whole arc: `rect` was
-              the mark on the bars slide and it's still the mark here — only
-              the channel it's bound to changed, from `h` to `fill`. One
-              orange row (Morris) in an otherwise blue matrix; a couple of
-              cells buck their row's sign without being faint about it —
-              Grand Rapids/Velvet rose +9.2 bushels/acre, University
-              Farm/No. 475 rose a more moderate +5.3 — real data, not a
-              chart bug, they just aren't uniform the way Morris's whole row
-              is. Own the gap between this spec and the real code here:
-              gofish-graphics's `gradient()` scale always spans the field's
-              actual min/max, so it can't be recentered at 0 for an
-              asymmetric spread of deltas — the real chart hand-builds the
-              diverging scale with chroma and bakes it into a precomputed
-              `deltaColor` hex field instead of a live `fill="delta"`
-              binding. The bars slide has its own precomputed `barTop`/
-              `barHeight` fields because `rect`'s `h` doesn't grow a bar
-              upward from a zero baseline for a negative value, and the
-              slope/anchored slides route a composite grouping key through
-              an internal render node (`r.directNode.datum[0]`) because a
-              fused relational mark doesn't inherit the flow's own grouping.
-              These are filed as gofish#752, #765, #768, #769, #770, #772,
-              #773 — real, open, and worth fixing, which is exactly why the
-              slide shows the spec we're fixing GoFish to deserve, not the
-              one it needs today.
+              Identical to the previous delta-bars slide, but the bars are
+              now filled by site through a Morris-orange palette; everything
+              else goes gray. This is deliberately late in the arc: the sign
+              question was already answered structurally (bar direction from
+              a zero baseline), so color isn't recruited to encode sign — it
+              only has to say "look here." That's the whole point of moving
+              color to this slide instead of the slope chart: on the slope
+              panels color would have had to do two jobs (which lines are
+              which site, and which site to look at) where here it only has
+              one. Own it honestly on stage: GoFish has no `emphasize()`
+              primitive yet. What's on screen is a hand-written conditional
+              in the render function (`highlight ? palette(...) : the
+              default color scale`), not a first-class operator — filed as
+              gofish#641, and worth fixing precisely because "highlight one
+              category, gray out the rest" is common enough to deserve its
+              own name instead of a per-chart if/else.
             </aside>
           </section>
 
-          <!-- Slope vs heatmap: metaphor vs pop-out -->
+          <!-- Labels/annotations: say the takeaway out loud (now on the delta bars) -->
           <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>two ways to say the same thing</h2>
-            <p
-              class="viz-step-copy"
-              style="margin: 0 0 0.2rem; font-size: 0.6em"
-            >
-              slope panels: up means more
-            </p>
+            <h2>annotations carry the takeaway</h2>
+            <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
+              <span class="q-gloss">same query — now stated in words too</span>
+            </div>
             <div
-              id="chart-viz-barley-slope-cmp"
+              id="chart-viz-barley-delta-bars-annotated"
               class="chart-container viz-gofish-chart"
+              style="height: 312px; min-height: 312px"
             ></div>
-            <p
-              class="viz-step-copy"
-              style="margin: 0.4rem 0 0.2rem; font-size: 0.6em"
-            >
-              Δ heatmap: color makes the sign pop
-            </p>
-            <div
-              id="chart-viz-barley-delta-cmp"
-              class="chart-container viz-gofish-chart"
-            ></div>
-            <p class="viz-step-copy" style="font-size: 0.58em">
-              The heatmap makes the exception jump out, but it gives up the "up
-              is more" metaphor the slope keeps. Metaphors are powerful: the
-              slope lets you read the sign without a legend.
+            <p class="viz-step-copy" style="font-size: 0.6em">
+              Color drew the eye; a label says the takeaway out loud: "Morris
+              is the only site where every variety rose. Everywhere else,
+              they fell."
             </p>
             <aside class="notes">
-              Same sentence, two encodings. The heatmap wins on pop-out (one
-              orange row) but the reader has to learn "orange = up." The slope
-              panels carry up-is-more for free. Neither is strictly better; it
-              depends which reading you want cheap.
+              The last step of explanatory polish: annotate. If the sentence
+              is the point, write the sentence on the chart — don't leave the
+              reader to reconstruct it from a color cue alone. Same delta
+              bars, same Morris-orange highlight — color already made
+              Morris's bars pop; the callout states the conclusion directly
+              instead of leaving the reader to scan six site groups of signed
+              bars. Morris sits third of six site groups, so the callout has
+              room in the upper area of the chart without covering any bars.
+              Exploratory charts help you find the story; explanatory charts
+              tell it.
             </aside>
           </section>
 

@@ -756,24 +756,24 @@
             <h2><code>stack()</code></h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
-                <span class="q-line"><span class="q-val">read</span> <span class="q-hole" style="white-space: nowrap">⟨total <em class="q-field">yield</em> across <em class="q-field">sites</em>⟩</span> for each <em class="q-field">variety</em> × <em class="q-field">year</em></span>
-                <span class="q-gloss">a cheaper query than the Δ one — worth trying first</span>
+                <span class="q-line"><span class="q-val">find</span> <span class="q-hole" style="white-space: nowrap">⟨which <em class="q-field">variety</em> drove the change⟩</span> at each <em class="q-field">site</em></span>
+                <span class="q-gloss">one variety, or all of them?</span>
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>(by="variety", dir="x"),
+    <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">stack</span>("site", dir="y", size="yield")
+    <span class="viz-op">stack</span>("variety", dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>(w=8, fill="site")
+    <span class="viz-mark">rect</span>(w=8, fill="variety")
   )</pre>
               <p class="viz-step-copy">
-                The first thing to try: totals and the rough site mix become
-                cheap reads. But the Δ query stays expensive — segments sit
-                on shifting baselines. Velvet at Grand Rapids rose
-                <strong>+9.2 bu/acre</strong>, the largest rise outside
-                Morris, and you can barely see it move.
+                Opening each site's bar by variety shows that the
+                <strong>total</strong> moved — bar heights differ between the
+                two years. Whether the <em>mix</em> changed is still an
+                expensive read: each variety's segment sits on a shifting
+                baseline set by everything stacked below it.
               </p>
             </div>
             <div
@@ -781,20 +781,157 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <aside class="notes">
-              Stack is a layout operator, green. It's the natural first move
-              on the Δ query, and it partially pays off: total yield per
-              variety and the rough site mix both become cheap reads. But it
-              prices per-part change out. Once a segment sits above others in
-              the stack, its two endpoints (1931 stack, 1932 stack) share a
+              Stack is a layout operator, green. Spreading by site and year
+              first, then stacking variety within each site-year bar, answers
+              the totals question for free: bar heights visibly differ
+              between 1931 and 1932 at every site. But it prices the mix
+              question out. Once a variety's segment sits above others in the
+              stack, its two endpoints (1931 stack, 1932 stack) share a
               shifting baseline set by every segment below it, so the eye
-              can't isolate its own Δ. Concretely: Velvet at Grand Rapids
-              rose +9.2 bushels/acre, the biggest jump anywhere outside
-              Morris — bigger than Morris's own Manchuria (+6.9) or Glabron
-              (+6.4) — and it's invisible here. That failure is the point:
-              it's what sends us hunting for a structure built for
-              comparing change directly, rather than reading it off two
-              stacked totals. Slope panels and the Δ heatmap, later in the
-              glyphs section, are that structure.
+              can't isolate whether that one variety's share changed or the
+              whole stack just slid. Concretely: Velvet at Grand Rapids rose
+              +9.2 bushels/acre, the biggest jump anywhere outside Morris —
+              bigger than Morris's own Manchuria (+6.9) or Glabron (+6.4) —
+              and its segment is nearly impossible to isolate here, buried
+              mid-stack on a baseline that itself moved. That failure is the
+              point: it's what sends us to normalize next, throwing the total
+              away on purpose to make the mix question cheap.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>did the mix change?</h2>
+            <div>
+              <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole" style="white-space: nowrap">⟨each <em class="q-field">variety</em>'s share of <em class="q-field">yield</em>⟩</span> between 1931 and 1932, at each <em class="q-field">site</em></span>
+                <span class="q-gloss">bands line up top to bottom — a shape match</span>
+              </div>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="cut-highlight"><span class="viz-op">stack</span>("variety", dir="y", size=<span class="viz-op">field</span>("yield").<span class="viz-transform">normalize</span>())</span>
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>(w=8, fill="variety")
+  )</pre>
+              <p class="viz-step-copy">
+                One line changed: <code>normalize()</code>. Every bar is now
+                the same height, so the total is deliberately thrown away and
+                only composition is left.
+              </p>
+            </div>
+            <div
+              id="chart-viz-stacked-share"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              A negative result, and a real finding: the bands line up across
+              each site's year pair — the variety mix held. It isn't one big
+              variety swinging the total; it's all of them, moving together,
+              roughly in proportion. Only the total moved. That's exactly
+              what licenses the simplification that follows — if the mix is
+              stable, the total (or really, its site-by-site delta) is the
+              whole story, and we can stop carrying per-variety segments at
+              all. The next beat abstracts down to a single number per site.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>same question, as pies</h2>
+            <div>
+              <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole" style="white-space: nowrap">⟨each <em class="q-field">variety</em>'s share of <em class="q-field">yield</em>⟩</span> between 1931 and 1932, at each <em class="q-field">site</em></span>
+                <span class="q-gloss">same query — now answer it wedge to wedge</span>
+              </div>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="y"),
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="cut-highlight">chart(coord=clock())</span>
+      .<span class="viz-op">flow</span>(<span class="viz-op">stack</span>("variety", dir="x", size="yield"))
+      .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="variety"))
+  )</pre>
+              <p class="viz-step-copy">
+                Still one line changed, and still the same normalized stack —
+                only the coordinate system is different. Length became angle.
+                The mix comparison that was a glance at the normalized bars
+                (do the band boundaries line up?) is now a wedge-to-wedge
+                comparison of angles, stacked one pie on top of another.
+              </p>
+            </div>
+            <div
+              id="chart-viz-variety-pies"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              This is the exact same data, the exact same normalized stack,
+              the exact same query — "did each variety's share change between
+              1931 and 1932, at each site?" — with one thing swapped: length
+              for angle. Same point as the length/angle pair earlier in the
+              deck (pie vs. bar with five similar wedges): fine-grained
+              comparison gets much harder. In the bar version, the mix
+              question was answered by whether two horizontal band edges
+              lined up — a single, cheap alignment judgment, repeated across
+              six sites. Here, answering it means comparing a wedge's angle
+              (or area) to the wedge directly below it, pie by pie, site by
+              site — no shared baseline, no edge to align, just two shapes
+              you have to hold in your head and compare. Nothing is wrong
+              with the pies; they're honest and correctly normalized. They
+              just price the same query much higher. That's the deck's whole
+              thesis in miniature: the encoding should be chosen to make the
+              query cheap, and here's a case where the "same" chart, one
+              option changed, makes it dearer instead.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>same pies, as a table</h2>
+            <div>
+              <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole" style="white-space: nowrap">⟨each <em class="q-field">variety</em>'s share of <em class="q-field">yield</em>⟩</span> between 1931 and 1932, at each <em class="q-field">site</em></span>
+                <span class="q-gloss">same wedges — one grid operator instead of two nested spreads</span>
+              </div>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="cut-highlight"><span class="viz-op">table</span>(by="site", by="year")</span>,
+  )
+  .<span class="viz-mark">mark</span>(
+    chart(coord=clock())
+      .<span class="viz-op">flow</span>(<span class="viz-op">stack</span>("variety", dir="x", size="yield"))
+      .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="variety"))
+  )</pre>
+              <p class="viz-step-copy">
+                The two nested <code>spread</code>s become one
+                <code>table</code>: rows for year, columns for site. Same
+                pies, same query — only the operator that lays out the grid
+                changed.
+              </p>
+            </div>
+            <div
+              id="chart-viz-variety-pies-table"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              This slide and the one before it are two layouts of the exact
+              same pies — same data, same normalized stack, same wedge-to-
+              wedge comparison. The only thing under test here is the layout
+              operator: two nested spreads vs. a single table() call. The
+              substantive question for the audience is unchanged from the
+              last slide — does angle make "did the mix change between these
+              two rows?" harder than the aligned bands of the normalized bar
+              chart did. The deck will likely keep only one of these two
+              pie slides going forward. Worth knowing for the Q&A but not
+              worth putting on the slide: table() did not turn out to be the
+              free fix it looked like going in — nesting a chart-as-glyph pie
+              inside it mislabels both axes (row ticks float above their
+              row, column ticks bunch up instead of centering over their
+              column), the same class of bug the spread version needed
+              realignYearPieTicks for, just on both axes instead of one. This
+              slide reuses that hack plus a new x-axis counterpart
+              (realignSitePieTicks) rather than hiding the bug.
             </aside>
           </section>
 
