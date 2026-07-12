@@ -469,16 +469,18 @@ chart(titanic)
           <!-- Escalation beat: keep composing and the chart menu runs out.
                Only structures the audience has NOT already seen — the mosaic
                and bottle tiles were cut once they starred in the move slides.
-               Live renders (sankey, rose) + gotree SVGs (sunburst,
-               orthogonal tree). Polar coverage: rose + sunburst. -->
+               Sankey is a live render; sunburst, orthogonal tree are gotree
+               SVGs; the pulley diagram (formerly the dedicated horizon slide,
+               now folded in here) is a static PNG export. Polar coverage:
+               sunburst only, since the rose tile was replaced. -->
           <section data-background-color="#f7f2e8">
             <h2>the same moves, stranger structures</h2>
             <div
               style="
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-                gap: 0.4rem 0.8rem;
-                margin-top: 0.6rem;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.3rem 0.8rem;
+                margin-top: 0.4rem;
                 justify-items: center;
                 align-items: center;
               "
@@ -487,53 +489,33 @@ chart(titanic)
                 <div
                   id="chart-viz-ex-sankey"
                   class="chart-container viz-ex-tile"
-                  style="zoom: 0.6"
+                  style="zoom: 0.55"
                 ></div>
-                <p class="viz-ex-caption">
-                  sankey tree
-                  <span class="fragment viz-ex-ops" data-fragment-index="1"
-                    ><code>spread + stack + ribbon</code></span
-                  >
-                </p>
+                <p class="viz-ex-caption">sankey tree</p>
               </div>
               <div style="text-align: center">
-                <div
-                  id="chart-viz-ex-rose"
-                  class="chart-container viz-ex-tile"
-                  style="zoom: 0.68"
-                ></div>
-                <p class="viz-ex-caption">
-                  rose
-                  <span class="fragment viz-ex-ops" data-fragment-index="1"
-                    ><code>stack, in clock() coords</code></span
-                  >
-                </p>
+                <img
+                  src="gallery-images/pulley-diagram.png"
+                  alt="Pulley diagram of the Larkin and Simon problem: pulleys A, B, C, rope segments, weights W1 and W2, rendered with GoFish"
+                  style="max-height: 180px; max-width: 100%"
+                />
+                <p class="viz-ex-caption">pulley diagram</p>
               </div>
               <div style="text-align: center">
                 <img
                   src="gallery-images/gotree-sunburst.svg"
                   alt="Sunburst chart rendered with gofish-gotree"
-                  style="max-height: 200px; max-width: 100%"
+                  style="max-height: 180px; max-width: 100%"
                 />
-                <p class="viz-ex-caption">
-                  sunburst
-                  <span class="fragment viz-ex-ops" data-fragment-index="1"
-                    ><code>tree(...), in polar() coords</code></span
-                  >
-                </p>
+                <p class="viz-ex-caption">sunburst</p>
               </div>
               <div style="text-align: center">
                 <img
                   src="gallery-images/gotree-orthogonal.svg"
                   alt="Orthogonal node-link tree rendered with gofish-gotree"
-                  style="max-height: 200px; max-width: 100%"
+                  style="max-height: 180px; max-width: 100%"
                 />
-                <p class="viz-ex-caption">
-                  orthogonal tree
-                  <span class="fragment viz-ex-ops" data-fragment-index="1"
-                    ><code>tree(...) with elbow links</code></span
-                  >
-                </p>
+                <p class="viz-ex-caption">orthogonal tree</p>
               </div>
             </div>
             <p
@@ -546,25 +528,48 @@ chart(titanic)
             <aside class="notes">
               Escalation beat. The moves the audience just learned — spread,
               stack, nest, restyle — don't stop where the chart menu does.
-              [advance] The operator captions are the point: the sankey is
-              spreads and stacks with ribbons connecting named tiers; the
-              rose is the stacked bar wrapped into clock coordinates — polar
-              is a coordinate change on structure we already built, not a
-              new chart family. The sunburst and the orthogonal tree come
-              from GoTree, a tree-layout grammar embedded in GoFish. None of
-              these four has a slot in the dropdown; all four are the same
-              composition, carried further.
+              Walk the tiles and say the operators out loud, since they're
+              not printed on the slide anymore: the sankey is spreads and
+              stacks with ribbons connecting named tiers. The sunburst and
+              the orthogonal tree come from GoTree, a tree-layout grammar
+              embedded in GoFish. And the pulley diagram is not clip art:
+              it's the GoFish docs-gallery export of the Bluefish pulley
+              example, drawn by the same layers, alignment, and constraints
+              as everything else in this talk. It reproduces Figure 1 of
+              Larkin and Simon 1987, "Why a Diagram Is (Sometimes) Worth Ten
+              Thousand Words" — their claim is this talk's thesis stated for
+              diagrams in 1987: a diagram earns its keep by making the right
+              inferences cheap. None of these four has a slot in a chart
+              dropdown — they're all the same composition carried further.
+              It's the escalation beat taken to its limit — the sankey,
+              sunburst, and tree at least have chart names; the pulley has
+              none. [advance] Keep composing the same moves and you don't
+              just run out of chart names, you leave charts behind entirely.
+              The structure language already reaches diagrams; the query
+              language for them is open research — a diagram's queries are
+              richer than for-each and share, things like incidence,
+              attachment, which way does it turn, and that's where the
+              research goes next. Close the loop: the strange Science
+              figures and systems diagrams from the opening are in reach of
+              the same moves. The dedicated horizon slide — with the full
+              Larkin and Simon problem text and the speculative look-up,
+              follow, and compare chips — is parked in a comment just below
+              this one; restore it if there's time.
             </aside>
           </section>
 
-          <!-- HORIZON SLIDE — cut this one first if time runs short.
+          <!--
+          PARKED — folded into "the same moves, stranger structures" above; restore if there's time.
+
+          HORIZON SLIDE — cut this one first if time runs short.
                gallery-images/pulley-diagram.png is the GoFish docs-gallery export of
                stories/bluefish/Pulley.stories.tsx — a real constraint-based GoFish
                render (port of Bluefish's pulley example), not a mockup. It reproduces
                Figure 1 of Larkin & Simon 1987, whose problem text appears at left.
                Framing: a horizon gesture, not a capability claim — the structure
                language already reaches diagrams; the query language for them is
-               open research (hence the dashed speculative chip). -->
+               open research (hence the dashed speculative chip).
+
           <section data-background-color="#f7f2e8">
             <h2>diagrams are visual data structures too</h2>
             <div class="two-col" style="align-items: center; margin-top: 0.5rem">
@@ -620,6 +625,7 @@ chart(titanic)
               diagrams from the opening are in reach of the same moves.
             </aside>
           </section>
+          -->
 
           <!-- Why "more": other grammars are subsets / neighbors -->
           <section class="scipy-statement" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: cut as unnecessary here -->
