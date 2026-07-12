@@ -865,7 +865,62 @@
               off a chart we already built, write the query down first — for each
               variety, for each site, how did yield change — and go hunting for
               the structure that makes it cheap. The rest of this section is that
-              hunt.
+              hunt — and the obvious first stop is the operator that just handed
+              us site and year: spread again.
+            </aside>
+          </section>
+
+          <section class="split viz-step" data-background-color="#f7f2e8">
+            <h2>just spread again?</h2>
+            <div>
+              <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
+                <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
+                <span class="q-line"><span class="q-val">compare</span> <span class="q-hole" style="white-space: nowrap">⟨each <em class="q-field">variety</em>'s <em class="q-field">yield</em>⟩</span> across <em class="q-field">years</em></span>
+              </div>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="viz-op">spread</span>(by="variety", dir="x")
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>(h="yield", fill="variety")
+  )</pre>
+              <p class="viz-step-copy">
+                The obvious move: nest one more <code>spread</code>. Every
+                variety gets its own bar, so each variety's yield is right
+                there to read. But 120 bars land in one row — each site's
+                group is now ten bars wide — and the total per site-year is
+                gone entirely: nothing sums the varieties back up.
+              </p>
+            </div>
+            <div
+              id="chart-viz-spread-variety"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              This is the naive move, and it's the honest one to try first —
+              we wrote the query down, we need per-variety yield, so just
+              spread by variety too. And it half-works: every variety does
+              get its own bar, so a single variety's yield is directly
+              readable, which is more than the stack on the next slide will
+              give us. But it fails in two ways. First, 120 bars in one row:
+              each site-year group is ten bars wide, so comparing one
+              variety across its two years means jumping over nine
+              neighbours, and comparing across sites is worse — the thing we
+              asked for is technically on screen and practically unreadable.
+              Second, and this is the real point: spreading throws the total
+              away. There is nothing that sums a site-year's varieties back
+              into one quantity, so the question that started this whole
+              beat — the totals rose at Morris and fell everywhere else, is
+              that one variety or all of them? — can't even be asked of this
+              chart. We lost the thing we were trying to explain. That is
+              exactly what <code>stack</code> buys us: it's the operator
+              that puts the parts back into a whole. The next slide swaps
+              this third <code>spread</code> for a <code>stack</code> and
+              the totals come back. The chip hasn't changed — same query,
+              third structure. That's the beat: hold the question fixed and
+              let the structure move.
             </aside>
           </section>
 
@@ -886,7 +941,9 @@
     <span class="viz-mark">rect</span>(w=8, fill="variety")
   )</pre>
               <p class="viz-step-copy">
-                Opening each site's bar by variety shows that the
+                Spreading a third time lost the total. Stacking variety
+                instead of spreading it puts the parts back into a whole:
+                opening each site's bar by variety shows that the
                 <strong>total</strong> moved — bar heights differ between the
                 two years. Whether the <em>mix</em> changed is still an
                 expensive read: each variety's segment sits on a shifting
@@ -901,7 +958,8 @@
               Stack is a layout operator, green. Spreading by site and year
               first, then stacking variety within each site-year bar, answers
               the totals question for free: bar heights visibly differ
-              between 1931 and 1932 at every site. But it prices the mix
+              between 1931 and 1932 at every site — the total that the third
+              `spread` just threw away is back. But it prices the mix
               question out. Once a variety's segment sits above others in the
               stack, its two endpoints (1931 stack, 1932 stack) share a
               shifting baseline set by every segment below it, so the eye

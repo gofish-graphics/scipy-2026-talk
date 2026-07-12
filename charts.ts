@@ -981,6 +981,44 @@ function renderVizVarietyShare(id = "chart-viz-stacked-share") {
   renderVizVarietyStack(id, { normalize: true });
 }
 
+// The naive move that sits BEFORE `stack()` in the beat: instead of stacking
+// variety, just nest a third `spread`, same as the other two. It's the
+// obvious first thing to try — the query wants "each variety's yield," and
+// spread is the operator that just handed us site and year, so spread again.
+// Watching it fail (120 bars in one row, no way to see the site-year total)
+// is what motivates `stack` on the next slide.
+//
+// Width budget for the 470px VIZ_W canvas: 6 sites × 2 years × 10 varieties
+// = 120 leaf bars, and unlike `renderVizVarietyStack` (which fixes the bar's
+// x-extent with an explicit `w`, independent of layout), this mark leaves
+// `w` unset, so each bar's width IS the innermost spread's allocated cell —
+// the spacings below directly divide up the canvas. Budgeting off a
+// conservative ~420px of usable plot width (470 minus axis/legend chrome):
+//   site cell   = (420 − 5×10) / 6   ≈ 61.7px   (5 gaps of 10 between 6 sites)
+//   year cell   = (61.7 − 1×3) / 2   ≈ 29.3px   (1 gap of 3 between the pair)
+//   variety/bar = (29.3 − 9×0) / 10  ≈ 2.9px    (varieties touch, spacing 0)
+// That keeps the nesting readable — site gap (10) clearly > year gap (3)
+// clearly > variety gap (0) — while landing bar width in the 2-3px range the
+// brief calls for. The ratios hold even if the real plot width is smaller
+// (e.g. at 250px usable, bars still land ~1.5px, just thinner) because the
+// gaps are fixed pixel amounts, not proportional. `axes: true` stays on:
+// only the 6 site ticks actually render on the x axis (year/variety don't
+// get their own tick labels at this nesting depth), so the x axis is still
+// legible even though the bars beneath it aren't — and the y axis is what
+// carries the value this slide is about to lose.
+function renderVizVarietySpread(id = "chart-viz-spread-variety") {
+  const el = getContainer(id);
+  if (!el || el.children.length > 0) return;
+  Chart(barley, vizChartOptions)
+    .flow(
+      spread("site", { dir: "x", spacing: 10 }),
+      spread("year", { dir: "x", spacing: 3 }),
+      spread("variety", { dir: "x", spacing: 0 })
+    )
+    .mark(rect({ h: "yield", fill: "variety" }))
+    .render(el, { w: VIZ_W, h: VIZ_H, axes: true, legend: true });
+}
+
 // The pie beat: literally `renderVizVarietyStack`'s normalized flow with ONE
 // option changed, `coord: clock()` — same data, same query, same variety
 // palette. `table("site", "year")` lays out a 6-site-wide x 2-year-tall grid
@@ -3001,6 +3039,7 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-site-year": () => renderVizSiteYear(),
   "chart-viz-site-variety-mini": renderVizSiteVarietyMini,
   "chart-viz-variety-site-mini": renderVizVarietySiteMini,
+  "chart-viz-spread-variety": () => renderVizVarietySpread(),
   "chart-viz-stacked": () => renderVizVarietyStackRaw(),
   "chart-viz-stacked-share": () => renderVizVarietyShare(),
   "chart-viz-variety-pies-table": () => renderVizVarietyPiesTable(),
