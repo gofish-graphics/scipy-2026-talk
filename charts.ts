@@ -2979,10 +2979,9 @@ export function renderCharts() {
   renderStackedBarBase();
   renderTitanicMosaic("chart-q-mosaic", 300, 250);
   renderMosaicSingleStackBase();
-  renderBottleChart("chart-q-bottle", 380, 210, false);
-  renderBottleChart("chart-q-bottle-bare", 380, 210, false);
-  renderBottleChart("chart-q-bottle-annotated");
-  renderBottleBarBase();
+  renderBottleChart("chart-q-bottle", 300, 190, false);
+  renderBottleChart("chart-q-bottle-annotated", 300, 190);
+  renderBottleBarBase("chart-q-bottle-base", 190, 190);
   renderEnergyRibbonBase();
   renderEnergyRibbonMid();
   renderEnergyRibbon();
@@ -3379,11 +3378,10 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-q-waffle-base": () => renderStackedBarBase(),
   "chart-q-mosaic": () => renderTitanicMosaic("chart-q-mosaic", 300, 250),
   "chart-q-mosaic-base": () => renderMosaicSingleStackBase(),
-  "chart-q-bottle": () => renderBottleChart("chart-q-bottle", 380, 210, false),
-  "chart-q-bottle-bare": () =>
-    renderBottleChart("chart-q-bottle-bare", 380, 210, false),
-  "chart-q-bottle-annotated": () => renderBottleChart("chart-q-bottle-annotated"),
-  "chart-q-bottle-base": () => renderBottleBarBase(),
+  "chart-q-bottle": () => renderBottleChart("chart-q-bottle", 300, 190, false),
+  "chart-q-bottle-annotated": () =>
+    renderBottleChart("chart-q-bottle-annotated", 300, 190),
+  "chart-q-bottle-base": () => renderBottleBarBase("chart-q-bottle-base", 190, 190),
   "chart-move-ribbon-base": () => renderEnergyRibbonBase(),
   "chart-move-ribbon-mid": () => renderEnergyRibbonMid(),
   "chart-move-ribbon": () => renderEnergyRibbon(),

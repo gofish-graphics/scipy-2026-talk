@@ -392,8 +392,8 @@ area = chart(energyMix)
             </aside>
           </section>
 
-          <!-- Query gallery, part 2: the one pair where the query DOESN'T
-               change, a pure style move. Same chip both sides on purpose. -->
+          <!-- Query gallery, part 2: the query stays fixed while the mark gains
+               a pictorial form and then an annotation layer. -->
           <section data-background-color="#f7f2e8">
             <h2>a move that doesn't</h2>
             <div
@@ -401,127 +401,72 @@ area = chart(energyMix)
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 2.2rem;
-                margin-top: 1rem;
+                gap: 1.25rem;
+                margin-top: 0.65rem;
               "
             >
               <div style="text-align: center">
                 <div
                   id="chart-q-bottle-base"
                   class="chart-container viz-ex-tile"
-                  style="zoom: 0.7"
+                  style="zoom: 0.62"
                   aria-label="Four ordinary normalized bars, one per bottle, filled versus empty"
                 ></div>
                 <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
                   ordinary normalized bars
                 </p>
-                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.2rem">
-                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨fill shares⟩</span> across bottles</span>
-                </div>
               </div>
-              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div style="font-size: 1.35em; color: #4a7fb5">→</div>
               <div style="text-align: center">
                 <div
                   id="chart-q-bottle"
                   class="chart-container viz-ex-tile"
-                  style="zoom: 0.7"
+                  style="zoom: 0.62"
                   aria-label="Bottle pictorial: the same fill shares drawn as bottle fill levels"
                 ></div>
                 <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
-                  how full is each bottle?
-                </p>
-                <div class="viz-query" style="font-size: 0.5em; margin-top: 0.2rem">
-                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨fill shares⟩</span> across bottles</span>
-                </div>
-              </div>
-            </div>
-            <div class="move-code-pair">
-              <div>
-                <p class="move-code-label">before</p>
-                <pre class="viz-code compact">chart(bottleData)
-  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x"))
-  .<span class="viz-mark">mark</span>(
-    <span class="viz-op">layer</span>([
-      <span class="viz-mark">rect</span>(h=datum(100), fill="gray"),
-      <span class="viz-mark">rect</span>(h="amount", fill="green")
-    ])
-  )</pre>
-              </div>
-              <div>
-                <p class="move-code-label">after</p>
-                <pre class="viz-code compact">chart(bottleData)
-  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x"))
-  .<span class="viz-mark">mark</span>(
-    <span class="cut-line cut-highlight"><span class="viz-mark">paint</span>(blend="color", over=[</span>
-      <span class="cut-line cut-highlight"><span class="viz-mark">image</span>("bottle.png"),</span>
-      <span class="cut-line cut-highlight"><span class="viz-mark">rect</span>(h="amount", fill="green")</span>
-    <span class="cut-line cut-highlight">])</span>
-  )</pre>
-              </div>
-            </div>
-            <p class="viz-step-copy" style="text-align: center; margin-top: 0.9rem">
-              same query. different voice.
-            </p>
-            <aside class="notes">
-              Not every move is structural. The bottles are a
-              paint-composited pictorial dressed over four ordinary
-              normalized bars, one per bottle, same "share of full" chip on
-              both sides, because the query hasn't moved at all. What
-              changed is voice, not structure: a bottle photo standing in for
-              a rectangle. Useful, memorable even, but it is a style choice
-              layered on the same chart, not a new question the reader can
-              ask.
-            </aside>
-          </section>
-
-          <section data-background-color="#f7f2e8">
-            <h2>annotation is another layer</h2>
-            <div
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 2.7rem;
-                margin-top: 1.15rem;
-              "
-            >
-              <div style="text-align: center">
-                <div
-                  id="chart-q-bottle-bare"
-                  class="chart-container viz-ex-tile"
-                  style="zoom: 0.7"
-                  aria-label="Bottle pictorial showing fill levels without annotations"
-                ></div>
-                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
-                  the pictorial mark
+                  paint the bars as bottles
                 </p>
               </div>
-              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div style="font-size: 1.35em; color: #4a7fb5">→</div>
               <div style="text-align: center">
                 <div
                   id="chart-q-bottle-annotated"
                   class="chart-container viz-ex-tile"
-                  style="zoom: 0.7"
+                  style="zoom: 0.62"
                   aria-label="Bottle pictorial with fill lines and percentage labels"
                 ></div>
                 <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
-                  plus a rule and labels
+                  layer on labels
                 </p>
               </div>
             </div>
-            <pre class="viz-code compact" style="width: 72%; margin: 0.75rem auto 0">.<span class="viz-mark">mark</span>(
-  <span class="viz-op">layer</span>([
-    bottle,
-    <span class="diff-add"><span class="viz-mark">rect</span>(h=1, y="amount").name("line"),</span>
-    <span class="diff-add"><span class="viz-mark">text</span>("{amount}%").name("label"),</span>
-  ]).<span class="viz-op">constrain</span>(...)
-)</pre>
+            <pre class="viz-code compact" style="width: 83%; margin: 0.55rem auto 0; font-size: 0.43em !important"><span class="viz-op">chart</span>(bottleData, axes=False)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x", spacing=20))
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-op">layer</span>([
+      <span class="viz-op">paint</span>([
+        <span class="viz-mark">image</span>(href=bottlePng, h=<span class="viz-transform">v</span>(100)),
+        <span class="viz-mark">rect</span>(h="amount", w=175, fill="green"),
+      ], blendMode="color").name("bottle"),
+      <span class="viz-mark">rect</span>(h=1, y="amount", fill="gray").name("line"),
+      <span class="viz-mark">text</span>(text="{amount}%", fill="gray").name("label"),
+    ]).<span class="viz-op">constrain</span>(lambda bottle, line, label: [
+      <span class="viz-op">Constraint</span>.<span class="viz-op">align</span>([bottle, line], x="start"),
+      <span class="viz-op">Constraint</span>.<span class="viz-op">distribute</span>([line, label], dir="y", spacing=0),
+      <span class="viz-op">Constraint</span>.<span class="viz-op">align</span>([label, line], x="end"),
+    ])
+  )</pre>
+            <p class="viz-step-copy" style="text-align: center; margin-top: 0.45rem">
+              same query. different voice. clearer annotation.
+            </p>
             <aside class="notes">
-              Now we add the rule and percentage labels. This is genuinely
-              more structure than the bare pictorial, but it is annotation
-              structure: a layer with constraints that positions a label at
-              each fill level. It sharpens reading without changing the
-              underlying comparison.
+              Hold the query fixed: compare the fill shares across bottles.
+              First, turn the normalized bars into bottle pictorials with
+              paint. Then add the fill rule and percentage labels as another
+              layer, constrained to their fill level. The richer presentation
+              makes the values easier to read, but it does not change what the
+              reader can ask of the data.
             </aside>
           </section>
 
