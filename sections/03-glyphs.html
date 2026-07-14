@@ -184,7 +184,7 @@ chart(barley_scatter_by_year(1931)).flow(
               Each site panel scatters every variety's two years as points,
               the connecting lines come next.
             </p>
-            <pre class="viz-code compact">chart(barleySeries)
+            <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
@@ -200,9 +200,8 @@ chart(barley_scatter_by_year(1931)).flow(
               Same spread/spread skeleton as the slope chart, with its first
               actual mark: scatter makes one placed point per variety in each
               site-year cell, and circle draws it. The series key combines
-              site and variety, ready for the next slide: line will connect
-              exactly those two points, not same-named varieties across
-              panels.
+              site-year cell. The next slide connects each variety along the
+              year axis.
             </aside>
           </section>
 
@@ -216,13 +215,13 @@ chart(barley_scatter_by_year(1931)).flow(
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               "Morris is the only site where every variety increased."
             </p>
-            <pre class="viz-code compact">chart(barleySeries)
+            <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
     <span class="viz-op">scatter</span>(by="variety", y="yield"),
   )
-  <span class="cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(by="series", fill="variety"))</span></pre>
+  <span class="cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(by="variety", along="year", fill="variety"))</span></pre>
             <div
               id="chart-viz-barley-slope"
               class="chart-container viz-gofish-chart"

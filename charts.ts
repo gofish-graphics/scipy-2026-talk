@@ -149,11 +149,12 @@ type BarleyRow = {
 };
 
 const barley = barleyRaw as BarleyRow[];
+// Temporary workaround for gofish-graphics#794: the current `line` mark does
+// not inherit the enclosing site facet when partitioned by variety alone.
 const barleySeries = barley.map((row) => ({
   ...row,
   series: `${row.site}|${row.variety}`,
 }));
-
 // Anonymized aggregate for the Boger/Franconeri opening ONLY, so the audience's
 // first read of the grouping swap isn't primed by recognizing the barley
 // dataset. Same numbers as barley (total yield per site per year), just
@@ -1312,9 +1313,9 @@ function renderVizBarleySlopePoints(
 }
 
 // One line per variety per site, connecting its 1931 -> 1932 yield. The
-// relational line consumes the placed points directly. Its key must include
-// both site and variety: a variety-only key would join identically named
-// varieties across all six panels into a single zigzag.
+// Temporary rendering workaround for gofish-graphics#794: use an explicit
+// composite key until `line(by="variety", along="year")` respects the site
+// facet. The audience-facing code shows the intended form.
 //
 // This flow (spread, spread, scatter) is NOT hit by gofish#770 (the
 // spread+scatter panel-collapse bug documented below on the delta-dots
@@ -1584,7 +1585,6 @@ const barleyAnchoredSeries = barleyAnchored.map((row) => ({
   ...row,
   series: `${row.site}|${row.variety}`,
 }));
-
 function renderVizBarleySlopeAnchored(
   id = "chart-viz-barley-slope-anchored",
   w = SLOPE_W,
