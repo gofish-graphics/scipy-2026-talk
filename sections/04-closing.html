@@ -155,6 +155,14 @@
     <span class="viz-op">spread</span>(by="lake", dir="x"),
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">waffle</span>(count="count", fill="species"))</pre>
+                <div class="waffle-mark-definition">
+                  <p class="move-code-label">waffle mark</p>
+                  <pre class="viz-code compact"><span class="viz-op">def</span> <span class="viz-mark">waffle</span>(count, fill, columns=5):
+  <span class="viz-op">return</span> <span class="viz-op">flow</span>(
+    <span class="viz-op">repeat</span>(count), <span class="viz-op">chunk</span>(columns),
+    <span class="viz-op">spread</span>(dir="y", reverse=True), <span class="viz-op">spread</span>(dir="x"),
+  ).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, h=8, fill=fill))</pre>
+                </div>
               </div>
             </div>
             <aside class="notes">

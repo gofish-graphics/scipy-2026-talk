@@ -1811,3 +1811,11 @@
 .move-code-builder .move-code-label {
   margin-bottom: 0.16rem;
 }
+
+.waffle-mark-definition {
+  margin-top: 0.35rem;
+}
+
+.waffle-mark-definition .viz-code.compact {
+  font-size: 0.28em !important;
+}
