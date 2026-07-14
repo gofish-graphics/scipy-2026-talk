@@ -175,7 +175,9 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <!-- ─── BRIDGE: THE SLOPE CHART'S FIRST LAYER ───────────── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8">
+          <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN: the relocated bars-versus-lines slide now establishes
+                 connection directly before the faceted slope chart. -->
             <h2>first, just the points</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
@@ -242,54 +244,52 @@ chart(barley_scatter_by_year(1931)).flow(
               stray line apiece in University Farm and Grand Rapids.
             </p>
             <aside class="notes">
-              Facets by site with the mark-as-function pattern (same idiom as
-              FacetedChart.stories.tsx): the outer spread makes six scopes,
-              and each scope's mark function draws its own little chart. The
-              connecting line reuses the exact "name it, select it, group it,
-              connect it" idiom the ribbon slide already taught, swap
-              `area` for `line`. One quantifier (site) is a scan across
-              panels; the other (variety) is a scan down each panel's ten
-              lines; the sign predicate is read off each line's slope, one
-              at a time. This is Trellis-style: Becker &amp; Cleveland's own
-              display for this dataset. It's precise on magnitude, you can
-              read off exactly how much each variety fell or rose, but the
-              reader still has to aggregate ten slope signs per panel to
-              recover the sentence. The delta-bars slides ahead trade that
-              Trellis precision for a display that lets the sign read in one
-              glance.
+              Here is connection applied to the barley question. Spread still
+              creates the six site panels and the two year positions. Scatter
+              creates one entity per variety, and line connects that variety's
+              two values. One quantifier, site, is a scan across panels. The
+              other, variety, is a scan down each panel's ten lines. The sign
+              predicate reads from each line's slope. This is Trellis-style:
+              Becker and Cleveland's own display for this dataset. It preserves
+              both absolute yields and each year-to-year trajectory, but the
+              reader still has to aggregate ten slope signs per panel to recover
+              the sentence. The delta bars ahead trade away those endpoints and
+              trajectories so every signed change can share one positional
+              baseline.
             </aside>
           </section>
 
-          <!-- ─── SECTION TITLE: CHARTS THAT ARGUE ────────────────── -->
+          <!-- ─── CHANNEL EFFECTIVENESS: ANGLE TO POSITION ────────── -->
 
           <section class="scipy-statement" data-background-color="#f7f2e8">
-            <h2>charts that argue</h2>
+            <h2>for change, position beats angle</h2>
             <p class="big-claim" style="margin-top: 1.1rem">
-              Up to now, every chart was for finding the anomaly. From here
-              on, every chart is for telling someone about it.
+              Slope gives direction immediately. But comparing how much each
+              variety changed means comparing line angles.
             </p>
             <p style="margin-top: 0.8rem; font-size: 0.6em; color: #555">
-              Same grammar, different pressure: exploratory charts reward
-              coverage; explanatory charts reward one unmissable reading.
+              Delta bars put every signed change against the same zero baseline.
+              We give up the two absolute yields and the explicit trajectory.
             </p>
             <aside class="notes">
-              Punctuation slide, keep it short, let it breathe. Everything
-              up through the last slope panels was built so WE could find
-              Morris: the six-panel Trellis layout is honest and complete,
-              but it makes the reader do the work of aggregating ten slope
-              signs per panel. Everything from here, color, the callout,
-              and the four-step simplification arc that follows, is built
-              so someone ELSE can see Morris without doing that work. Same
-              operators, same data, different design pressure: exploratory
-              charts optimize for not hiding anything; explanatory charts
-              optimize for making one reading cheap, even at the cost of
-              others.
+              Bring back channel effectiveness from the opening. For the
+              question "how much did yield change?", the slope chart asks us
+              to compare orientations while tracking many lines. Position
+              against a shared baseline is more precise. So compute one delta
+              per variety and put every delta against zero. This is a trade,
+              not a free improvement: the slope chart preserves the 1931 and
+              1932 values and shows the year-to-year trajectory. The delta bar
+              keeps only signed change. That narrower structure is exactly
+              what makes the comparison cheaper.
             </aside>
           </section>
 
           <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 1 OF 4, THE SLOPE ──── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8">
+          <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN: the faceted slope chart already establishes this spec;
+                 the channel-effectiveness slide now motivates the direct jump
+                 to delta bars. -->
             <h2>simplify your message</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
@@ -322,7 +322,9 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 2 OF 4, ANCHORED ───── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8">
+          <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
+            <!-- HIDDEN: the direct slope-to-delta transition makes this anchored
+                 slope intermediate unnecessary. -->
             <h2>anchor the comparison</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨Δ <em class="q-field">yield</em> from 1931⟩</span>, site by site</span>
@@ -359,14 +361,13 @@ chart(barley_scatter_by_year(1931)).flow(
           <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 3 OF 4, BARS ───────── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>the line has nothing left to connect</h2>
+            <h2>trade angle for position</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              One edit: <code>derive</code> collapses the year pair into a
-              single delta. The line isn't removed for taste, it becomes
-              ungrammatical.
+              <code>derive</code> collapses each year pair into one signed
+              delta. Every change now starts from the same zero baseline.
             </p>
             <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
 ><span class="cut-line">  .<span class="viz-op">flow</span>(</span
@@ -381,16 +382,16 @@ chart(barley_scatter_by_year(1931)).flow(
               style="height: 312px; min-height: 312px"
             ></div>
             <aside class="notes">
-              The key beat of the whole arc. `derive` now folds each
-              variety's two years into one delta, so the year spread has
-              nothing left to spread over, it's gone, and `variety` takes
-              its place as the inner facet. Once each (site, variety) pair is
-              down to a single value, there is no second point left for a
-              line to connect, the mark isn't swapped from `line` to `rect`
-              because bars look nicer, it's swapped because a line needs two
-              endpoints and this data only has one. The data itself took the
-              line away. A signed bar from a zero baseline keeps the
-              up-is-more read from the slope, just compressed onto one axis.
+              Here is the trade made concrete. `derive` folds each variety's
+              two years into one delta. The year spread disappears and
+              variety becomes the inner facet. With one value per variety,
+              there is no second endpoint for a line to connect, so a signed
+              bar places that delta against zero. Comparing magnitude and sign
+              is now positional and shares a baseline across every site. What
+              disappeared matters: we can no longer recover either absolute
+              yield or inspect the two-year trajectory. We chose the cheaper
+              reading because signed change is the question this section is
+              trying to answer.
             </aside>
           </section>
 

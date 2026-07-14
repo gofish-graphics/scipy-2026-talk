@@ -889,11 +889,9 @@
               <p class="viz-step-copy">
                 The obvious move: nest one more <code>spread</code>. Every
                 variety gets its own bar, so each variety's yield is right
-                there to read. But the bars sit side by side as ten independent
-                heights, and nothing sums them back up, so a variety's
-                <em>share</em> of its site-year is nowhere on the screen.
-                Proportion stops being something you can see and becomes
-                something you have to compute.
+                there to read. But each variety's two years remain separate,
+                with nine neighbors between them. Color tells you which bars
+                match; nothing yet connects them as one trajectory.
               </p>
             </div>
             <div
@@ -903,39 +901,88 @@
             <aside class="notes">
               This is the naive move, and it's the honest one to try first,
               we wrote the query down, we need per-variety yield, so just
-              spread by variety too. And it half-works: every variety does
-              get its own bar, so a single variety's yield is directly
-              readable, which is more than the stack on the next slide will
-              give us. And then it fails, and the way it fails is the whole
-              reason the next slide exists: you cannot judge relative
-              proportions here. The ten bars in a group are ten independent
-              heights sitting next to each other, and nothing on the screen
-              sums them. So "what share of this site-year is Trebi?" isn't a
-              thing you can look at, you'd have to mentally add up ten bars
-              to get a total and then divide one of them by it. The chart
-              hands you every part and withholds the whole.
-              Say that structurally and it's the same sentence: spreading
-              throws the total away. No total means no denominator, and no
-              denominator means no proportion. Which is also why the question
-              that started this whole beat, the totals rose at Morris and
-              fell everywhere else, is that one variety or all of them?,
-              can't even be asked of this chart. We lost the very thing we
-              were trying to explain. There's a second, cruder problem worth
-              a beat if you have time: 120 bars in one row, each site-year
-              group ten wide, so even comparing one variety across its two
-              years means jumping over nine neighbours. But that one is just
-              crowding. The proportions failure is structural, and it's the
-              one that names the fix. <code>stack</code> is the part-to-whole
-              operator, it puts the parts back into a whole, so that share
-              becomes a thing on the screen rather than arithmetic in the
-              head. The next slide swaps this third <code>spread</code> for a
-              <code>stack</code> and the totals come back. The chip hasn't
-              changed, same query, third structure. That's the beat: hold the
-              question fixed and let the structure move.
+              spread by variety too. It gives every variety its own bar, but
+              it also makes every bar a separate visual object. Comparing one
+              variety across its two years means jumping over nine neighbors
+              and matching by color. Spread is doing exactly what we asked:
+              separating values into slots. The next move asks what changes
+              when we connect the values that belong to the same entity.
             </aside>
           </section>
 
-          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8">
+          <!-- Connection affordances: bars vs lines (Zacks & Tversky 1999). -->
+          <section class="viz-step" data-background-color="#f7f2e8">
+            <h2>spread separates; line connects</h2>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 3rem;
+                margin-top: 0.8rem;
+              "
+            >
+              <div style="text-align: center">
+                <div id="chart-conn-bars" class="chart-container"></div>
+                <p
+                  class="fragment"
+                  data-fragment-index="1"
+                  style="
+                    margin-top: 0.5rem;
+                    font-size: 0.72em;
+                    font-family: 'Shantell Sans', sans-serif;
+                    color: #1a1a2e;
+                  "
+                >
+                  separate values invite discrete comparisons
+                </p>
+              </div>
+              <div style="text-align: center">
+                <div style="position: relative; display: inline-block">
+                  <div id="chart-conn-line" class="chart-container"></div>
+                  <div class="conn-line-label" style="left: 6%">female</div>
+                  <div class="conn-line-label" style="left: 94%">male</div>
+                </div>
+                <p
+                  class="fragment"
+                  data-fragment-index="2"
+                  style="
+                    margin-top: 1.4rem;
+                    font-size: 0.72em;
+                    font-family: 'Shantell Sans', sans-serif;
+                    color: #1a1a2e;
+                  "
+                >
+                  connection invites a trend reading
+                </p>
+              </div>
+            </div>
+            <p
+              class="viz-step-copy fragment"
+              data-fragment-index="3"
+              style="font-size: 0.6em; margin-top: 0.6rem"
+            >
+              The data did not change. The relation between the marks did.
+              <span style="color: #777">Zacks &amp; Tversky (1999)</span>
+            </p>
+            <aside class="notes">
+              Spread makes separate slots, so the bars invite separate-value
+              comparisons. A line adds a relation: these positions belong to
+              the same entity, so follow them as a trend. Zacks and Tversky
+              showed the force of that cue with the same data drawn as bars
+              and as a line. Bar readers said "men are taller than women."
+              Line readers said "the more male a person is, the taller he or
+              she is," even though the x-axis was categorical. Connection is
+              not decoration. It asserts continuity and identity. So for the
+              barley question, connect each variety across its two years and
+              facet those lines by site.
+            </aside>
+          </section>
+
+          <!-- HIDDEN: the stack/normalize/pies detour interrupts the more direct
+               spread -> connection -> slope -> delta argument. Keep these slides
+               as operator examples for possible reuse. -->
+          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2><code>stack()</code></h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
@@ -985,7 +1032,7 @@
             </aside>
           </section>
 
-          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8">
+          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>did the mix change?</h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
@@ -1023,7 +1070,7 @@
             </aside>
           </section>
 
-          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8">
+          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>same question, as pies</h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
@@ -1224,7 +1271,8 @@
 
           <!-- Connection affordances: bars vs lines (Zacks & Tversky 1999).
                Perceptual beat, no code, same format as the Franconeri slides. -->
-          <!-- HIDDEN for now: "what does connecting things do?" set parked; remove data-visibility to restore. -->
+          <!-- HIDDEN: superseded by the relocated "spread separates; line connects"
+               slide immediately after "just spread again?". -->
           <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>what does connecting things do?</h2>
             <div
@@ -1237,7 +1285,7 @@
               "
             >
               <div style="text-align: center">
-                <div id="chart-conn-bars" class="chart-container"></div>
+                <div id="chart-conn-bars-parked" class="chart-container"></div>
                 <p
                   class="fragment"
                   data-fragment-index="1"
@@ -1253,7 +1301,7 @@
               </div>
               <div style="text-align: center">
                 <div style="position: relative; display: inline-block">
-                  <div id="chart-conn-line" class="chart-container"></div>
+                  <div id="chart-conn-line-parked" class="chart-container"></div>
                   <div class="conn-line-label" style="left: 6%">female</div>
                   <div class="conn-line-label" style="left: 94%">male</div>
                 </div>
