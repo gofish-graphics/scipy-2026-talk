@@ -35,7 +35,7 @@
                     <strong>Inner structure:</strong> pie affords "what
                     fraction?" queries.
                   </p>
-                  <!-- <p>The mark method takes a chart — same as faceting.</p> -->
+                  <!-- <p>The mark method takes a chart, same as faceting.</p> -->
                   <div
                     class="spec-slide-query fragment"
                     style="margin-top: 0.65rem"
@@ -62,7 +62,7 @@
               </div>
             </div>
             <aside class="notes">
-              This is composition — nesting one query-affording structure inside
+              This is composition, nesting one query-affording structure inside
               another. It's the same idea as faceting: spreading a chart-making
               function. Pie affords proportion queries easily; magnitude queries
               are hard because arc angle is a weaker encoding than length.
@@ -80,7 +80,7 @@
 
           <section data-visibility="hidden">
             <!-- HIDDEN: barley scatter-pie beat cut. Remove data-visibility to restore. -->
-            <h2>same glyph, new dataset — barley, two years</h2>
+            <h2>same glyph, new dataset: barley, two years</h2>
             <div class="two-col">
               <div class="col-code">
                 <pre><code class="language-python"># x, y: each site's Minnesota lon/lat
@@ -121,7 +121,7 @@ chart(barley_scatter_by_year(1931)).flow(
                     </p>
                     <ul class="stack-queries-list">
                       <li>
-                        every other site's pie shrinks from 1931 → 1932 —
+                        every other site's pie shrinks from 1931 → 1932,
                         Morris's grows
                       </li>
                       <li>
@@ -162,13 +162,13 @@ chart(barley_scatter_by_year(1931)).flow(
               popularized by Cleveland &amp; via the trellis-display
               literature): nearly every site's yield fell from 1931 to 1932,
               except Morris, which rose. The pies sit at each site's actual
-              geography — Crookston in the far northwest, Duluth on Lake
+              geography, Crookston in the far northwest, Duluth on Lake
               Superior in the northeast, Waseca in the south, Morris
-              mid-west — so the chart doubles as a map of Minnesota.
+              mid-west, so the chart doubles as a map of Minnesota.
               Encoding total yield as pie radius (instead of a fixed radius,
               as in the lake version) makes the flip visible at a glance
               without giving up the proportion read inside each pie. Same
-              outer/inner grammar as the seafood scatter-pie — only the
+              outer/inner grammar as the seafood scatter-pie, only the
               radius channel is new.
             </aside>
           </section>
@@ -178,10 +178,10 @@ chart(barley_scatter_by_year(1931)).flow(
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>first, just the points</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
-              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Each site panel scatters every variety's two years as points —
+              Each site panel scatters every variety's two years as points,
               the connecting lines come next.
             </p>
             <pre class="viz-code compact">chart(barley)
@@ -198,17 +198,17 @@ chart(barley_scatter_by_year(1931)).flow(
             ></div>
             <aside class="notes">
               Same spread/spread skeleton as the stacked-bar slides (site 24,
-              year 6 — tight within a site's year pair, wide between sites),
+              year 6, tight within a site's year pair, wide between sites),
               just with the mark swapped: scatter stands in for stack, circle
-              stands in for rect. No nested chart and no group step — after
+              stands in for rect. No nested chart and no group step, after
               the two facet spreads, each (site, year) cell holds ten rows,
               one per variety, and a bare scatter (no `by`) already splits
               its input one point per row, so `scatter(y="yield")` positions
               each variety's point by its own yield with no further grouping
               needed. The year-pair grouping that used to come from a wide
               between-site gap now falls out directly from the year spread
-              sitting inside the site spread. Next slide adds one thing —
-              connect each variety's two points with a line — and the
+              sitting inside the site spread. Next slide adds one thing,
+              connect each variety's two points with a line, and the
               sentence starts to read.
             </aside>
           </section>
@@ -218,10 +218,10 @@ chart(barley_scatter_by_year(1931)).flow(
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>the takeaway is a sentence</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
-              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              "Every variety decreased at every site — except Morris, where
+              "Every variety decreased at every site, except Morris, where
               every variety increased."
             </p>
             <pre class="viz-code compact">chart(barley)
@@ -246,13 +246,13 @@ chart(barley_scatter_by_year(1931)).flow(
               FacetedChart.stories.tsx): the outer spread makes six scopes,
               and each scope's mark function draws its own little chart. The
               connecting line reuses the exact "name it, select it, group it,
-              connect it" idiom the ribbon slide already taught — swap
+              connect it" idiom the ribbon slide already taught, swap
               `area` for `line`. One quantifier (site) is a scan across
               panels; the other (variety) is a scan down each panel's ten
               lines; the sign predicate is read off each line's slope, one
               at a time. This is Trellis-style: Becker &amp; Cleveland's own
-              display for this dataset. It's precise on magnitude — you can
-              read off exactly how much each variety fell or rose — but the
+              display for this dataset. It's precise on magnitude, you can
+              read off exactly how much each variety fell or rose, but the
               reader still has to aggregate ten slope signs per panel to
               recover the sentence. The delta-bars slides ahead trade that
               Trellis precision for a display that lets the sign read in one
@@ -273,12 +273,12 @@ chart(barley_scatter_by_year(1931)).flow(
               coverage; explanatory charts reward one unmissable reading.
             </p>
             <aside class="notes">
-              Punctuation slide — keep it short, let it breathe. Everything
+              Punctuation slide, keep it short, let it breathe. Everything
               up through the last slope panels was built so WE could find
               Morris: the six-panel Trellis layout is honest and complete,
               but it makes the reader do the work of aggregating ten slope
-              signs per panel. Everything from here — color, the callout,
-              and the four-step simplification arc that follows — is built
+              signs per panel. Everything from here, color, the callout,
+              and the four-step simplification arc that follows, is built
               so someone ELSE can see Morris without doing that work. Same
               operators, same data, different design pressure: exploratory
               charts optimize for not hiding anything; explanatory charts
@@ -287,15 +287,15 @@ chart(barley_scatter_by_year(1931)).flow(
             </aside>
           </section>
 
-          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 1 OF 4 — THE SLOPE ──── -->
+          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 1 OF 4, THE SLOPE ──── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>simplify your message</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
-              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em> — one variety, or all?</span>
+              <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Same slope panels as before — the starting point for four
+              Same slope panels as before, the starting point for four
               one-edit steps toward a faster read.
             </p>
             <pre class="viz-code compact">chart(barley)
@@ -311,7 +311,7 @@ chart(barley_scatter_by_year(1931)).flow(
               style="height: 312px; min-height: 312px"
             ></div>
             <aside class="notes">
-              Same chart, same spec, as the "takeaway is a sentence" slide —
+              Same chart, same spec, as the "takeaway is a sentence" slide,
               deliberately, so it re-anchors the through-line right after the
               section break. This is the through-line for the next four
               slides: each step is exactly one edit to this spec, and each
@@ -320,7 +320,7 @@ chart(barley_scatter_by_year(1931)).flow(
             </aside>
           </section>
 
-          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 2 OF 4 — ANCHORED ───── -->
+          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 2 OF 4, ANCHORED ───── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>anchor the comparison</h2>
@@ -348,7 +348,7 @@ chart(barley_scatter_by_year(1931)).flow(
               One edit from the last slide: `derive` computes each variety's
               delta from its own 1931 yield, and `y` is rebound to that delta
               instead of raw yield. Every line still starts at the same
-              baseline (zero), so nothing about "up is more" is lost — the
+              baseline (zero), so nothing about "up is more" is lost, the
               slope metaphor survives intact. What's new is that the line's
               ANGLE now IS the delta, not just a byproduct of two absolute
               values. Nothing is thrown away yet; this step only compresses
@@ -356,7 +356,7 @@ chart(barley_scatter_by_year(1931)).flow(
             </aside>
           </section>
 
-          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 3 OF 4 — BARS ───────── -->
+          <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 3 OF 4, BARS ───────── -->
 
           <section class="viz-step" data-background-color="#f7f2e8">
             <h2>the line has nothing left to connect</h2>
@@ -365,7 +365,7 @@ chart(barley_scatter_by_year(1931)).flow(
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               One edit: <code>derive</code> collapses the year pair into a
-              single delta. The line isn't removed for taste — it becomes
+              single delta. The line isn't removed for taste, it becomes
               ungrammatical.
             </p>
             <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
@@ -383,10 +383,10 @@ chart(barley_scatter_by_year(1931)).flow(
             <aside class="notes">
               The key beat of the whole arc. `derive` now folds each
               variety's two years into one delta, so the year spread has
-              nothing left to spread over — it's gone, and `variety` takes
+              nothing left to spread over, it's gone, and `variety` takes
               its place as the inner facet. Once each (site, variety) pair is
               down to a single value, there is no second point left for a
-              line to connect — the mark isn't swapped from `line` to `rect`
+              line to connect, the mark isn't swapped from `line` to `rect`
               because bars look nicer, it's swapped because a line needs two
               endpoints and this data only has one. The data itself took the
               line away. A signed bar from a zero baseline keeps the
@@ -396,7 +396,7 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <!-- HIDDEN ALTERNATE: dots instead of bars for the same delta
                data. Same spec shape as the bars slide, swapping the mark
-               for a small rounded rect standing in for a dot — bars read
+               for a small rounded rect standing in for a dot, bars read
                sign faster, but dots are the more literal "scatter" analog
                and worth having on hand. To swap it in for the bars slide:
                remove data-visibility="hidden" here, and either add
@@ -409,7 +409,7 @@ chart(barley_scatter_by_year(1931)).flow(
           >
             <h2>the line has nothing left to connect</h2>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Same one-edit step as the bars slide — dots instead of bars for
+              Same one-edit step as the bars slide, dots instead of bars for
               the same collapsed delta.
             </p>
             <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
@@ -428,7 +428,7 @@ chart(barley_scatter_by_year(1931)).flow(
               Same beat as the bars slide: derive collapses the year pair, so
               there is nothing left for a line to connect. A dot marks each
               (site, variety)'s single delta against a dashed zero baseline
-              instead of a bar's filled rect — more literally "a scatter with
+              instead of a bar's filled rect, more literally "a scatter with
               one point," but a signed bar reads the sign faster because its
               length and its direction from the baseline are the same
               gesture. Kept as a hideable alternate to flip between on stage.
@@ -467,7 +467,7 @@ chart(barley_scatter_by_year(1931)).flow(
               now filled by site through a Morris-orange palette; everything
               else goes gray. This is deliberately late in the arc: the sign
               question was already answered structurally (bar direction from
-              a zero baseline), so color isn't recruited to encode sign — it
+              a zero baseline), so color isn't recruited to encode sign, it
               only has to say "look here." That's the whole point of moving
               color to this slide instead of the slope chart: on the slope
               panels color would have had to do two jobs (which lines are
@@ -475,7 +475,7 @@ chart(barley_scatter_by_year(1931)).flow(
               one. Own it honestly on stage: GoFish has no `emphasize()`
               primitive yet. What's on screen is a hand-written conditional
               in the render function (`highlight ? palette(...) : the
-              default color scale`), not a first-class operator — filed as
+              default color scale`), not a first-class operator, filed as
               gofish#641, and worth fixing precisely because "highlight one
               category, gray out the rest" is common enough to deserve its
               own name instead of a per-chart if/else.
@@ -500,9 +500,9 @@ chart(barley_scatter_by_year(1931)).flow(
             </p>
             <aside class="notes">
               The last step of explanatory polish: annotate. If the sentence
-              is the point, write the sentence on the chart — don't leave the
+              is the point, write the sentence on the chart, don't leave the
               reader to reconstruct it from a color cue alone. Same delta
-              bars, same Morris-orange highlight — color already made
+              bars, same Morris-orange highlight, color already made
               Morris's bars pop; the callout states the conclusion directly
               instead of leaving the reader to scan six site groups of signed
               bars. Morris sits third of six site groups, so the callout has
@@ -578,7 +578,7 @@ layer([
                     class="fragment"
                     style="margin-top: 0.35rem; opacity: 0.55"
                   >
-                    what fraction of catch is Bass? — <em>harder</em> (length
+                    what fraction of catch is Bass?, <em>harder</em> (length
                     doesn't naturally read as proportion)
                   </p>
                   <div
@@ -600,10 +600,10 @@ layer([
             </div>
             <aside class="notes">
               Same outer scatter. Different inner glyph. The petal encodes
-              magnitude differently from a pie slice — it affords comparison of
+              magnitude differently from a pie slice, it affords comparison of
               absolute values rather than proportions. Petal length is a
               stronger encoding for magnitude than arc angle, but it gives up
-              proportion legibility — the tradeoff the grammar makes explicit.
+              proportion legibility, the tradeoff the grammar makes explicit.
               ~21 min mark.
             </aside>
           </section>
@@ -618,7 +618,7 @@ layer([
               <div class="grammar-def">
                 <code>lake: discrete</code><br />
                 <span style="font-size: 0.85em; color: #888"
-                  >same scatter positioning as pie — unchanged</span
+                  >same scatter positioning as pie, unchanged</span
                 >
               </div>
               <div class="grammar-term">inner key</div>
@@ -632,7 +632,7 @@ layer([
               <div class="grammar-def">
                 <code>count: continuous → petal length</code><br />
                 <span style="font-size: 0.85em; color: #888"
-                  >absolute magnitude — not normalized</span
+                  >absolute magnitude, not normalized</span
                 >
               </div>
             </div>
@@ -711,14 +711,14 @@ Frame(
                     class="fragment"
                     style="margin-top: 0.35rem; opacity: 0.55"
                   >
-                    what's the Bass count at Lake Ontario? —
+                    what's the Bass count at Lake Ontario?,
                     <em>impossible</em> (not encoded)
                   </p>
                   <p
                     class="fragment"
                     style="margin-top: 0.35rem; opacity: 0.55"
                   >
-                    how does species composition vary? —
+                    how does species composition vary?,
                     <em>impossible</em> (breakdown gone)
                   </p>
                   <div
@@ -727,7 +727,7 @@ Frame(
                   >
                     Balloon loses all per-species breakdown. Gains:
                     <strong>total magnitude is now the primary read</strong>
-                    — cleaner, more memorable, but radically reduced information
+                    for a cleaner, more memorable, but radically reduced information
                     density.
                   </div>
                 </div> -->
@@ -1069,7 +1069,7 @@ Frame(
                       text-transform: uppercase;
                     "
                   >
-                    relational — draws over an index, builds none
+                    relational, draws over an index, builds none
                   </td>
                 </tr>
                 <tr class="fragment" data-fragment-index="4">
@@ -1096,11 +1096,11 @@ Frame(
                         text-align: center;
                       "
                     >
-                      no index — draws over one
+                      no index, draws over one
                     </div>
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555; font-size: 0.85em">
-                    <span style="color: #bbb">—</span>
+                    <span style="color: #bbb">none</span>
                   </td>
                   <td style="padding: 0.18rem 0.7rem; color: #555">
                     <div class="viz-query" style="font-size: 0.85em">
@@ -1124,7 +1124,7 @@ Frame(
                 padding: 0 0.7rem;
               "
             >
-              <strong>color</strong> — groups by similarity, nonlocally: ties
+              <strong>color</strong>: groups by similarity, nonlocally; ties
               marks across the layout without building a spatial index;
               weaker than proximity by default
             </div>
@@ -1140,19 +1140,19 @@ Frame(
               queries after Brehmer &amp; Munzner (2013)
             </div>
             <aside class="notes">
-              spread — discrete; alignment &amp; uniform density.
+              spread, discrete; alignment &amp; uniform density.
               <br />
-              stack — partitioned continuous; part-to-whole.
+              stack, partitioned continuous; part-to-whole.
               <br />
-              scatter — continuous × continuous; proximity.
+              scatter, continuous × continuous; proximity.
               <br />
-              area / line / ribbon — continuous or contiguous; connection.
+              area / line / ribbon, continuous or contiguous; connection.
               <br />
-              table — discrete × discrete; uniform density.
+              table, discrete × discrete; uniform density.
               <br /><br />
               Every operator does two jobs: an addressing move (what's where,
               what's locatable) and a pricing move (which readings become one
-              perceptual act). Connection is the only pure pricing move — and
+              perceptual act). Connection is the only pure pricing move, and
               the scatterpie works by keeping scatter's addressing while
               swapping the value payload.
               <br /><br />
@@ -1160,7 +1160,7 @@ Frame(
               the distribution varies across space, the pie glyph contributes
               share-within-entity.
               <br /><br />
-              Connection is the strongest grouping cue there is — stronger
+              Connection is the strongest grouping cue there is, stronger
               than proximity, stronger than color or shape similarity
               (Franconeri, Bemis, Burlingham &amp; Kramer 2021, PSPI, Fig. 8).
               Explicit connecting lines improve relation judgments by
@@ -1181,7 +1181,7 @@ Frame(
               <br /><br />
               The bottom line about color is the nonlocal grouping cue:
               similarity groups marks without adjacency and without building
-              a spatial index — no by= to point to. By default it sits below
+              a spatial index, no by= to point to. By default it sits below
               proximity in the strength ranking above, but that ordering is
               parametric, not fixed: a large enough color difference, or
               tight enough spacing, can flip it (same Quinlan &amp; Wilton
@@ -1193,40 +1193,40 @@ Frame(
               query actions. Their identify/compare/summarize ladder maps onto
               this table three ways: identify is a mark-level read, compare
               is the operator's ask line, summarize is what the hole
-              collapses down to once a scope docks upward — worth saying out
+              collapses down to once a scope docks upward, worth saying out
               loud, since the chip no longer prints a price for it.
               <br /><br />
               spread is align + distribute: distribute builds the index (the
-              index cell — one slot per key), align prices the comparison
+              index cell, one slot per key), align prices the comparison
               itself (the ask line). Which align anchor you pick decides
               which comparison is precise: baseline anchoring gives
               common-scale length comparisons, middle anchoring gives
               symmetric deviation comparisons.
               <br /><br />
-              stack trades per-key comparison accuracy — interior segments
-              lose the shared baseline the moment they're not first — for a
+              stack trades per-key comparison accuracy, interior segments
+              lose the shared baseline the moment they're not first, for a
               free read of the total at the far edge. That far edge, Σ size,
               is itself a size an enclosing operator can consume. Normalize
               it (size: field(...).normalize()) and the far edge reads as
               ⟨each key's share⟩ instead of an absolute total.
               <br /><br />
               scatter's key is one field, with x/y carried as attributes
-              (by= is optional — omit it for a per-item scatter). A 1D
-              scatter, with only x or only y bound, is a strip plot — hence
+              (by= is optional, omit it for a per-item scatter). A 1D
+              scatter, with only x or only y bound, is a strip plot, hence
               "1–2 axes" under the preview. table's key is two fields
               crossed (by={row, col}); that row/col split is what makes it
               discrete both ways, versus scatter's continuous one-or-two.
               <br /><br />
-              ⟨the shape of the crowd⟩ = trends, clusters, outliers — the
+              ⟨the shape of the crowd⟩ = trends, clusters, outliers, the
               gestalt reads a scatter affords for free. Scagnostics is the
               formalization of exactly that list.
               <br /><br />
               What each operator's "places" used to say, before the shape
-              column replaced the prose: spread — one slot per value of a
-              field. stack — scopes tiled end to end; boundaries at the
-              running totals. scatter — each entity at its location in space.
-              area / line / ribbon — nothing new; draws over existing
-              placements. table — two independently addressable axes.
+              column replaced the prose: spread, one slot per value of a
+              field. stack, scopes tiled end to end; boundaries at the
+              running totals. scatter, each entity at its location in space.
+              area / line / ribbon, nothing new; draws over existing
+              placements. table, two independently addressable axes.
             </aside>
           </section>
 
@@ -1240,7 +1240,7 @@ Frame(
               <div class="grammar-def">
                 <code>lake: discrete</code><br />
                 <span style="font-size: 0.85em; color: #888"
-                  >same scatter positioning — outer structure unchanged</span
+                  >same scatter positioning, outer structure unchanged</span
                 >
               </div>
               <div class="grammar-term">value</div>
@@ -1254,7 +1254,7 @@ Frame(
               <div class="grammar-def">
                 <code>dominant species → color</code><br />
                 <span style="font-size: 0.85em; color: #888"
-                  >only the top species survives — per-species breakdown is
+                  >only the top species survives, per-species breakdown is
                   gone</span
                 >
               </div>
@@ -1319,7 +1319,7 @@ Frame(
           </section> -->
 
           <!-- <section>
-            <h2>You have choice — and now you know how to make it</h2>
+            <h2>You have choice, and now you know how to make it</h2>
             <div
               style="margin-top: 1.2rem; font-size: 0.88em; line-height: 1.9"
             >
@@ -1336,7 +1336,7 @@ Frame(
                 <em>which inner query do you want to afford?</em>
               </p>
               <p class="fragment">
-                There are real tradeoffs — familiarity, legibility, precision.
+                There are real tradeoffs, familiarity, legibility, precision.
                 But the <strong>query-affordance frame</strong>
                 tells you how to reason about them.
               </p>
@@ -1350,7 +1350,7 @@ Frame(
             </div>
             <aside class="notes">
               ~25 min mark. The audience should feel that they now have a handle
-              on something they didn't before — a way to think about charts that
+              on something they didn't before, a way to think about charts that
               isn't "pick the right chart type."
             </aside>
           </section> -->
@@ -1358,4 +1358,3 @@ Frame(
         <!-- /COLUMN 3 -->
 
         <!-- COLUMN 4 retrospective (back to the beginning + charts A–C) omitted -->
-

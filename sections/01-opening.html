@@ -24,7 +24,7 @@
 
           <!-- ═══ HIDDEN AI OPENING (cut 2026-07-12, see comments below; slides kept for possible reuse) ═══ -->
 
-          <!-- HIDDEN 2026-07-12: cut the AI one-shotting opener — the SciPy audience already uses AI heavily; no need to demonstrate that AI can build vizzes. The deck now opens directly with the problem. -->
+          <!-- HIDDEN 2026-07-12: cut the AI one-shotting opener, the SciPy audience already uses AI heavily; no need to demonstrate that AI can build vizzes. The deck now opens directly with the problem. -->
           <section data-visibility="hidden">
             <h2>you can one-shot a dashboard now</h2>
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
@@ -37,13 +37,13 @@
               ></video>
               <p style="font-size: 0.72em; color: #555;">
                 *Sped up 2–4×; actual time ~2.5 min. Placeholder: Arvind's
-                VizChitra demo — to re-record with a scientific dataset.
+                VizChitra demo, to re-record with a scientific dataset.
               </p>
             </div>
             <aside class="notes">
               Here's a chat with Claude, asked to summarize a dataset of
               cricket matches. Over about two and a half minutes it built this
-              interactive dashboard — and it even computed sensible
+              interactive dashboard, and it even computed sensible
               domain-specific metrics along the way, like runs per innings and
               whether chasing beats defending. No code written by a human.
             </aside>
@@ -72,10 +72,10 @@
             </aside>
           </section>
 
-          <!-- HIDDEN 2026-07-12: cut with the AI one-shotting beat. Its key line ("judging it — and knowing what to ask for — is now the whole game") was folded into the relocated AI-skill slide's speaker notes. -->
+          <!-- HIDDEN 2026-07-12: cut with the AI one-shotting beat. Its key line ("judging it, and knowing what to ask for, is now the whole game") was folded into the relocated AI-skill slide's speaker notes. -->
           <section class="scipy-statement" data-background-color="#f7f2e8" data-visibility="hidden">
             <p class="part">The catch</p>
-            <h2>ok — but is it actually good?</h2>
+            <h2>ok, but is it actually good?</h2>
             <p class="big-claim">
               How do you know the figure shows what your reader needs? How do
               you know what you want in the first place?
@@ -86,7 +86,7 @@
             </p>
             <aside class="notes">
               This is the real question. The agent will hand you something
-              polished either way. Judging it — and knowing what to ask for —
+              polished either way. Judging it, and knowing what to ask for,
               is now the whole game.
             </aside>
           </section>
@@ -96,7 +96,7 @@
             <p class="part">The way out</p>
             <h2>we need to see structure, not chart types</h2>
             <p class="big-claim">
-              To judge a figure — yours or the AI's — you need a way to see
+              To judge a figure, yours or the AI's, you need a way to see
               what it's doing.
             </p>
             <p>
@@ -106,7 +106,7 @@
             <aside class="notes">
               So that's where this talk goes. Instead of judging figures by
               their chart-type name, we're going to learn to see their
-              structure — and that gives us both a way to evaluate what an
+              structure, and that gives us both a way to evaluate what an
               agent hands us and a language for asking for what we actually
               want.
             </aside>
@@ -252,7 +252,7 @@
               The second answer: we could consult guides that bucket the
               problem into "relationship," "comparison," "distribution,"
               "composition," and so on. But those buckets are still too vague
-              to decide anything. For one, they're hard to tell apart — what
+              to decide anything. For one, they're hard to tell apart, what
               exactly is the difference between a comparison, a relationship,
               and a composition? And a real graphic might need several of
               them at once. So they leave us with dozens of options to try,
@@ -275,17 +275,17 @@
             <aside class="notes">
               And the third answer: most of you are already using AI agents to
               make your figures, and they're genuinely good at the
-              implementation — writing the code was never going to stay the
+              implementation, writing the code was never going to stay the
               bottleneck. The problem that remains is picking the graphic you
               want, judging whether it's good, and steering the design. And
               here's the catch: this is the actual skill file Claude uses for
-              visualization — a table mapping coarse task descriptions to
-              chart types. The chart picker didn't go away — the chart types
+              visualization, a table mapping coarse task descriptions to
+              chart types. The chart picker didn't go away, the chart types
               and the task taxonomies are getting ossified into AI skills,
               not improved. And because the conventional chart types are where
               the training data is, the agent quietly pulls every figure
-              toward the mean. Judging the output — and knowing what to ask
-              for — is now the whole game.
+              toward the mean. Judging the output, and knowing what to ask
+              for, is now the whole game.
             </aside>
           </section>
 
@@ -325,7 +325,7 @@
             </div>
             <aside class="notes">
               And to be fair, all of these approaches are fine if what you
-              need is a standard scatter plot or a bar chart — and a lot of
+              need is a standard scatter plot or a bar chart, and a lot of
               the time, that's exactly what we want. But when our datasets are
               more complex, they often require more complex graphics.
             </aside>
@@ -365,7 +365,7 @@
               scatterplots of pie charts; Jen Christiansen in Scientific
               American with a scatterplot of coxcombs. These are bespoke,
               composite, long-tail graphics. What makes them work is how
-              their pieces are arranged — the alignment between the marginals
+              their pieces are arranged, the alignment between the marginals
               and the scatter, the positioning of glyphs in a shared space.
               None of that is on a picker menu, and "jointplot" won't be the
               name of the thing your paper needs next. And these graphics
@@ -412,7 +412,7 @@
             </aside>
           </section>
 
-          <!-- Montage — bespoke graphics -->
+          <!-- Montage, bespoke graphics -->
           <!-- HIDDEN 2026-07-12: superseded by the relocated "scientists live in the long tail" montage, which makes the same point with examples closer to this audience. -->
           <section data-visibility="hidden">
             <h2>graphics don't always fall into neat taxonomies</h2>
@@ -468,7 +468,7 @@
             </aside>
           </section>
 
-          <!-- Franconeri A — the hook -->
+          <!-- Franconeri A, the hook -->
           <section>
             <h2>here's a grouped bar chart</h2>
             <div class="chart-spec-slide">
@@ -482,8 +482,8 @@
               To answer those two questions, we can't reason from chart-type
               names or task taxonomies. We have to watch what a reader
               actually notices. So let's actually look at the problem. We'll
-              strip everything down to the simplest possible example — grouped
-              bar charts — and run the experiment right here.
+              strip everything down to the simplest possible example, grouped
+              bar charts, and run the experiment right here.
 
               <br />
               <br />
@@ -495,7 +495,7 @@
             </aside>
           </section>
 
-          <!-- Franconeri A — recall question -->
+          <!-- Franconeri A, recall question -->
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2>what did you notice about the data?</h2>
             <aside class="notes">
@@ -515,13 +515,13 @@
               ></div>
             </div>
             <aside class="notes">
-              Same drill — about ten seconds, then hide it and ask again. It's
+              Same drill, about ten seconds, then hide it and ask again. It's
               the same exact data, regrouped, but don't say so yet. Boger
               &amp; Franconeri (2024).
             </aside>
           </section>
 
-          <!-- Franconeri B — recall question -->
+          <!-- Franconeri B, recall question -->
           <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2>what did you notice now?</h2>
             <aside class="notes">
@@ -543,7 +543,7 @@
             <aside class="notes">
               For anyone who missed it, here it is in orange: Boulder is the
               one city whose sales rise while everything else falls. And if
-              you missed it, you're really not alone — which is exactly what
+              you missed it, you're really not alone, which is exactly what
               the study on the next slide found.
             </aside>
           </section>
@@ -571,7 +571,7 @@
             </aside>
           </section>
 
-          <!-- Boger & Franconeri — study results figure -->
+          <!-- Boger & Franconeri, study results figure -->
           <section>
             <div
               style="
@@ -676,7 +676,7 @@
             <aside class="notes">
               And I want to highlight that these are all the same kind of chart,
               but their takeaways are different. How do we make sense of that?
-              <!-- Same data, same chart type — but grouping order and color
+              <!-- Same data, same chart type, but grouping order and color
               completely change what a reader sees first. The chart-type
               heuristic doesn't help here. We need a better way to think about
               this. Boger &amp; Franconeri (2024): "Reading a Graph Is Like
@@ -713,7 +713,7 @@
             <aside class="notes">
               Quick confession before we move on: I anonymized this data so
               the grouping would read fresh. [advance] Same bars, real
-              labels — this is the classic 1931–1932 Minnesota barley trial
+              labels, this is the classic 1931–1932 Minnesota barley trial
               data: ten varieties, six sites, two years. We'll be working
               with this dataset for the rest of the talk.
             </aside>
@@ -762,7 +762,7 @@
               </div>
             </div>
             <h2 class="fragment" data-fragment-index="3" style="margin-top: 1.2rem; font-size: 1.2em">
-              but there's <span class="highlight">no account of structure</span> — it can't explain what we just saw
+              but there's <span class="highlight">no account of structure</span>, so it can't explain what we just saw
             </h2>
             <aside class="notes">
               This is the strongest answer yet. You might object that the
@@ -771,9 +771,9 @@
               them, and there's a famous accuracy ranking: position and length
               beat angle, area, and color. That tells us how precisely one
               value can be read. But you just saw the counterexample: same
-              marks, same channels, same rankings — and you read the three
+              marks, same channels, same rankings, and you read the three
               charts differently. Marks and channels are blind to arrangement
-              — how things are grouped and laid out. So we need a way of
+              and how things are grouped and laid out. So we need a way of
               talking about arrangement.
             </aside>
           </section>
@@ -837,7 +837,7 @@
             </div>
             <aside class="notes">
               The key idea of this talk is that when we're designing a graphic,
-              we're doing a lot more than just picking a chart type — we're
+              we're doing a lot more than just picking a chart type, we're
               creating a visual structure for our readers to navigate. The way
               we arrange shapes and the colors we assign affect what our readers
               see first, what comparisons they make, and what story they take
@@ -894,7 +894,7 @@
                     >GoFish
                   </strong>
                   <span style="font-size: 0.7em; color: #777">
-                    — a language of graphical structure
+                    a language of graphical structure
                   </span>
                   <br />
                   <span style="font-size: 0.75em; color: #444; line-height: 1.4">
@@ -939,7 +939,7 @@
                 a language of perceptual queries
               </p>
               <p style="color: #555; margin: 0.2rem 0 0.4rem">
-                speculative — cutting-edge research. please push back!
+                speculative, cutting-edge research. please push back!
               </p>
               <div class="viz-query" style="font-size: 0.68em">
                 <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
@@ -947,7 +947,7 @@
               </div>
             </div>
             <aside class="notes">
-              The whole talk in one sentence. A chart is not a picture of numbers —
+              The whole talk in one sentence. A chart is not a picture of numbers,
               it is a data structure laid out in space, and reading it is running
               queries against that structure with your visual system.
 
@@ -957,11 +957,11 @@
               conveys meaning and building better libraries to take advantage
               of it.
 
-              The queries are the second half — and you just experienced this:
+              The queries are the second half, and you just experienced this:
               you queried those bar charts with your eyes, and changing the
               grouping changed what your queries returned. [advance] The query
-              language does not exist yet — it is where my current research is.
-              Here's a preview of the notation — one of the queries you just ran
+              language does not exist yet, it is where my current research is.
+              Here's a preview of the notation, one of the queries you just ran
               on the barley chart; I'll build it up properly later. For now,
               hold onto the idea that a chart is something you can query, and I
               genuinely want pushback on the proposal when it shows up.
@@ -1042,7 +1042,7 @@
                   2 · a language of perceptual queries
                 </p>
                 <p style="color: #555; margin: 0.2rem 0 0">
-                  speculative — cutting-edge research. please push back!
+                  speculative, cutting-edge research. please push back!
                 </p>
               </div>
             </div>
@@ -1051,7 +1051,7 @@
               source, alpha, you can install it today. It's the culmination of a
               PhD spent studying how visual structure conveys meaning and building
               better libraries to take advantage of it. The query language does not
-              exist yet — it is where my current research is. I'll introduce it with
+              exist yet, it is where my current research is. I'll introduce it with
               its own notation once we've built up some GoFish code to read queries
               off of; for now, hold onto the idea that a chart is something you can
               query, and I genuinely want pushback on the proposal when it shows up.
@@ -1085,7 +1085,7 @@
               </p>
             </div>
             <aside class="notes">
-              This is the vibe: the front page is a wall of the gallery — bar
+              This is the vibe: the front page is a wall of the gallery, bar
               charts, streamgraphs, scatterpies, rose charts, even a pulley
               diagram, all one language. npm install today, Python alpha close
               behind. I'll come back to some of these examples at the end.
@@ -1247,10 +1247,10 @@
               harder.
               <!-- GoFish's operators map directly onto Gestalt grouping principles,
               ordered here by relational strength. Containment is the strongest
-              perceptual grouping cue — an enclosing boundary almost always
+              perceptual grouping cue, an enclosing boundary almost always
               wins. Connection via lines is next. Similar attributes (color,
               shape, size) are weaker but flexible. Alignment and proximity are
-              the weakest, but they're everywhere — a bar chart is just
+              the weakest, but they're everywhere, a bar chart is just
               alignment and uniform density. -->
             </aside>
           </section>
@@ -1458,10 +1458,10 @@
               </h2>
             </div>
             <p style="margin-top: 0.8rem; font-size: 1.05em; color: #444">
-              build the structure — then query it
+              build the structure, then query it
             </p>
             <aside class="notes">
-              Enough theory — let's get into the code. We'll rebuild the bar
+              Enough theory, let's get into the code. We'll rebuild the bar
               charts from the opening in GoFish, one operator at a time, and
               once there's enough structure on screen the perceptual-query
               notation comes back to run against it.
@@ -1469,7 +1469,7 @@
           </section>
 
           <section data-background-color="#f7f2e8" data-visibility="hidden">
-            <!-- HIDDEN 2026-07-12: cut the "back to those bar charts" return beat — the talk now flows straight from the Gestalt grouping slides into the GoFish walkthrough, and the barley reveal moved up to the Franconeri demo. Restore by removing data-visibility. -->
+            <!-- HIDDEN 2026-07-12: cut the "back to those bar charts" return beat, the talk now flows straight from the Gestalt grouping slides into the GoFish walkthrough, and the barley reveal moved up to the Franconeri demo. Restore by removing data-visibility. -->
             <h2>back to those bar charts</h2>
             <div
               style="

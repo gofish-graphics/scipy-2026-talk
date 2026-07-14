@@ -12,7 +12,7 @@
                highlighted q-line on the "after" side. A fourth move (bars →
                pies → scatter, a triptych where bars → pies keeps an
                IDENTICAL chip as a pure restyle, then pies → scatter gains
-               the clause) is cut for time — see the HIDDEN slide just below,
+               the clause) is cut for time, see the HIDDEN slide just below,
                still numbered "move 1 of 4" internally so it drops back into
                its original slot if restored. Move 3 here is a composition
                instead of a before/after: two ingredient charts (sorted
@@ -86,11 +86,11 @@
             <aside class="notes">
               First move, in two steps. All three charts carry the same
               per-lake species shares. Bars to pies is stack-to-clock
-              coordinates — note the chips are identical, because that step
+              coordinates, note the chips are identical, because that step
               is a pure restyle. Nothing gained, nothing lost (hold that
               thought for the last slide). Pies to scatterpie is the
               structural step: the glyphs land at each lake's real position,
-              and the chip gains the highlighted clause — composition is
+              and the chip gains the highlighted clause, composition is
               now answerable AT a place, so "what's happening in the
               north?" is one glance instead of a lookup.
             </aside>
@@ -150,7 +150,7 @@
             <aside class="notes">
               First pair, same seafood data. The left sizes each segment
               continuously; the right chunks the same counts into unit
-              squares. The nested for-eaches are identical — what changes is
+              squares. The nested for-eaches are identical, what changes is
               the last line: an eyeballed "share of the total" becomes an
               exact "count squares," because the units are countable atoms.
             </aside>
@@ -215,14 +215,14 @@ chart(titanic)
               one level short, the chart says the opposite. (Simpson's paradox)
             </p>
             <aside class="notes">
-              Second pair, Titanic data — and this one has teeth. The
+              Second pair, Titanic data, and this one has teeth. The
               two-level mosaic answers the class question directly: Third
               class survived at 25.2%, Crew at 24.0%, so third class fared
               better. Add the sex level and the answer flips within BOTH
               sexes: among men, Crew 22.3% vs Third 17.3%; among women, Crew
               87.0% vs Third 45.9%. The mechanism: the crew is 97% male, and
               men survived at far lower rates everywhere, so the crew's
-              aggregate is dragged down below Third's. Simpson's paradox —
+              aggregate is dragged down below Third's. Simpson's paradox,
               the extra for-each isn't decoration, it changes the verdict.
               Next: one more move (connect, then sort) before the
               counterexample.
@@ -231,16 +231,16 @@ chart(titanic)
 
           <!-- Move 3 is a COMPOSITION, not a before/after sequence: the two
                ingredient charts stack vertically on the left (top: sorted
-               stacks — rank as position, no connection; bottom: stacked
-               area — fixed order + connected, bands carry identity but
+               stacks, rank as position, no connection; bottom: stacked
+               area, fixed order + connected, bands carry identity but
                never cross), and the ribbon on the right combines them
                (sorted + connected: a crossing is a rank inversion). Only
-               the ribbon's overtake-reading line is pill-highlighted — it's
+               the ribbon's overtake-reading line is pill-highlighted, it's
                the clause neither ingredient affords alone. This replaces
                the barley ribbon build-up cut from 02-walkthrough.html (that
                section's query was sign-of-change, now carried by the slope
                chart in 03-glyphs.html; ribbons price rank-change queries).
-               Data: charts.ts energyMix — real UK share-of-generation
+               Data: charts.ts energyMix, real UK share-of-generation
                figures (Our World in Data / Ember); vendor-gofish's
                energy.ts is Sankey flow data with no period dimension.
                Verified overtakes: Wind passes Coal 2014->2018 (Nuclear
@@ -329,32 +329,32 @@ chart(titanic)
               UK electricity generation · Our World in Data / Ember
             </p>
             <aside class="notes">
-              Third move — a composition, so the layout shows the two
+              Third move, a composition, so the layout shows the two
               ingredients separately and then combined. Left top: sort each
-              year's stack by amount — rank reads as position, but sorting
+              year's stack by amount, rank reads as position, but sorting
               re-purposes position from an identity channel to a rank
               channel, so following one source across years is a color hunt.
-              Left bottom: connect instead — the bands carry "same source"
+              Left bottom: connect instead, the bands carry "same source"
               identity across years, but in fixed stacking order they never
               cross, so there's nothing to read at a crossing. Compose them
               and the gained clause appears: with rank as position AND
-              identity as continuity, a crossing IS a rank inversion — an
+              identity as continuity, a crossing IS a rank inversion, an
               overtake event, read directly. Real data: UK share of
               electricity generation (Our World in Data / Ember). Wind
-              passes Coal between 2014 and 2018 — Coal collapses 29.6% to
-              5.0%, so Nuclear passes it too — then Wind passes Nuclear
+              passes Coal between 2014 and 2018, Coal collapses 29.6% to
+              5.0%, so Nuclear passes it too, then Wind passes Nuclear
               between 2018 and 2022, and Solar passes Coal by 2022:
               renewables overtaking legacy sources one crossing at a time.
               Contrast with the barley walkthrough this replaced: there the
               story was sign-of-change (did each variety rise or fall?), and
-              the ribbon answered an adjacent rank question — the slope
+              the ribbon answered an adjacent rank question, the slope
               panels carry that beat now. Rank change is the query ribbons
               are actually FOR, so the ribbon lives here.
             </aside>
           </section>
 
           <!-- Query gallery, part 2: the one pair where the query DOESN'T
-               change — a pure style move. Same chip both sides on purpose. -->
+               change, a pure style move. Same chip both sides on purpose. -->
           <section data-background-color="#f7f2e8">
             <h2>a move that doesn't</h2>
             <div
@@ -402,7 +402,7 @@ chart(titanic)
             <aside class="notes">
               Not every move is structural. The bottles are a
               paint-composited pictorial dressed over four ordinary
-              normalized bars, one per bottle — same "share of full" chip on
+              normalized bars, one per bottle, same "share of full" chip on
               both sides, because the query hasn't moved at all. What
               changed is voice, not structure: a fill line and a bottle
               photo standing in for a rectangle. Useful, memorable even, but
@@ -430,10 +430,10 @@ chart(titanic)
     <span class="viz-mark">rect</span>(fill="survived")
   )</pre>
               <p class="viz-step-copy">
-                No new operators — just <code>stack</code> three deep. Cell
+                No new operators, just <code>stack</code> three deep. Cell
                 area is the joint count; the blue fraction is the survival
                 rate. And the nesting order decides which comparison you read
-                first — the same choice as the grouped bars that opened the
+                first, the same choice as the grouped bars that opened the
                 talk.
               </p>
             </div>
@@ -455,8 +455,8 @@ chart(titanic)
             <aside class="notes">
               Titanic passengers: class, sex, survived. Three stacks, nested,
               alternating direction, each normalized within its parent scope.
-              Read it: within every class, women survived at higher rates —
-              "women and children first" as one uniform visual sentence — and
+              Read it: within every class, women survived at higher rates,
+              "women and children first" as one uniform visual sentence, and
               survival falls from first class to third within each sex. Note
               this is the Charlie-and-River move again: swapping the nesting
               order changes whether you read "survival by sex, within each
@@ -467,7 +467,7 @@ chart(titanic)
           </section>
 
           <!-- Escalation beat: keep composing and the chart menu runs out.
-               Only structures the audience has NOT already seen — the mosaic
+               Only structures the audience has NOT already seen, the mosaic
                and bottle tiles were cut once they starred in the move slides.
                Sankey is a live render; sunburst, orthogonal tree are gotree
                SVGs; the pulley diagram (formerly the dedicated horizon slide,
@@ -526,8 +526,8 @@ chart(titanic)
               Keep composing the same moves and you run out of chart names.
             </p>
             <aside class="notes">
-              Escalation beat. The moves the audience just learned — spread,
-              stack, nest, restyle — don't stop where the chart menu does.
+              Escalation beat. The moves the audience just learned, spread,
+              stack, nest, restyle, don't stop where the chart menu does.
               Walk the tiles and say the operators out loud, since they're
               not printed on the slide anymore: the sankey is spreads and
               stacks with ribbons connecting named tiers. The sunburst and
@@ -537,36 +537,36 @@ chart(titanic)
               example, drawn by the same layers, alignment, and constraints
               as everything else in this talk. It reproduces Figure 1 of
               Larkin and Simon 1987, "Why a Diagram Is (Sometimes) Worth Ten
-              Thousand Words" — their claim is this talk's thesis stated for
+              Thousand Words", their claim is this talk's thesis stated for
               diagrams in 1987: a diagram earns its keep by making the right
               inferences cheap. None of these four has a slot in a chart
-              dropdown — they're all the same composition carried further.
-              It's the escalation beat taken to its limit — the sankey,
+              dropdown, they're all the same composition carried further.
+              It's the escalation beat taken to its limit, the sankey,
               sunburst, and tree at least have chart names; the pulley has
               none. [advance] Keep composing the same moves and you don't
               just run out of chart names, you leave charts behind entirely.
               The structure language already reaches diagrams; the query
-              language for them is open research — a diagram's queries are
+              language for them is open research, a diagram's queries are
               richer than for-each and share, things like incidence,
               attachment, which way does it turn, and that's where the
               research goes next. Close the loop: the strange Science
               figures and systems diagrams from the opening are in reach of
-              the same moves. The dedicated horizon slide — with the full
+              the same moves. The dedicated horizon slide, with the full
               Larkin and Simon problem text and the speculative look-up,
-              follow, and compare chips — is parked in a comment just below
+              follow, and compare chips, is parked in a comment just below
               this one; restore it if there's time.
             </aside>
           </section>
 
           <!--
-          PARKED — folded into "the same moves, stranger structures" above; restore if there's time.
+          PARKED, folded into "the same moves, stranger structures" above; restore if there's time.
 
-          HORIZON SLIDE — cut this one first if time runs short.
+          HORIZON SLIDE, cut this one first if time runs short.
                gallery-images/pulley-diagram.png is the GoFish docs-gallery export of
-               stories/bluefish/Pulley.stories.tsx — a real constraint-based GoFish
+               stories/bluefish/Pulley.stories.tsx, a real constraint-based GoFish
                render (port of Bluefish's pulley example), not a mockup. It reproduces
                Figure 1 of Larkin & Simon 1987, whose problem text appears at left.
-               Framing: a horizon gesture, not a capability claim — the structure
+               Framing: a horizon gesture, not a capability claim, the structure
                language already reaches diagrams; the query language for them is
                open research (hence the dashed speculative chip).
 
@@ -588,7 +588,7 @@ chart(titanic)
                 </p>
                 <p class="viz-step-copy fragment">
                   The same operators drew this. The structure language already
-                  reaches diagrams — the query language for them is open
+                  reaches diagrams, the query language for them is open
                   research.
                 </p>
                 <p class="viz-step-copy fragment">
@@ -606,21 +606,21 @@ chart(titanic)
               </div>
             </div>
             <aside class="notes">
-              Horizon slide — cut it first if time runs short. Larkin and
+              Horizon slide, cut it first if time runs short. Larkin and
               Simon's classic: the paragraph and the diagram carry exactly
               the same information, but they are not computationally
               equivalent. Their claim is the talk's thesis stated for
-              diagrams in 1987 — a diagram earns its keep by making the
+              diagrams in 1987, a diagram earns its keep by making the
               right inferences cheap. And this diagram is not clip art: it's
               the GoFish docs-gallery export of the Bluefish pulley example,
               drawn by the same layers, alignment, and constraints as
-              everything else today — the structure language already reaches
+              everything else today, the structure language already reaches
               diagrams. What's open is the query side: the chips we've been
               writing all talk say for-each and share; a diagram's queries
-              are richer — incidence, attachment, which way does it turn —
+              are richer, incidence, attachment, which way does it turn,
               and a query language for those is where the research goes
               next. That's why this chip is dashed: speculative, like the
-              two-languages slide's invitation — please push back on it.
+              two-languages slide's invitation, please push back on it.
               Close the loop: the strange Science figures and systems
               diagrams from the opening are in reach of the same moves.
             </aside>
@@ -632,7 +632,7 @@ chart(titanic)
             <p class="part">Why "more"</p>
             <h2>a grammar of <em>more</em> graphics</h2>
             <p class="big-claim">
-              The Grammar of Graphics fits inside GoFish — and so do grammars
+              The Grammar of Graphics fits inside GoFish, and so do grammars
               beyond it.
             </p>
             <div
@@ -651,14 +651,14 @@ chart(titanic)
               </p>
               <ul style="margin-top: 0.3rem">
                 <li>
-                  <strong>vega-lite</strong> — the grammar underneath Altair
+                  <strong>vega-lite</strong>: the grammar underneath Altair
                 </li>
-                <li><strong>Atom</strong> — unit &amp; dot-plot charts</li>
+                <li><strong>Atom</strong>: unit &amp; dot-plot charts</li>
                 <li>
-                  <strong>PiCCL</strong> — pictorial charts (the bottle)
+                  <strong>PiCCL</strong>: pictorial charts (the bottle)
                 </li>
                 <li>
-                  <strong>GoTree</strong> — a tree-layout grammar, 46 gallery
+                  <strong>GoTree</strong>: a tree-layout grammar, 46 gallery
                   examples
                 </li>
                 <li>
@@ -669,11 +669,11 @@ chart(titanic)
             </div>
             <aside class="notes">
               This is the sense of "more." These aren't screenshots of other
-              tools — each of these grammars exists as a folder of working
+              tools, each of these grammars exists as a folder of working
               examples in GoFish's own test suite. The vega-lite gallery is
               the engine underneath Altair, so the charts Altair makes easy
-              stay easy. And the grammars Altair and matplotlib can't reach —
-              unit charts, pictorials, tree layouts, diagrams — are the same
+              stay easy. And the grammars Altair and matplotlib can't reach,
+              unit charts, pictorials, tree layouts, diagrams, are the same
               operators composing further, not custom SVG code. The standard
               grammar is a subset; the composition keeps going where the
               chart-type menu stops.
@@ -706,8 +706,8 @@ chart(titanic)
                 our data or task.
               </p>
               <!-- <p class="fragment" style="margin-top: 1.2rem; color: #555">
-                GoFish is one attempt. I'd love to hear — in Q&amp;A, in the
-                hallway, on GitHub —
+                GoFish is one attempt. I'd love to hear, in Q&amp;A, in the
+                hallway, on GitHub,
                 <strong
                   >where this does and doesn't match problems you actually
                   have.</strong
@@ -715,10 +715,10 @@ chart(titanic)
               </p> -->
             </div>
             <aside class="notes">
-              Land all three explicitly. 1: the Part 1 journey — bar, stacked,
-              sorted, ribbon, polar — weren't different chart types, they were
-              structural moves. 2: affordances thread — every move opens some
-              queries and closes others. 3: the composition payoff —
+              Land all three explicitly. 1: the Part 1 journey, bar, stacked,
+              sorted, ribbon, polar, weren't different chart types, they were
+              structural moves. 2: affordances thread, every move opens some
+              queries and closes others. 3: the composition payoff,
               scatter-pie, flower, balloon weren't in any dropdown. Then the
               honest close: GoFish is one attempt, Q&A is needfinding. ~27 min
               mark.
@@ -889,7 +889,7 @@ chart(titanic)
             </div>
             <aside class="notes">
               Quick pip install (--pre for the alpha), docs, and GitHub.
-              Socials — scan the QR or find me at joshmpollock.com. ~28 min
+              Socials, scan the QR or find me at joshmpollock.com. ~28 min
               mark.
             </aside>
           </section>
@@ -902,7 +902,7 @@ chart(titanic)
               </p>
             </div>
             <aside class="notes">
-              15 min Q&amp;A — use it as needfinding. "Can it do X?" → unmet
+              15 min Q&amp;A, use it as needfinding. "Can it do X?" → unmet
               needs, write them down. "Why not just use Y?" → positioning isn't
               landing, probe why. "How does it handle Z?" → evaluating against
               real workflows. "Oh cool" + silence → the need isn't felt. That's

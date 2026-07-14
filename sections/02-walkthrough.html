@@ -44,7 +44,7 @@
             <div>
               <pre class="viz-code">chart(barley)</pre>
               <p class="viz-step-copy">
-                Ten varieties, six sites, two years — before any operator
+                Ten varieties, six sites, two years, before any operator
                 touches it, the chart is just the data.
               </p>
             </div>
@@ -176,12 +176,12 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <aside class="notes">
-              Site nested by year — the same site-then-year structure as the
-              opening, now on the real barley data. That two-level spec —
-              spread(by="site") then spread(by="year") — is now built. Next,
+              Site nested by year, the same site-then-year structure as the
+              opening, now on the real barley data. That two-level spec,
+              spread(by="site") then spread(by="year"), is now built. Next,
               three slides walk that same spec bottom-up, starting from a
               single mark and moving the cut up the spec one line at a time,
-              tying each line to a perceptual-query chip — the notation
+              tying each line to a perceptual-query chip, the notation
               promised back in the opening.
             </aside>
           </section>
@@ -226,26 +226,26 @@
             </div>
             <aside class="notes">
               Highlighting a line of the spec picks a CUT through the operator
-              tree — Elmqvist-style hierarchical aggregation, but the cut is
+              tree, Elmqvist-style hierarchical aggregation, but the cut is
               wherever your eye lands in the code, not a fixed level someone
               baked into the chart. We start at the very bottom of the spec,
               the mark line, so the cut sits as low as it can go: the
               boundary is a single bar, and there is nothing below the cut
               left to collapse into a summary glyph, because the mark is the
-              leaf — this first step is the one place in the whole sequence
+              leaf, this first step is the one place in the whole sequence
               where nothing is hidden. The focused region is marked by a
               drawn dashed boundary around the bar in play rather than by
-              graying out the rest — this slide has earned the right to use
+              graying out the rest, this slide has earned the right to use
               its own machinery: common region is the strong Gestalt cue
               (the whole reason grouping/adjacency reads as comparison at
               all), where dimming was only ever a salience nudge borrowed
               for the earlier Boulder slide back in the opening. Watch the
               boundary as the steps advance: right now it hugs a single bar,
               as small as it can get, and it will grow one enclosure at a
-              time as the cut moves up the spec — first to Morris's pair of
+              time as the cut moves up the spec, first to Morris's pair of
               bars, then to the entire plot. The chip states that same story
               directly: the header is a full set of concrete field = value
-              bindings (site = Morris, year = 1932) — every coordinate is
+              bindings (site = Morris, year = 1932), every coordinate is
               pinned down, so there's no hole in the query body, just a
               direct channel mapping, yield → height, site → color. With
               nothing left to search for and nothing to aggregate, the
@@ -304,11 +304,11 @@
               cut for the first time. Below the cut, the tree collapses
               into a summary glyph: this is just the inner substitution
               GoFish already does whenever a grouping level is left out of
-              a spec — the same auto-summing behind "back to those bar
+              a spec, the same auto-summing behind "back to those bar
               charts." Concretely, on this step it happens site by site:
               every site other than Morris has its whole spread over years
               flattened down to one neutral gray bar of its total, while
-              Morris — the one site the header pins down — stays exploded
+              Morris, the one site the header pins down, stays exploded
               into its own bar per year, because that's what's inside the
               boundary now. So the visualization of the idea (fade what's
               below the cut into a summary) is itself an instance of the
@@ -317,25 +317,25 @@
               of bars, one enclosure bigger than the mark step. The header
               shrinks the same amount it grew: year = 1932 is gone,
               discharged into the query body as "across years," and only
-              site = Morris is left pinned down — boundary and header are
+              site = Morris is left pinned down, boundary and header are
               the same widening cut, drawn vs. written. This is also where
               the perceptual-query notation is introduced properly for the
-              first time: the hole in the chip — ⟨yield heights⟩ — is a
+              first time: the hole in the chip, ⟨yield heights⟩, is a
               placeholder for the reader's own attention, marking what the
               boundary is now cheap enough to compare but hasn't been read
               out yet. The chip states the query; what it costs to actually
-              run it is worth saying out loud rather than printing — here,
+              run it is worth saying out loud rather than printing, here,
               bars sit adjacent, so the estimate is cheap: one glance, not a
               verdict on whether the chart is good, just what this
               arrangement charges for the comparison. A second chip has now
-              landed above the first, and it's not floating free — it sits
+              landed above the first, and it's not floating free, it sits
               directly beside the spread(by="year") line, the way the mark
               chip below it sits beside the mark line, so the column is
               starting to read like a legend for the spec itself. Worth
               noticing in passing: the header just got shorter than the
               mark chip's, one binding lighter, because year = 1932 dropped
               out of the address and reappeared as "across years" in the
-              body — that's the same shrink the boundary talk above is
+              body, that's the same shrink the boundary talk above is
               describing, just visible in the chip stack now too.
             </aside>
           </section>
@@ -379,21 +379,21 @@
               </div>
             </div>
             <div class="viz-query" style="margin: 0.9rem auto 0; max-width: 720px; font-size: 0.5em">
-              <span class="q-line"><em class="q-field">search</em> — where is it? <span class="q-val">look up</span> <span class="q-val">find</span> <span class="q-val">follow</span></span>
-              <span class="q-gloss"><span class="q-val">look up</span>: you were handed the address. <span class="q-val">find</span>: you weren't — the chart has to make the answer visible. <span class="q-val">follow</span>: trace a link.</span>
-              <span class="q-line" style="margin-top: 0.5em"><em class="q-field">query</em> — what about it? <span class="q-val">read</span> <span class="q-val">compare</span> <span class="q-val">collect</span></span>
+              <span class="q-line"><em class="q-field">search</em>, where is it? <span class="q-val">look up</span> <span class="q-val">find</span> <span class="q-val">follow</span></span>
+              <span class="q-gloss"><span class="q-val">look up</span>: you were handed the address. <span class="q-val">find</span>: you weren't, the chart has to make the answer visible. <span class="q-val">follow</span>: trace a link.</span>
+              <span class="q-line" style="margin-top: 0.5em"><em class="q-field">query</em>, what about it? <span class="q-val">read</span> <span class="q-val">compare</span> <span class="q-val">collect</span></span>
               <span class="q-gloss"><span class="q-val">read</span>: decode one value or event. <span class="q-val">compare</span>: relate two or more located things. <span class="q-val">collect</span>: summarize all of them.</span>
             </div>
             <aside class="notes">
               One more line up, and we're at the top of the spec: the cut
               moves onto the outer spread(by="site"), and now the year line
-              collapses too, along with the mark line beneath it — both
+              collapses too, along with the mark line beneath it, both
               fall below the cut, both fold into summary glyphs wherever
               the layout doesn't need them expanded. The boundary takes its
               last, biggest step: from Morris's pair of bars out to the
               entire plot, every site now participating, nothing held back
               as a special case anymore. The header shrinks to match, and
-              this time it empties out completely — there's no field =
+              this time it empties out completely, there's no field =
               value binding left to write, because we're no longer looking
               at one example region, we're looking at all of them at once.
               That's exactly what the query body says without any header
@@ -402,23 +402,23 @@
               is the whole claim of this slide's title made literal: read
               down the column and you're reading down the spec, one chip
               per line, in the same order. Read it top to bottom and two
-              things move in opposite directions — the headers thin out as
+              things move in opposite directions, the headers thin out as
               you go up, a full site = Morris · year = 1932 address at the
               bottom, down to site = Morris with year gone, down to no
-              header at all at the top — while the holes do the opposite,
+              header at all at the top, while the holes do the opposite,
               growing from nothing, to a hole, to a whole shape. And the
               cost tracks both: a lookup at the bottom, a glance in the
               middle, a scan at the top. Three chips, three prices, one
-              spec. The hole is bigger than either of the last two steps' holes —
+              spec. The hole is bigger than either of the last two steps' holes,
               it's not one number, it's a whole shape, repeated once per
-              site — and it's worth pricing that out loud: groups sitting
+              site, and it's worth pricing that out loud: groups sitting
               apart is a real perceptual act, but reading ten of them
               side by side is a scan, the most expensive query in this
-              three-step arc. Lookup, then one glance, then a scan — the
+              three-step arc. Lookup, then one glance, then a scan, the
               query gets more expensive exactly as the boundary gets
               bigger and the header gets emptier; three prices for the
               same widening cut. The key underneath the chip spells out
-              the six verbs the chips use, and they aren't arbitrary —
+              the six verbs the chips use, and they aren't arbitrary,
               they split into two tiers. Look up, find, and follow are all
               "where is it" questions: look up means someone handed you
               the address (a key, a coordinate) and the index just
@@ -432,7 +432,7 @@
               loud later, when the delta-bars slides come up: that whole
               four-step arc is the story of turning a find into something
               close to a look up. Early on, "which way did yield move at
-              this site" is a real hunt — you have to read a line's slope,
+              this site" is a real hunt, you have to read a line's slope,
               one of ten per panel, and there's no shortcut. By the time
               the bars are diverging from a zero baseline, the sign has an
               address: which side of the baseline the bar falls on. The
@@ -475,7 +475,7 @@
                   across <em class="q-field">sites</em></span
                 >
                 <span class="q-gloss fragment" data-fragment-index="3"
-                  >groups sit apart — a scan</span
+                  >groups sit apart, a scan</span
                 >
               </div>
 
@@ -512,15 +512,15 @@
               </div>
             </div>
             <aside class="notes">
-              Docking is evaluation, not substitution. A chip is a query — an
+              Docking is evaluation, not substitution. A chip is a query, an
               act you can run when you attend inside a region; what crosses
               the boundary upward is only the act's export. When the mark
               chip docks into the year chip, its whole body collapses to
-              ⟨yield heights⟩ — and notice the header: C's binding year =
+              ⟨yield heights⟩, and notice the header: C's binding year =
               1932 is discharged by B's "across years", just as B's site =
               Morris is discharged by A's "across sites". Headers shrink as
               you dock upward; on the cut slides they grew as we cut
-              downward — same interface, two directions. The mapping
+              downward, same interface, two directions. The mapping
               chip-to-summary is many-to-one: a stacked bar and a waffle are
               different chips exporting the same summary type at different
               precision, which is exactly why inner substitution preserves
@@ -576,16 +576,16 @@
               site → year: each site's two years sit together, so the change per
               site is easy to read. Now that the chips are all up at once,
               here's what that adjacency buys: the top chip's hole is ⟨each
-              site's year pattern⟩, compared across sites — and it's nesting
+              site's year pattern⟩, compared across sites, and it's nesting
               by site first that puts each site's two years right next to
               each other, which is the only reason "each site's year
               pattern" is a single readable shape instead of two bars you'd
               have to go find on opposite sides of the plot. The middle chip
               zooms into one site and prices the within-site comparison as a
-              glance — Morris's two years, side by side. The bottom chip is
+              glance, Morris's two years, side by side. The bottom chip is
               the same lookup it always was: one rect, one color. Same three
               prices as the cut slides, but now all three are visible
-              together, because there's no single cut being made here — the
+              together, because there's no single cut being made here, the
               whole point of this slide is that all three queries are live
               at once, for this particular nesting order.
             </aside>
@@ -632,26 +632,26 @@
               year → site: sites sit together within each year, so the
               per-site change is scattered across the two blocks. Same three
               chips as the last slide, same data, same operators, only the
-              nesting order has flipped — and you can read that flip
+              nesting order has flipped, and you can read that flip
               straight off the two chip columns if you compare them across
               this slide advance: same shape, top to bottom, but every site
               and year token has traded places. The hole at the top is now
-              ⟨each year's site pattern⟩, compared across years — a scan,
+              ⟨each year's site pattern⟩, compared across years, a scan,
               same as before, but the thing being scanned has changed from
               "one site's two years" to "one year's six sites." The middle
               chip zooms into a single year and prices the within-year
               comparison across sites as a glance, where a moment ago that
               same glance was across years. The bottom chip hasn't moved at
-              all — one rect is one rect regardless of which spread sits
+              all, one rect is one rect regardless of which spread sits
               outside the other. That's the whole payoff of "nesting order
               matters" stated in the chip notation: same data, same
-              operators, same three cuts, only the order changed — and the
+              operators, same three cuts, only the order changed, and the
               order is exactly what decides which comparison is a cheap
               glance and which one is a scan.
             </aside>
           </section>
 
-          <!-- DISABLED: "or flatten it to a grid" — heatmap solo step cut from the
+          <!-- DISABLED: "or flatten it to a grid", heatmap solo step cut from the
                nesting build-up; the heatmap/table() still appears later on the
                "flattening the hierarchy" slide, so it is not lost from the talk.
           <section class="viz-step" data-background-color="#f7f2e8">
@@ -667,11 +667,11 @@
           </section>
           -->
 
-          <!-- DISABLED: "nesting order matters" — 3-panel comparison slide cut
+          <!-- DISABLED: "nesting order matters", 3-panel comparison slide cut
                from the deck. Its core argument (site → year prices "each
                site's year pattern" as a scan across sites; year → site
                prices the same shape the other way, "each year's site
-               pattern" across years — same cost, different grouping) has
+               pattern" across years, same cost, different grouping) has
                been redistributed into the notes of the two surviving
                "group by site, then year" / "or group by year, then site"
                slides above. The heatmap panel's table()/lookup argument
@@ -797,15 +797,15 @@
             </div>
             <aside class="notes">
               Three layouts of the same data, side by side, all three columns
-              visible at once — and now that the cut slides have introduced
+              visible at once, and now that the cut slides have introduced
               the chip notation, each panel gets to state its own query
               directly instead of us describing it out loud. The two
-              grouped-bar chips differ by swapping exactly two tokens — site
-              and year — because that's the whole nesting-order move: which
+              grouped-bar chips differ by swapping exactly two tokens, site
+              and year, because that's the whole nesting-order move: which
               field gets the outer for-each. Site → year prices "each site's
               year pattern" as a scan across sites; year → site prices the
               same shape of comparison the other way, "each year's site
-              profile" across years — same cost, different grouping. The
+              profile" across years, same cost, different grouping. The
               heatmap chip trades both adjacencies away for direct
               addressability: no scan at all, just a lookup by (site, year),
               read coarsely by color. Same data, three specs, three different
@@ -856,16 +856,16 @@
               <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s <em class="q-field">yield</em>⟩</span> across <em class="q-field">years</em></span>
             </div>
             <p class="fragment" style="margin-top: 1rem; font-size: 0.55em; color: #555">
-              this time, start from the query — then build the structure that answers it
+              this time, start from the query, then build the structure that answers it
             </p>
             <aside class="notes">
               The totals rose at Morris and fell everywhere else. But a total can
               hide its parts: maybe one big variety swung it. To answer, we break
               each site open by variety. New move: instead of reading the query
-              off a chart we already built, write the query down first — for each
-              variety, for each site, how did yield change — and go hunting for
+              off a chart we already built, write the query down first, for each
+              variety, for each site, how did yield change, and go hunting for
               the structure that makes it cheap. The rest of this section is that
-              hunt — and the obvious first stop is the operator that just handed
+              hunt, and the obvious first stop is the operator that just handed
               us site and year: spread again.
             </aside>
           </section>
@@ -890,7 +890,7 @@
                 The obvious move: nest one more <code>spread</code>. Every
                 variety gets its own bar, so each variety's yield is right
                 there to read. But the bars sit side by side as ten independent
-                heights, and nothing sums them back up — so a variety's
+                heights, and nothing sums them back up, so a variety's
                 <em>share</em> of its site-year is nowhere on the screen.
                 Proportion stops being something you can see and becomes
                 something you have to compute.
@@ -901,7 +901,7 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <aside class="notes">
-              This is the naive move, and it's the honest one to try first —
+              This is the naive move, and it's the honest one to try first,
               we wrote the query down, we need per-variety yield, so just
               spread by variety too. And it half-works: every variety does
               get its own bar, so a single variety's yield is directly
@@ -911,14 +911,14 @@
               proportions here. The ten bars in a group are ten independent
               heights sitting next to each other, and nothing on the screen
               sums them. So "what share of this site-year is Trebi?" isn't a
-              thing you can look at — you'd have to mentally add up ten bars
+              thing you can look at, you'd have to mentally add up ten bars
               to get a total and then divide one of them by it. The chart
               hands you every part and withholds the whole.
               Say that structurally and it's the same sentence: spreading
               throws the total away. No total means no denominator, and no
               denominator means no proportion. Which is also why the question
-              that started this whole beat — the totals rose at Morris and
-              fell everywhere else, is that one variety or all of them? —
+              that started this whole beat, the totals rose at Morris and
+              fell everywhere else, is that one variety or all of them?,
               can't even be asked of this chart. We lost the very thing we
               were trying to explain. There's a second, cruder problem worth
               a beat if you have time: 120 bars in one row, each site-year
@@ -926,11 +926,11 @@
               years means jumping over nine neighbours. But that one is just
               crowding. The proportions failure is structural, and it's the
               one that names the fix. <code>stack</code> is the part-to-whole
-              operator — it puts the parts back into a whole, so that share
+              operator, it puts the parts back into a whole, so that share
               becomes a thing on the screen rather than arithmetic in the
               head. The next slide swaps this third <code>spread</code> for a
               <code>stack</code> and the totals come back. The chip hasn't
-              changed — same query, third structure. That's the beat: hold the
+              changed, same query, third structure. That's the beat: hold the
               question fixed and let the structure move.
             </aside>
           </section>
@@ -955,7 +955,7 @@
                 Spreading a third time lost the total. Stacking variety
                 instead of spreading it puts the parts back into a whole:
                 opening each site's bar by variety shows that the
-                <strong>total</strong> moved — bar heights differ between the
+                <strong>total</strong> moved, bar heights differ between the
                 two years. Whether the <em>mix</em> changed is still an
                 expensive read: each variety's segment sits on a shifting
                 baseline set by everything stacked below it.
@@ -969,15 +969,15 @@
               Stack is a layout operator, green. Spreading by site and year
               first, then stacking variety within each site-year bar, answers
               the totals question for free: bar heights visibly differ
-              between 1931 and 1932 at every site — the total that the third
+              between 1931 and 1932 at every site, the total that the third
               `spread` just threw away is back. But it prices the mix
               question out. Once a variety's segment sits above others in the
               stack, its two endpoints (1931 stack, 1932 stack) share a
               shifting baseline set by every segment below it, so the eye
               can't isolate whether that one variety's share changed or the
               whole stack just slid. Concretely: Velvet at Grand Rapids rose
-              +9.2 bushels/acre, the biggest jump anywhere outside Morris —
-              bigger than Morris's own Manchuria (+6.9) or Glabron (+6.4) —
+              +9.2 bushels/acre, the biggest jump anywhere outside Morris,
+              bigger than Morris's own Manchuria (+6.9) or Glabron (+6.4),
               and its segment is nearly impossible to isolate here, buried
               mid-stack on a baseline that itself moved. That failure is the
               point: it's what sends us to normalize next, throwing the total
@@ -1013,10 +1013,10 @@
             ></div>
             <aside class="notes">
               A negative result, and a real finding: the bands line up across
-              each site's year pair — the variety mix held. It isn't one big
+              each site's year pair, the variety mix held. It isn't one big
               variety swinging the total; it's all of them, moving together,
               roughly in proportion. Only the total moved. That's exactly
-              what licenses the simplification that follows — if the mix is
+              what licenses the simplification that follows, if the mix is
               stable, the total (or really, its site-by-site delta) is the
               whole story, and we can stop carrying per-variety segments at
               all. The next beat abstracts down to a single number per site.
@@ -1040,7 +1040,7 @@
       .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="variety"))
   )</pre>
               <p class="viz-step-copy">
-                Still one line changed, and still the same normalized stack —
+                Still one line changed, and still the same normalized stack,
                 only the coordinate system is different. Length became angle.
                 The mix comparison that was a glance at the normalized bars
                 (do the band boundaries line up?) is now a wedge-to-wedge
@@ -1053,16 +1053,16 @@
             ></div>
             <aside class="notes">
               This is the exact same data, the exact same normalized stack,
-              the exact same query — at Morris, did each variety's share
-              change across the years? — with one thing swapped: length
+              the exact same query, at Morris, did each variety's share
+              change across the years?, with one thing swapped: length
               for angle. Same point as the length/angle pair earlier in the
               deck (pie vs. bar with five similar wedges): fine-grained
               comparison gets much harder. In the bar version, the mix
               question was answered by whether two horizontal band edges
-              lined up — a single, cheap alignment judgment, repeated across
+              lined up, a single, cheap alignment judgment, repeated across
               six sites. Here, answering it means comparing a wedge's angle
               (or area) to the wedge directly below it, pie by pie, site by
-              site — no shared baseline, no edge to align, just two shapes
+              site, no shared baseline, no edge to align, just two shapes
               you have to hold in your head and compare. Nothing is wrong
               with the pies; they're honest and correctly normalized. They
               just price the same query much higher. That's the deck's whole
@@ -1083,7 +1083,7 @@
 
           <section data-visibility="hidden">
             <!-- HIDDEN: was redundant with the 3-panel "nesting order matters" slide
-                 above, but that slide is now disabled — this is currently the only
+                 above, but that slide is now disabled, this is currently the only
                  place table()/the heatmap appears in the talk. Restore by removing
                  data-visibility. -->
             <h2>flattening the hierarchy</h2>
@@ -1158,7 +1158,7 @@
             </div>
             <aside class="notes">
               The heatmap collapses the hierarchy entirely: (lake, species) is a
-              flat compound key. No nesting, no containment — just a grid. The
+              flat compound key. No nesting, no containment, just a grid. The
               key structure you choose determines what queries your reader can
               answer.
             </aside>
@@ -1223,7 +1223,7 @@
           </section>
 
           <!-- Connection affordances: bars vs lines (Zacks & Tversky 1999).
-               Perceptual beat, no code — same format as the Franconeri slides. -->
+               Perceptual beat, no code, same format as the Franconeri slides. -->
           <!-- HIDDEN for now: "what does connecting things do?" set parked; remove data-visibility to restore. -->
           <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>what does connecting things do?</h2>
@@ -1276,7 +1276,7 @@
               data-fragment-index="3"
               style="font-size: 0.6em; margin-top: 0.6rem"
             >
-              Bars afford discrete comparisons; connected marks afford trends —
+              Bars afford discrete comparisons; connected marks afford trends,
               even when the x-axis is categorical.
               <span style="color: #777">Zacks &amp; Tversky (1999)</span>
             </p>
@@ -1284,13 +1284,13 @@
               Before we add the next operator, a perception question: what does
               connecting marks do? Zacks &amp; Tversky (1999), "Bars and lines: a
               study of graphic communication," showed people the same data as
-              bars and as a line. Bar readers produced discrete comparisons —
-              "men are taller than women." Line readers produced trends — even
+              bars and as a line. Bar readers produced discrete comparisons,
+              "men are taller than women." Line readers produced trends, even
               on categorical data, giving absurd readings like "the more male a
               person is, the taller he or she is." Connection is not decoration:
               it asserts continuity and identity, and it licenses trend
               readings. Sorting a stack by value buys rank-as-position but
-              gives up identity — "same site, same slot" is gone — and
+              gives up identity, "same site, same slot" is gone, and
               connection is exactly the operator that buys it back. (That
               trade plays out later, in the closing section's sort+connect move slide (move 3 of 3),
               on the energy ribbon.)
@@ -1363,7 +1363,7 @@
             ></div>
             <aside class="notes">
               Highlight Morris, Grand Rapids after the structural moves are in
-              place. Same structure, same data — only the color encoding
+              place. Same structure, same data, only the color encoding
               changed, and the set of easily-answered queries is now
               completely different.
             </aside>
@@ -1454,7 +1454,7 @@
             >
               The flip side is tasks where you only need a coarse sense of
               part-to-whole: at a glance you can treat each wedge as “about a
-              fifth,” “about a third,” “nearly half”—familiar angles become a
+              fifth,” “about a third,” “nearly half”,familiar angles become a
               quick recognition problem. Getting the same whole-to-part read
               from bars often means adding gridlines or leaning on the axis, and
               the comparison is less visually immediate.
@@ -1504,7 +1504,7 @@
             >
               So polar mapping is an <strong>accuracy–efficiency</strong> trade:
               angle can be faster for coarse proportion, while a Cartesian axis
-              often wins for fine comparison—same data, different tasks.
+              often wins for fine comparison,same data, different tasks.
             </div> -->
             <div
               class="fragment"
@@ -1542,7 +1542,7 @@
               <div class="grammar-def"><code>species: contiguous</code></div>
             </div>
             <p style="margin-top: 1.2rem; font-size: 0.82em; color: #777">
-              Same structure as the ribbon — only the coordinate system changed.
+              Same structure as the ribbon, only the coordinate system changed.
             </p>
             <aside class="notes">
               This is the point. The schema is identical to the ribbon. The
