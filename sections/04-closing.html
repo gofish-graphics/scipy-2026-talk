@@ -138,9 +138,9 @@
                 </div>
               </div>
             </div>
-            <div class="move-code-pair">
-              <div>
-                <p class="move-code-label">before</p>
+            <div class="move-code-builder">
+              <div class="move-code-stage">
+                <p class="move-code-label">continuous bars</p>
                 <pre class="viz-code compact">chart(seafood)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="lake", dir="x"),
@@ -148,13 +148,13 @@
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=36, fill="species"))</pre>
               </div>
-              <div>
-                <p class="move-code-label">after</p>
+              <div class="move-code-stage fragment" data-fragment-index="1">
+                <p class="move-code-label">countable units</p>
                 <pre class="viz-code compact">chart(seafood)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="lake", dir="x"),
   )
-  <span class="cut-line cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">waffle</span>(count="count", fill="species"))</span></pre>
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">waffle</span>(count="count", fill="species"))</pre>
               </div>
             </div>
             <aside class="notes">
@@ -213,9 +213,9 @@
                 </div>
               </div>
             </div>
-            <div class="move-code-pair">
-              <div>
-                <p class="move-code-label">before</p>
+            <div class="move-code-builder">
+              <div class="move-code-stage">
+                <p class="move-code-label">one level</p>
                 <pre class="viz-code compact">chart(titanic)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">stack</span>("class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
@@ -223,13 +223,13 @@
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
-              <div>
-                <p class="move-code-label">after</p>
+              <div class="move-code-stage fragment" data-fragment-index="1">
+                <p class="move-code-label">one more level</p>
                 <pre class="viz-code compact">chart(titanic)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">stack</span>("class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
-    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("sex", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),</span>
-    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("survived", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())</span>
+    <span class="viz-op">stack</span>("sex", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="viz-op">stack</span>("survived", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
@@ -341,27 +341,29 @@
                 </div>
               </div>
             </div>
-            <div class="move-code-pair move-code-pair-tight">
-              <div>
-                <p class="move-code-label">before</p>
+            <div class="move-code-builder">
+              <div class="move-code-stage">
+                <p class="move-code-label">sort each year's stack</p>
                 <pre class="viz-code compact">sorted = chart(energyMix)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x"),
     <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y"))
-  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="amount", fill="source"))
-
-area = chart(energyMix)
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="amount", fill="source"))</pre>
+              </div>
+              <div class="move-code-stage fragment" data-fragment-index="1">
+                <p class="move-code-label">connect the stacks</p>
+                <pre class="viz-code compact">area = chart(energyMix)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year"), <span class="viz-op">stack</span>(by="source"))
   .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(by="source", h="amount", fill="source", opacity=0.8))</pre>
               </div>
-              <div>
-                <p class="move-code-label">after</p>
+              <div class="move-code-stage fragment" data-fragment-index="2">
+                <p class="move-code-label">sort + connect</p>
                 <pre class="viz-code compact">chart(energyMix)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="year", dir="x"),
     <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y")
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="amount", fill="source"))
-  <span class="cut-line cut-highlight">.<span class="viz-op">layer</span>(<span class="viz-mark">ribbon</span>(by="source", opacity=0.5))</span></pre>
+  .<span class="viz-op">layer</span>(<span class="viz-mark">ribbon</span>(by="source", opacity=0.5))</pre>
               </div>
             </div>
             <p class="source-line" style="margin-top: 0.3em !important">
@@ -441,7 +443,28 @@ area = chart(energyMix)
                 </p>
               </div>
             </div>
-            <pre class="viz-code compact" style="width: 83%; margin: 0.55rem auto 0; font-size: 0.43em !important"><span class="viz-op">chart</span>(bottleData, axes=False)
+            <div class="move-code-builder" style="max-width: 980px">
+              <div class="move-code-stage">
+                <p class="move-code-label">normalized bars</p>
+                <pre class="viz-code compact"><span class="viz-op">chart</span>(bottleData, axes=False)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x", spacing=20))
+  .<span class="viz-mark">mark</span>(<span class="viz-op">layer</span>([
+    <span class="viz-mark">rect</span>(h=<span class="viz-transform">datum</span>(100), fill="gray"),
+    <span class="viz-mark">rect</span>(h="amount", fill="green"),
+  ]))</pre>
+              </div>
+              <div class="move-code-stage fragment" data-fragment-index="1">
+                <p class="move-code-label">paint the bottle</p>
+                <pre class="viz-code compact"><span class="viz-op">chart</span>(bottleData, axes=False)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x", spacing=20))
+  .<span class="viz-mark">mark</span>(<span class="viz-op">paint</span>([
+    <span class="viz-mark">image</span>(href=bottlePng, h=<span class="viz-transform">datum</span>(100)),
+    <span class="viz-mark">rect</span>(h="amount", w=175, fill="green"),
+  ], blendMode="color"))</pre>
+              </div>
+              <div class="move-code-stage fragment" data-fragment-index="2">
+                <p class="move-code-label">layer on labels</p>
+                <pre class="viz-code compact" style="font-size: 0.43em !important"><span class="viz-op">chart</span>(bottleData, axes=False)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x", spacing=20))
   .<span class="viz-mark">mark</span>(
     <span class="viz-op">layer</span>([
@@ -457,6 +480,8 @@ area = chart(energyMix)
       <span class="viz-op">Constraint</span>.<span class="viz-op">align</span>([label, line], x="end"),
     ])
   )</pre>
+              </div>
+            </div>
             <p class="viz-step-copy" style="text-align: center; margin-top: 0.45rem">
               same query. different voice. clearer annotation.
             </p>
