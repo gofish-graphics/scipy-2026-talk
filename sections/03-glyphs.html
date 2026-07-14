@@ -175,9 +175,7 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <!-- ─── BRIDGE: THE SLOPE CHART'S FIRST LAYER ───────────── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
-            <!-- HIDDEN: the grouped bars now lead directly to the faceted
-                 slope chart, so this points-only intermediate is redundant. -->
+          <section class="viz-step" data-background-color="#f7f2e8">
             <h2>first, just the points</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
@@ -186,11 +184,11 @@ chart(barley_scatter_by_year(1931)).flow(
               Each site panel scatters every variety's two years as points,
               the connecting lines come next.
             </p>
-            <pre class="viz-code compact">chart(barley)
+            <pre class="viz-code compact">chart(barleySeries)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>(by="site", dir="x", spacing=24),
-    <span class="viz-op">spread</span>(by="year", dir="x", spacing=6),
-    <span class="viz-op">scatter</span>(y="yield")
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="viz-op">scatter</span>(by="variety", y="yield")
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">circle</span>(r=3, fill="variety"))</pre>
             <div
@@ -199,19 +197,12 @@ chart(barley_scatter_by_year(1931)).flow(
               style="height: 312px; min-height: 312px"
             ></div>
             <aside class="notes">
-              Same spread/spread skeleton as the stacked-bar slides (site 24,
-              year 6, tight within a site's year pair, wide between sites),
-              just with the mark swapped: scatter stands in for stack, circle
-              stands in for rect. No nested chart and no group step, after
-              the two facet spreads, each (site, year) cell holds ten rows,
-              one per variety, and a bare scatter (no `by`) already splits
-              its input one point per row, so `scatter(y="yield")` positions
-              each variety's point by its own yield with no further grouping
-              needed. The year-pair grouping that used to come from a wide
-              between-site gap now falls out directly from the year spread
-              sitting inside the site spread. Next slide adds one thing,
-              connect each variety's two points with a line, and the
-              sentence starts to read.
+              Same spread/spread skeleton as the slope chart, with its first
+              actual mark: scatter makes one placed point per variety in each
+              site-year cell, and circle draws it. The series key combines
+              site and variety, ready for the next slide: line will connect
+              exactly those two points, not same-named varieties across
+              panels.
             </aside>
           </section>
 
@@ -225,13 +216,13 @@ chart(barley_scatter_by_year(1931)).flow(
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
               "Morris is the only site where every variety increased."
             </p>
-            <pre class="viz-code compact">chart(barley)
+            <pre class="viz-code compact">chart(barleySeries)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="cut-highlight"><span class="viz-op">scatter</span>(by="variety", y="yield"),</span>
+    <span class="viz-op">scatter</span>(by="variety", y="yield"),
   )
-  <span class="cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(stroke="variety"))</span></pre>
+  <span class="cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(by="series", fill="variety"))</span></pre>
             <div
               id="chart-viz-barley-slope"
               class="chart-container viz-gofish-chart"

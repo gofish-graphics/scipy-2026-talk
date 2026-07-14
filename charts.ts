@@ -149,6 +149,10 @@ type BarleyRow = {
 };
 
 const barley = barleyRaw as BarleyRow[];
+const barleySeries = barley.map((row) => ({
+  ...row,
+  series: `${row.site}|${row.variety}`,
+}));
 
 // Anonymized aggregate for the Boger/Franconeri opening ONLY, so the audience's
 // first read of the grouping swap isn't primed by recognizing the barley
@@ -1276,7 +1280,7 @@ const SITE_SLOPE_SPACING = 66;
 // the full facet width — each variety's line got a long horizontal run and
 // an obvious tilt. Porting to the two-nested-spreads flow (`spread(site)` ->
 // `spread(year)` -> `scatter`, needed to dodge gofish#770's panel-collapse
-// bug, see `slopeLineBy`'s comment) initially kept the OLD spacing value (6),
+// bug) initially kept the OLD spacing value (6),
 // a leftover from when it just nudged two dots apart inside a
 // scatter-defined width. At `spacing: 6` the two year columns sit almost on
 // top of each other, so every line renders nearly vertical — the tilt (the
@@ -1288,14 +1292,8 @@ const SITE_SLOPE_SPACING = 66;
 // original's `scatter(x=year)` spread, without the panels touching.
 const SLOPE_YEAR_SPACING = 60;
 
-// Same facet skeleton as the stacked-bar charts (renderVizSiteYear above:
-// spread site 24 / year 4), just with the mark swapped from a stacked rect
-// to a scattered circle: this is literally the slope chart's first layer,
-// rendered on its own — the bridge slide before the connecting line gets
-// drawn. One flat pipeline, no nested chart: spread facets by site, spread
-// facets by year within each site, then scatter positions each remaining
-// row (one per variety) by yield — `by` is omitted because a bare scatter
-// already splits its input one entry per row.
+// The slope chart's first layer, rendered on its own: same facets and same
+// per-variety points, with circles instead of the later relational line.
 function renderVizBarleySlopePoints(
   id = "chart-viz-barley-slope-points",
   w = SLOPE_W,
@@ -1303,34 +1301,20 @@ function renderVizBarleySlopePoints(
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(barley, vizChartOptions)
+  Chart(barleySeries, vizChartOptions)
     .flow(
-      spread("site", { dir: "x", spacing: 24 }),
-      spread("year", { dir: "x", spacing: 6 }),
-      scatter({ y: "yield" })
+      spread("site", { dir: "x", spacing: SITE_SLOPE_SPACING }),
+      spread("year", { dir: "x", spacing: SLOPE_YEAR_SPACING }),
+      scatter({ by: "variety", y: "yield" })
     )
     .mark(circle({ r: 3, fill: "variety" }))
     .render(el, { w, h, axes: true, legend: false });
 }
 
-// ── Site short codes: workaround for gofish#770 ─────────────────────────
-// One line per variety per site, connecting its 1931 -> 1932 yield — ported
-// off the old "name it, select it, group it, connect it" `markLayer` idiom
-// (see git history) onto gofish-graphics 0.1.0-nightly.20260711's fused
-// relational marks: `.connect()` is gone, and `line({ by })` now consumes a
-// scatter's placement directly as its own `.mark()`, no `blank()` scaffold
-// or `.name()`/`select()` two-layer indirection needed.
-//
-// Two nested spreads (site, then year) sit upstream of the scatter that
-// places each variety's points, and a fused relational mark does NOT inherit
-// the flow's grouping (gofish #752): `by: "variety"` alone would connect
-// every site's same-named variety into ONE long cross-panel polyline (ten
-// continuous zigzags spanning all six sites, confirmed by rendering it), not
-// six independent 2-point slopes. `slopeLineBy` below folds site back into
-// the key. Its function form does NOT receive the plain data row either — it
-// receives an internal render node, and the actual datum lives at
-// `.directNode.datum[0]` (undocumented, found by logging `Object.keys()` on
-// the callback's argument; gofish #768). Both are worth reporting upstream.
+// One line per variety per site, connecting its 1931 -> 1932 yield. The
+// relational line consumes the placed points directly. Its key must include
+// both site and variety: a variety-only key would join identically named
+// varieties across all six panels into a single zigzag.
 //
 // This flow (spread, spread, scatter) is NOT hit by gofish#770 (the
 // spread+scatter panel-collapse bug documented below on the delta-dots
@@ -1342,11 +1326,6 @@ function renderVizBarleySlopePoints(
 // `legend: false` is a no-op for a categorical `fill` (gofish #686) — an
 // unsuppressable variety/site legend would eat about half the canvas, so
 // `stripLegend` (see above) removes it by DOM surgery after render.
-const slopeLineBy = (r: any) => {
-  const d = r.directNode?.datum?.[0] ?? r;
-  return `${d.site}|${d.variety}`;
-};
-
 // The inner (year) spread's two tick labels ("1931", "1932") sit close
 // enough together (spacing: 6) that they render on top of each other,
 // smearing into an unreadable "1931932"/"19332"-looking mess — the exact
@@ -1420,15 +1399,15 @@ function unclipSvgWidth(id: string) {
 // width), and the bold "every" is faked with a same-color stroke on a mark of
 // its own, x-offset by the measured width of "Morris rose for ".
 //
-// (1) SLOPE — the spec we wish we could write, hacks marked:
-//   Chart(barley, vizChartOptions)
+// (1) SLOPE:
+//   Chart(barleySeries, vizChartOptions)
 //     .flow(
 //       spread({ by: "site", dir: "x", spacing: SITE_SLOPE_SPACING }),
 //       spread({ by: "year", dir: "x", spacing: SLOPE_YEAR_SPACING }),
 //       scatter({ by: "variety", y: "yield" })
 //     )
-//     .mark(line({ by: slopeLineBy /* HACK: gofish#752/#768 */, fill: "variety", strokeWidth: 2 }))
-//     .render(el, { w, h, axes: true, legend: false /* HACK: gofish#686, see stripLegend */ });
+//     .mark(line({ by: "series", fill: "variety", strokeWidth: 2 }))
+//     .render(el, { w, h, axes: true, legend: true });
 function renderVizBarleySlopePanels(
   id = "chart-viz-barley-slope",
   highlight = false,
@@ -1441,7 +1420,7 @@ function renderVizBarleySlopePanels(
   const chartOptions = highlight
     ? { color: palette({ Morris: "#e08214" }), legend: false }
     : vizChartOptions;
-  const panels = Chart(barley, chartOptions)
+  const panels = Chart(barleySeries, chartOptions)
     .flow(
       // `spacing: 20` (the original value) packs facets ~49px apart center to
       // center — narrower than "University Farm"'s own rendered label width
@@ -1458,7 +1437,7 @@ function renderVizBarleySlopePanels(
     )
     .mark(
       line({
-        by: slopeLineBy,
+        by: "series",
         fill: highlight ? "site" : "variety",
         strokeWidth: 2,
       })
@@ -1601,6 +1580,10 @@ function anchorYears(rows: BarleyRow[]): (BarleyRow & { yieldAnchored: number })
   }));
 }
 const barleyAnchored = anchorYears(barley);
+const barleyAnchoredSeries = barleyAnchored.map((row) => ({
+  ...row,
+  series: `${row.site}|${row.variety}`,
+}));
 
 function renderVizBarleySlopeAnchored(
   id = "chart-viz-barley-slope-anchored",
@@ -1609,13 +1592,13 @@ function renderVizBarleySlopeAnchored(
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(barleyAnchored, vizChartOptions)
+  Chart(barleyAnchoredSeries, vizChartOptions)
     .flow(
       spread({ by: "site", dir: "x", spacing: SITE_SLOPE_SPACING }), // see SITE_SLOPE_SPACING comment above (1)
       spread({ by: "year", dir: "x", spacing: SLOPE_YEAR_SPACING }), // see SLOPE_YEAR_SPACING comment above (1)
       scatter({ by: "variety", y: "yieldAnchored" }) // <- only diff from (1): y field
     )
-    .mark(line({ by: slopeLineBy, fill: "variety", strokeWidth: 2 }))
+    .mark(line({ by: "series", fill: "variety", strokeWidth: 2 }))
     // `yieldAnchored` is the internal derived-field name (see `anchorYears`)
     // — it must not leak onto the axis, so the title is overridden with what
     // the quantity actually is. `legend: true` restores the real
