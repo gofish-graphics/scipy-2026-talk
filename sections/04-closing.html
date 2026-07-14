@@ -153,12 +153,8 @@
                 <pre class="viz-code compact">chart(seafood)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="lake", dir="x"),
-    <span class="cut-line cut-highlight"><span class="viz-transform">derive</span>(row => <span class="viz-transform">repeat</span>(row, "count")),</span>
-    <span class="cut-line cut-highlight"><span class="viz-transform">derive</span>(rows => chunk(rows, 5)),</span>
-    <span class="cut-line cut-highlight"><span class="viz-op">spread</span>(dir="y", reverse=True),</span>
-    <span class="cut-line cut-highlight"><span class="viz-op">spread</span>(dir="x")</span>
   )
-  <span class="cut-line cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, h=8, fill="species"))</span></pre>
+  <span class="cut-line cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">waffle</span>(count="count", fill="species"))</span></pre>
               </div>
             </div>
             <aside class="notes">

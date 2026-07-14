@@ -2213,23 +2213,42 @@ function renderScatterPieChart(
     .render(el, { w, h, axes: true });
 }
 
-// ── Waffle chart (unit squares; ported from forwardsyntax/WaffleChart) ────
-// Each catch row becomes `count` unit squares via repeat(); chunks of five
-// squares form the rows of each lake's column. Bottom-aligned lake columns
-// (alignment: "end" in y-down space) fill upward from a shared baseline, and
-// the reversed row spread parks the ragged partial row at the top.
+// ── Waffle chart (a composed mark) ─────────────────────────────────────────
+// The helper reads like a waffle mark at the call site, but it is only a
+// reusable composition: repeat turns counts into unit rows, chunk makes grid
+// rows, two spreads position those rows and their cells, and rect draws them.
+function waffle({
+  count = "count",
+  fill,
+  columns = 5,
+  cell = 8,
+}: {
+  count?: string;
+  fill: string;
+  columns?: number;
+  cell?: number;
+}) {
+  return (data: any[]) => {
+    return Chart(data, { axes: false })
+      .flow(
+        derive((rows: any) => _.flatMap(rows, (row) => repeat(row, count))),
+        derive((rows: any) => _.chunk(rows, columns)),
+        spread({ spacing: 2, dir: "y", reverse: true }),
+        spread({ spacing: 2, dir: "x" })
+      )
+      .mark(rect({ w: cell, h: cell, fill }));
+  };
+}
+
+// Bottom-aligned lake columns (alignment: "end" in y-down space) fill upward
+// from a shared baseline. The waffle helper parks the ragged partial row at
+// the top by reversing its row spread.
 function renderWaffleChart(id = "chart-q-waffle", w = 340, h = 260) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(seafood, { axes: { x: { side: "end" } } })
-    .flow(
-      spread("lake", { spacing: 8, dir: "x", axes: false, alignment: "end" }),
-      derive((d: any[]) => d.flatMap((row) => repeat(row, "count"))),
-      derive((d: any[]) => _.chunk(d, 5)),
-      spread({ spacing: 2, dir: "y", reverse: true }),
-      spread({ spacing: 2, dir: "x" })
-    )
-    .mark(rect({ w: 8, h: 8, fill: "species" }))
+    .flow(spread("lake", { spacing: 8, dir: "x", axes: false, alignment: "end" }))
+    .mark(waffle({ fill: "species" }))
     .render(el, { w, h });
 }
 
