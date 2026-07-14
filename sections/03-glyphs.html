@@ -816,65 +816,72 @@ Frame(
 
           <!-- ─── OPERATOR / GESTALT TABLE ─────────────────────── -->
 
-          <section data-background-color="#f7f2e8">
+          <section class="viz-step" data-background-color="#f7f2e8">
             <h2>choose by the structure you need</h2>
             <table
               style="
                 width: 100%;
                 margin-top: 0.7rem;
                 border-collapse: collapse;
-                font-size: 0.78em;
+                font-size: 0.76em;
                 line-height: 1.4;
               "
             >
               <thead>
                 <tr style="border-bottom: 2px solid #1a1a2e">
-                  <th style="text-align: left; padding: 0.38rem 0.7rem; width: 34%">
-                    What you're building
-                  </th>
-                  <th style="text-align: left; padding: 0.38rem 0.7rem; width: 30%">
-                    Structural move
-                  </th>
-                  <th style="text-align: left; padding: 0.38rem 0.7rem; width: 36%">
-                    Useful additions
-                  </th>
+                  <th style="text-align: center; padding: 0.3rem 0.7rem; width: 20%">Visual structure</th>
+                  <th style="text-align: left; padding: 0.3rem 0.7rem; width: 48%">What it does</th>
+                  <th style="text-align: left; padding: 0.3rem 0.7rem; width: 32%">Operator</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid #d8d3ca">
-                  <td style="padding: 0.42rem 0.7rem">separate or nest groups</td>
-                  <td style="padding: 0.42rem 0.7rem"><code>spread(by=key)</code></td>
-                  <td style="padding: 0.42rem 0.7rem; color: #555">
-                    nest another <code>spread</code> to control adjacency
+                  <td style="padding: 0.18rem 0.7rem">
+                    <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
+                      <div id="chart-viz-op-spread"></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.34rem 0.7rem">put each key in its own slot; nest to control adjacency</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">spread</span>(by=key)</code></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.18rem 0.7rem">
+                    <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
+                      <div id="chart-viz-op-stack"></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.34rem 0.7rem">tile parts end to end, with each segment sized by a value</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">stack</span>(by=key, size=value)</code></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.18rem 0.7rem">
+                    <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
+                      <div id="chart-viz-op-scatter"></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.34rem 0.7rem">place each item by one or two measured values</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">scatter</span>(x, y)</code></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.18rem 0.7rem">
+                    <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
+                      <div id="chart-viz-op-ribbon"></div>
+                    </div>
+                  </td>
+                  <td style="padding: 0.34rem 0.7rem">connect matching items across positions</td>
+                  <td style="padding: 0.34rem 0.7rem">
+                    <code><span class="viz-mark">line</span>(by=key)</code> or
+                    <code><span class="viz-mark">ribbon</span>(by=key)</code>
                   </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #d8d3ca">
-                  <td style="padding: 0.42rem 0.7rem">assemble parts into a whole</td>
-                  <td style="padding: 0.42rem 0.7rem"><code>stack(by=key, size=value)</code></td>
-                  <td style="padding: 0.42rem 0.7rem; color: #555">
-                    normalize for shares; sort to reveal order
+                  <td style="padding: 0.18rem 0.7rem">
+                    <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
+                      <div id="chart-viz-op-table" style="margin-left: -40px"></div>
+                    </div>
                   </td>
-                </tr>
-                <tr style="border-bottom: 1px solid #d8d3ca">
-                  <td style="padding: 0.42rem 0.7rem">place items by measured values</td>
-                  <td style="padding: 0.42rem 0.7rem"><code>scatter(x, y)</code></td>
-                  <td style="padding: 0.42rem 0.7rem; color: #555">
-                    add color or size, or use a chart as each point
-                  </td>
-                </tr>
-                <tr style="border-bottom: 1px solid #d8d3ca">
-                  <td style="padding: 0.42rem 0.7rem">connect the same thing across positions</td>
-                  <td style="padding: 0.42rem 0.7rem"><code>line(by=key)</code> or <code>ribbon(by=key)</code></td>
-                  <td style="padding: 0.42rem 0.7rem; color: #555">
-                    draw over a <code>spread</code>, <code>scatter</code>, or <code>stack</code>
-                  </td>
-                </tr>
-                <tr style="border-bottom: 1px solid #d8d3ca">
-                  <td style="padding: 0.42rem 0.7rem">cross two discrete keys</td>
-                  <td style="padding: 0.42rem 0.7rem"><code>table(row, col)</code></td>
-                  <td style="padding: 0.42rem 0.7rem; color: #555">
-                    put any mark or nested chart in each cell
-                  </td>
+                  <td style="padding: 0.34rem 0.7rem">cross two discrete keys into addressable cells</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">table</span>(row, col)</code></td>
                 </tr>
               </tbody>
             </table>
@@ -884,10 +891,9 @@ Frame(
             </p>
             <aside class="notes">
               This deliberately echoes the AI skill table from the opening,
-              but the recommendations are composable structural moves rather
-              than finished chart types. The left column describes the visual
-              structure you need, the middle gives the operator, and the last
-              column shows common ways to extend it. These are ingredients,
+              but it replaces finished chart types with composable structural
+              moves. The visual preview is on the left, the concrete effect is
+              in the middle, and the highlighted syntax is on the right. These are ingredients,
               not mutually exclusive answers. A slope chart, for example,
               combines spread, scatter, and line. The small note below keeps
               the wider toolbox visible without turning this into another
@@ -989,7 +995,7 @@ Frame(
                         overflow: hidden;
                       "
                     >
-                      <div id="chart-viz-op-spread"></div>
+                      <div data-archive-id="chart-viz-op-spread"></div>
                     </div>
                     <div
                       style="
@@ -1026,7 +1032,7 @@ Frame(
                         overflow: hidden;
                       "
                     >
-                      <div id="chart-viz-op-stack"></div>
+                      <div data-archive-id="chart-viz-op-stack"></div>
                     </div>
                     <div
                       style="
@@ -1063,7 +1069,7 @@ Frame(
                         justify-content: center;
                       "
                     >
-                      <div id="chart-viz-op-scatter"></div>
+                      <div data-archive-id="chart-viz-op-scatter"></div>
                     </div>
                     <div
                       style="
@@ -1105,7 +1111,7 @@ Frame(
                            (whose 40px margins are symmetrically clipped by
                            their centered 150px windows). -->
                       <div
-                        id="chart-viz-op-table"
+                        data-archive-id="chart-viz-op-table"
                         style="margin-left: -40px"
                       ></div>
                     </div>
@@ -1170,7 +1176,7 @@ Frame(
                         overflow: hidden;
                       "
                     >
-                      <div id="chart-viz-op-ribbon"></div>
+                      <div data-archive-id="chart-viz-op-ribbon"></div>
                     </div>
                     <div
                       style="
