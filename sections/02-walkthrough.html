@@ -940,8 +940,10 @@
               <div style="text-align: center">
                 <div style="position: relative; display: inline-block">
                   <div id="chart-conn-line" class="chart-container"></div>
-                  <div class="conn-line-label" style="left: 6%">female</div>
-                  <div class="conn-line-label" style="left: 94%">male</div>
+                  <div class="conn-line-label" style="left: 6%">Manchuria</div>
+                  <div class="conn-line-label" style="left: 35%">Velvet</div>
+                  <div class="conn-line-label" style="left: 65%">Trebi</div>
+                  <div class="conn-line-label" style="left: 94%">Peatland</div>
                 </div>
                 <p
                   class="fragment"
@@ -963,19 +965,21 @@
               style="font-size: 0.6em; margin-top: 0.6rem"
             >
               The data did not change. The relation between the marks did.
-              <span style="color: #777">Zacks &amp; Tversky (1999)</span>
+              <span style="color: #777">Adapted from Zacks &amp; Tversky (1999)</span>
             </p>
             <aside class="notes">
               Spread makes separate slots, so the bars invite separate-value
-              comparisons. A line adds a relation: these positions belong to
-              the same entity, so follow them as a trend. Zacks and Tversky
-              showed the force of that cue with the same data drawn as bars
-              and as a line. Bar readers said "men are taller than women."
-              Line readers said "the more male a person is, the taller he or
-              she is," even though the x-axis was categorical. Connection is
-              not decoration. It asserts continuity and identity. So for the
-              barley question, connect each variety across its two years and
-              facet those lines by site.
+              comparisons. These are mean yields for four barley varieties.
+              Variety is genuinely discrete: there is no continuum from
+              Manchuria through Velvet and Trebi to Peatland. The bar chart
+              asks which category is higher. The line imposes a rise-and-fall
+              path through an arbitrary ordering. Connection is not
+              decoration. It asserts continuity and identity, and here that
+              assertion is unwarranted. In the next slide it becomes useful:
+              connect each variety to itself across two ordered years, then
+              facet those trajectories by site. The representational contrast
+              is adapted from Zacks and Tversky; the barley values are computed
+              from the dataset used throughout this talk.
             </aside>
           </section>
 
@@ -1266,82 +1270,6 @@
             <aside class="notes">
               Sorting is a modifier on the stacked field, not a separate step. It
               re-purposes position from an identity channel to a rank channel.
-            </aside>
-          </section>
-
-          <!-- Connection affordances: bars vs lines (Zacks & Tversky 1999).
-               Perceptual beat, no code, same format as the Franconeri slides. -->
-          <!-- HIDDEN: superseded by the relocated "spread separates; line connects"
-               slide immediately after "just spread again?". -->
-          <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
-            <h2>what does connecting things do?</h2>
-            <div
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                gap: 3rem;
-                margin-top: 0.8rem;
-              "
-            >
-              <div style="text-align: center">
-                <div id="chart-conn-bars-parked" class="chart-container"></div>
-                <p
-                  class="fragment"
-                  data-fragment-index="1"
-                  style="
-                    margin-top: 0.5rem;
-                    font-size: 0.72em;
-                    font-family: 'Shantell Sans', sans-serif;
-                    color: #1a1a2e;
-                  "
-                >
-                  “men are taller than women”
-                </p>
-              </div>
-              <div style="text-align: center">
-                <div style="position: relative; display: inline-block">
-                  <div id="chart-conn-line-parked" class="chart-container"></div>
-                  <div class="conn-line-label" style="left: 6%">female</div>
-                  <div class="conn-line-label" style="left: 94%">male</div>
-                </div>
-                <p
-                  class="fragment"
-                  data-fragment-index="2"
-                  style="
-                    margin-top: 1.4rem;
-                    font-size: 0.72em;
-                    font-family: 'Shantell Sans', sans-serif;
-                    color: #1a1a2e;
-                  "
-                >
-                  “the more male a person is, the taller he or she is”
-                </p>
-              </div>
-            </div>
-            <p
-              class="viz-step-copy fragment"
-              data-fragment-index="3"
-              style="font-size: 0.6em; margin-top: 0.6rem"
-            >
-              Bars afford discrete comparisons; connected marks afford trends,
-              even when the x-axis is categorical.
-              <span style="color: #777">Zacks &amp; Tversky (1999)</span>
-            </p>
-            <aside class="notes">
-              Before we add the next operator, a perception question: what does
-              connecting marks do? Zacks &amp; Tversky (1999), "Bars and lines: a
-              study of graphic communication," showed people the same data as
-              bars and as a line. Bar readers produced discrete comparisons,
-              "men are taller than women." Line readers produced trends, even
-              on categorical data, giving absurd readings like "the more male a
-              person is, the taller he or she is." Connection is not decoration:
-              it asserts continuity and identity, and it licenses trend
-              readings. Sorting a stack by value buys rank-as-position but
-              gives up identity, "same site, same slot" is gone, and
-              connection is exactly the operator that buys it back. (That
-              trade plays out later, in the closing section's sort+connect move slide (move 3 of 3),
-              on the energy ribbon.)
             </aside>
           </section>
 

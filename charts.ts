@@ -2920,29 +2920,34 @@ function renderEnergyRibbon(id = "chart-move-ribbon") {
   renderEnergyStackChart(id, { sort: true, connect: true, w: 400, h: 320 });
 }
 
-// ── Bars vs. line (Zacks & Tversky) ─────────────────────────────────────────
-// Same two-datum dataset (average adult height by sex, cm) shown as a plain
-// bar chart and as a two-point line chart, for the connection-vs-comparison
-// framing.
-const connHeights = [
-  { sex: "female", height: 162 },
-  { sex: "male", height: 175 },
-];
+// ── Bars vs. line (after Zacks & Tversky) ───────────────────────────────────
+// Mean yields for four unordered barley varieties, computed from the dataset
+// already used throughout the talk. Bars compare genuinely discrete
+// categories. Connecting those same categories imposes an arbitrary path
+// because variety has no continuous left-to-right order.
+const connVarietyOrder = ["Manchuria", "Velvet", "Trebi", "Peatland"];
+const connVarieties = connVarietyOrder.map((variety) => ({
+  variety,
+  yield: _.meanBy(
+    barley.filter((row) => row.variety === variety),
+    "yield"
+  ),
+}));
 
 function renderConnBars(id = "chart-conn-bars", w = 380, h = 280) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(connHeights)
-    .flow(spread("sex", { dir: "x", spacing: 32 }))
-    .mark(rect({ h: "height", fill: FRANCONERI_BAR_COLOR }))
+  Chart(connVarieties)
+    .flow(spread("variety", { dir: "x", spacing: 24 }))
+    .mark(rect({ h: "yield", fill: FRANCONERI_BAR_COLOR }))
     .render(el, { w, h, axes: true });
 }
 
 function renderConnLine(id = "chart-conn-line", w = 380, h = 280) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  // Same two data points as chart-conn-bars, scattered by an index (scatter
-  // needs a numeric x for the categorical position) and joined by a fused
+  // Same four data points as chart-conn-bars, scattered by an index (scatter
+  // needs a numeric x for the categorical positions) and joined by a fused
   // relational line mark. gofish-graphics 0.1.0-nightly.20260711 deletes
   // `.connect()` and the `.mark(scaffold()).connect(line(...))` two-layer
   // idiom along with it; `line({ by })` now consumes the scatter's placement
@@ -2950,11 +2955,15 @@ function renderConnLine(id = "chart-conn-line", w = 380, h = 280) {
   // resolve to a single two-point line entry (a fused relational mark does
   // NOT inherit the flow's grouping — gofish #752 — so `by` must be restated
   // here even though there's only one group).
-  // Axes off: the numeric index axis would read "xIndex 0..1"; the slide
-  // overlays female/male labels under the endpoints instead.
-  const indexed = connHeights.map((d, i) => ({ ...d, xIndex: i, group: "all" }));
+  // Axes off: the numeric index axis would read "xIndex 0..3"; the slide
+  // overlays the four variety labels under the positions instead.
+  const indexed = connVarieties.map((d, i) => ({
+    ...d,
+    xIndex: i,
+    group: "all",
+  }));
   Chart(indexed, { axes: false })
-    .flow(scatter("xIndex", { x: "xIndex", y: "height" }))
+    .flow(scatter("xIndex", { x: "xIndex", y: "yield" }))
     .mark(line({ by: "group", stroke: FRANCONERI_BAR_COLOR, strokeWidth: 2.5 }))
     .render(el, { w, h: h - 40, axes: false });
 }
