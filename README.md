@@ -1,4 +1,4 @@
-# Seeing Graphics Clearly - SciPy draft
+# GoFish: Graphical Structure in Plain Sight - SciPy draft
 
 Full Reveal/Vite deck adapted from the `pydata-meetup-2026` branch of `/Users/jmp/gofish-20250316`.
 

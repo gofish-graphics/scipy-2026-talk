@@ -804,8 +804,19 @@
 }
 
 .scipy-title-slide h1 {
-  font-size: 3.35em;
+  font-size: 3.1em;
+  line-height: 1.05;
   margin: 0.2em auto 0.15em;
+}
+
+.scipy-title-slide .title-product,
+.scipy-title-slide .title-claim {
+  display: block;
+}
+
+.scipy-title-slide .title-claim {
+  font-size: 0.58em;
+  margin-top: 0.22em;
 }
 
 .title-logo-row {
