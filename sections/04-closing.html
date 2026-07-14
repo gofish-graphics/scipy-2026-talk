@@ -467,10 +467,61 @@ area = chart(energyMix)
               paint-composited pictorial dressed over four ordinary
               normalized bars, one per bottle, same "share of full" chip on
               both sides, because the query hasn't moved at all. What
-              changed is voice, not structure: a fill line and a bottle
-              photo standing in for a rectangle. Useful, memorable even, but
-              it's a style choice layered on the same chart, not a new
-              question the reader can ask.
+              changed is voice, not structure: a bottle photo standing in for
+              a rectangle. Useful, memorable even, but it is a style choice
+              layered on the same chart, not a new question the reader can
+              ask.
+            </aside>
+          </section>
+
+          <section data-background-color="#f7f2e8">
+            <h2>annotation is another layer</h2>
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 2.7rem;
+                margin-top: 1.15rem;
+              "
+            >
+              <div style="text-align: center">
+                <div
+                  id="chart-q-bottle-bare"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.7"
+                  aria-label="Bottle pictorial showing fill levels without annotations"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  the pictorial mark
+                </p>
+              </div>
+              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div style="text-align: center">
+                <div
+                  id="chart-q-bottle-annotated"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.7"
+                  aria-label="Bottle pictorial with fill lines and percentage labels"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
+                  plus a rule and labels
+                </p>
+              </div>
+            </div>
+            <pre class="viz-code compact" style="width: 72%; margin: 0.75rem auto 0">.<span class="viz-mark">mark</span>(
+  <span class="viz-op">layer</span>([
+    bottle,
+    <span class="diff-add"><span class="viz-mark">rect</span>(h=1, y="amount").name("line"),</span>
+    <span class="diff-add"><span class="viz-mark">text</span>("{amount}%").name("label"),</span>
+  ]).<span class="viz-op">constrain</span>(...)
+)</pre>
+            <aside class="notes">
+              Now we add the rule and percentage labels. This is genuinely
+              more structure than the bare pictorial, but it is annotation
+              structure: a layer with constraints that positions a label at
+              each fill level. It sharpens reading without changing the
+              underlying comparison.
             </aside>
           </section>
 

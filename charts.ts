@@ -2651,11 +2651,11 @@ function renderNightingaleRose(id = "chart-viz-ex-rose", w = 230, h = 230) {
     .render(el, { w, h });
 }
 
-// ── Bottle pictorial (paint compositing over an image, constrained label) ──
+// ── Bottle pictorial (paint compositing, then optional annotation) ─────────
 // Ported from piccl/Bottle.stories.tsx: a row of bottles filled to a
-// percentage, the fill rect composited onto the bottle image with a "color"
-// blend mode, a fill-line rect and a percent label constrained to align with
-// it.
+// percentage, with the fill rect composited onto the bottle image with a
+// "color" blend mode. The fill line and percentage label are a separate
+// annotation layer, constrained to align with the bottle.
 const bottleData = [
   { category: "a", amount: 30 },
   { category: "d", amount: 60 },
@@ -2663,17 +2663,21 @@ const bottleData = [
   { category: "c", amount: 100 },
 ];
 
-function renderBottleChart(id = "chart-viz-ex-bottle", w = 380, h = 210) {
+function renderBottleChart(
+  id = "chart-viz-ex-bottle",
+  w = 380,
+  h = 210,
+  annotations = true
+) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(bottleData, { axes: false })
-    .flow(spread("category", { dir: "x", spacing: 20, axes: { x: false } }))
-    .mark(
-      markLayer([
-        paint({ blendMode: "color" }, [
-          image({ href: bottlePng, h: v(100) }),
-          rect({ h: "amount", w: 175, fill: "#00ff00" }),
-        ]).name("bottle"),
+  const bottle = paint({ blendMode: "color" }, [
+    image({ href: bottlePng, h: v(100) }),
+    rect({ h: "amount", w: 175, fill: "#00ff00" }),
+  ]).name("bottle");
+  const marks = annotations
+    ? markLayer([
+        bottle,
         rect({ h: 1, fill: "#666", w: 175, y: "amount" }).name("line"),
         text({ fontSize: 35, fill: "#666", text: (d: any) => `${d.amount}%` }).name(
           "label"
@@ -2683,7 +2687,10 @@ function renderBottleChart(id = "chart-viz-ex-bottle", w = 380, h = 210) {
         Constraint.distribute({ dir: "y", spacing: 0 }, [line, label]),
         Constraint.align({ x: "end" }, [label, line]),
       ])
-    )
+    : bottle;
+  Chart(bottleData, { axes: false })
+    .flow(spread("category", { dir: "x", spacing: 20, axes: { x: false } }))
+    .mark(marks)
     .render(el, { w, h });
 }
 
@@ -2972,7 +2979,9 @@ export function renderCharts() {
   renderStackedBarBase();
   renderTitanicMosaic("chart-q-mosaic", 300, 250);
   renderMosaicSingleStackBase();
-  renderBottleChart("chart-q-bottle");
+  renderBottleChart("chart-q-bottle", 380, 210, false);
+  renderBottleChart("chart-q-bottle-bare", 380, 210, false);
+  renderBottleChart("chart-q-bottle-annotated");
   renderBottleBarBase();
   renderEnergyRibbonBase();
   renderEnergyRibbonMid();
@@ -3370,7 +3379,10 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-q-waffle-base": () => renderStackedBarBase(),
   "chart-q-mosaic": () => renderTitanicMosaic("chart-q-mosaic", 300, 250),
   "chart-q-mosaic-base": () => renderMosaicSingleStackBase(),
-  "chart-q-bottle": () => renderBottleChart("chart-q-bottle"),
+  "chart-q-bottle": () => renderBottleChart("chart-q-bottle", 380, 210, false),
+  "chart-q-bottle-bare": () =>
+    renderBottleChart("chart-q-bottle-bare", 380, 210, false),
+  "chart-q-bottle-annotated": () => renderBottleChart("chart-q-bottle-annotated"),
   "chart-q-bottle-base": () => renderBottleBarBase(),
   "chart-move-ribbon-base": () => renderEnergyRibbonBase(),
   "chart-move-ribbon-mid": () => renderEnergyRibbonMid(),
