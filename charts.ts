@@ -2776,28 +2776,24 @@ function renderMosaicSingleStackBase(
     .render(el, { w, h, axes: false });
 }
 
-// Slide B pair: the bottle's base form. An ordinary normalized bar — filled
-// vs. empty, sharing the bottle's own green fill — instead of the
-// pictorial's paint-composited bottle image.
-// One filled/empty bar per bottle category, mirroring bottleData's fill levels.
-const bottleBarData = bottleData.flatMap(({ category, amount }) => [
-  { category, part: "filled", amount },
-  { category, part: "empty", amount: 100 - amount },
-]);
+// Slide B pair: the bottle's base form. A gray capacity bar sits behind a
+// green fill bar, using the same small mark layer as the pictorial's paint
+// composition but without the bottle image.
 
 function renderBottleBarBase(id = "chart-q-bottle-base", w = 220, h = 210) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  Chart(bottleBarData, {
+  Chart(bottleData, {
     axes: { x: true, y: true },
     legend: false,
-    color: palette({ filled: "#5aa66c", empty: "#e0ded4" }),
   })
-    .flow(
-      spread("category", { dir: "x", spacing: 12 }),
-      stack("part", { dir: "y", size: field("amount").normalize() })
+    .flow(spread("category", { dir: "x", spacing: 12 }))
+    .mark(
+      markLayer([
+        rect({ w: 36, h: 100, fill: "#e0ded4" }),
+        rect({ w: 36, h: "amount", fill: "#5aa66c" }),
+      ])
     )
-    .mark(rect({ w: 36, fill: "part" }))
     .render(el, { w, h, axes: { x: true, y: true }, legend: false });
 }
 
