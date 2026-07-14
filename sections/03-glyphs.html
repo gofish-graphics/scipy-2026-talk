@@ -449,9 +449,11 @@ chart(barley_scatter_by_year(1931)).flow(
   <span class="cut-highlight">color=<span class="viz-op">palette</span>({"Morris": "#e08214"}),  # every other site gray</span>
 )
   .<span class="viz-op">flow</span>(
-    <span class="viz-transform">derive</span>(delta),
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="variety", dir="x"),
+    <span class="viz-transform">derive</span>(lambda rows: [{
+      **rows[0], "delta": rows[1]["yield"] - rows[0]["yield"]
+    }]),
   )
   .<span class="viz-mark">mark</span>(<span class="cut-highlight"><span class="viz-mark">rect</span>(h="delta", fill="site")</span>)</pre>
             <div
