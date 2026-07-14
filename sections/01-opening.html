@@ -209,7 +209,7 @@
                 alt="Seaborn example gallery"
               />
               <p style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
-                chart types: <em>no underlying structure</em>
+                chart types lack underlying structure
               </p>
             </div>
             <aside class="notes">
@@ -245,7 +245,7 @@
                 alt="Chart type guide: relationship, comparison, distribution, composition"
               />
               <p style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
-                <em>vague</em> task taxonomies
+                task taxonomies are vague
               </p>
             </div>
             <aside class="notes">
@@ -269,7 +269,7 @@
                 style="max-height: min(60vh, 420px); max-width: 100%; border-radius: 4px; object-fit: contain;"
               />
               <p style="text-align: center; font-size: 0.9em; margin-top: 0.6rem;">
-                <em>ossified</em> into AI skills
+                ossified into AI skills
               </p>
             </div>
             <aside class="notes">
@@ -332,7 +332,7 @@
           </section>
 
           <section>
-            <h2>but scientists live in the long tail</h2>
+            <h2>but what about the long tail</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; height: 420px;">
               <img
                 src="motivational-images/vizchitra/jointplot.png"
@@ -355,12 +355,10 @@
                 style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;"
               />
             </div>
-            <p class="fragment" style="text-align: center; font-size: 0.9em; width: fit-content; margin: 0.6rem auto 0; background: #f7f2e8; border: 1px solid #d8cfba; border-radius: 6px; padding: 0.3em 0.9em;">
-              how do we figure out <em>what to make</em>?
-            </p>
-            <p class="fragment" style="text-align: center; font-size: 0.9em; width: fit-content; margin: 0.4rem auto 0; background: #f7f2e8; border: 1px solid #d8cfba; border-radius: 6px; padding: 0.3em 0.9em;">
-              how do we know if it's <em>helping</em>?
-            </p>
+            <div class="fragment long-tail-questions">
+              <p>how do we figure out <em>what to make</em>?</p>
+              <p>how do we <em>make it</em>?</p>
+            </div>
             <aside class="notes">
               Look at the graphics scientists actually use and publish. A
               Seaborn jointplot; an UpSet plot; oceanographers plotting
@@ -372,10 +370,8 @@
               None of that is on a picker menu, and "jointplot" won't be the
               name of the thing your paper needs next. And these graphics
               raise two questions. First: how do we even figure out what
-              graphic to make in the first place? And second: once we've made
-              it, how do we know it's helping? That second one forces us to
-              ask what the graphic is even trying to accomplish — what we
-              want the reader to be able to see.
+              graphic to make in the first place? And second: once we know
+              what we want, how do we actually make it?
             </aside>
           </section>
 
@@ -472,21 +468,6 @@
             </aside>
           </section>
 
-          <!-- Grouped bars — not interchangeable -->
-          <section>
-            <h2>let's actually <em>look</em> at the problem</h2>
-            <aside class="notes">
-              To answer those two questions — especially whether a graphic is
-              helping — we can't reason from chart-type names or task
-              taxonomies. We have to watch what a reader actually notices. So
-              let's strip everything down to the simplest possible example —
-              grouped bar charts — and run the experiment right here. I'll
-              show you a grouped bar chart for about ten seconds — read the
-              axes, take it in — then I'll hide it and ask what you noticed
-              about the data.
-            </aside>
-          </section>
-
           <!-- Franconeri A — the hook -->
           <section>
             <h2>here's a grouped bar chart</h2>
@@ -498,6 +479,15 @@
               ></div>
             </div>
             <aside class="notes">
+              To answer those two questions, we can't reason from chart-type
+              names or task taxonomies. We have to watch what a reader
+              actually notices. So let's actually look at the problem. We'll
+              strip everything down to the simplest possible example — grouped
+              bar charts — and run the experiment right here.
+
+              <br />
+              <br />
+
               Show this for about ten seconds. Let people read the axes and
               take it in, then advance. Stimulus adapted from Boger &amp;
               Franconeri (2024): "Reading a Graph Is Like Reading a
@@ -506,7 +496,7 @@
           </section>
 
           <!-- Franconeri A — recall question -->
-          <section>
+          <section class="scipy-statement" data-background-color="#f7f2e8">
             <h2>what did you notice about the data?</h2>
             <aside class="notes">
               Collect a few answers. Expect things like "Fresno had the most"
@@ -532,8 +522,8 @@
           </section>
 
           <!-- Franconeri B — recall question -->
-          <section>
-            <h2>what do you notice now?</h2>
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <h2>what did you notice now?</h2>
             <aside class="notes">
               Give people time. At least some will spot that Boulder goes up
               while every other city goes down.
@@ -1560,4 +1550,3 @@
           </section>
         </section>
         <!-- /COLUMN 1 -->
-

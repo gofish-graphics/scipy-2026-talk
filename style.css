@@ -878,7 +878,7 @@
    flatten them to the top of the slide. */
 .reveal .slides section.scipy-title-slide,
 .reveal .slides section.scipy-statement {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   justify-content: center;
   height: 100%;
@@ -994,8 +994,27 @@
   margin: 0.08em 0 0.35em;
 }
 
+.scipy-statement h2::after {
+  content: none;
+}
+
 .scipy-statement p:not(.part) {
   max-width: 950px;
+}
+
+.long-tail-questions {
+  background: #f7f2e8;
+  border: 1px solid #d8cfba;
+  border-radius: 6px;
+  font-size: 0.9em;
+  margin: 0.6rem auto 0;
+  padding: 0.3em 0.9em;
+  text-align: center;
+  width: fit-content;
+}
+
+.long-tail-questions p {
+  margin: 0.1em 0;
 }
 
 .note-card {
