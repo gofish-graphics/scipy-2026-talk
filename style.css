@@ -1207,6 +1207,11 @@
   font-weight: 760;
 }
 
+.viz-keyword {
+  color: #8b5ba8;
+  font-weight: 760;
+}
+
 .viz-legend {
   display: flex;
   flex-wrap: wrap;
