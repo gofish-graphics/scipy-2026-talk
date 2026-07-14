@@ -1026,12 +1026,13 @@ function renderVizVarietyShare(id = "chart-viz-stacked-share") {
   renderVizVarietyStack(id, { normalize: true });
 }
 
-// The naive move that sits BEFORE `stack()` in the beat: instead of stacking
-// variety, just nest a third `spread`, same as the other two. It's the
-// obvious first thing to try — the query wants "each variety's yield," and
-// spread is the operator that just handed us site and year, so spread again.
-// Watching it fail (120 bars in one row, no way to see the site-year total)
-// is what motivates `stack` on the next slide.
+// The strongest plain-spread answer to the query: make site the outer panel,
+// variety the comparison unit inside each site, and year the adjacent pair
+// inside each variety. The earlier site -> year -> variety ordering put nine
+// unrelated bars between a variety's two years, needlessly weakening the
+// comparison before the deck introduced connection. This site -> variety ->
+// year order fixes that grouping problem while preserving the honest limit
+// that every change still has to be inferred from two separate bar heights.
 //
 // Width budget for the 470px VIZ_W canvas: 6 sites × 2 years × 10 varieties
 // = 120 leaf bars, and unlike `renderVizVarietyStack` (which fixes the bar's
@@ -1039,28 +1040,23 @@ function renderVizVarietyShare(id = "chart-viz-stacked-share") {
 // `w` unset, so each bar's width IS the innermost spread's allocated cell —
 // the spacings below directly divide up the canvas. Budgeting off a
 // conservative ~420px of usable plot width (470 minus axis/legend chrome):
-//   site cell   = (420 − 5×10) / 6   ≈ 61.7px   (5 gaps of 10 between 6 sites)
-//   year cell   = (61.7 − 1×3) / 2   ≈ 29.3px   (1 gap of 3 between the pair)
-//   variety/bar = (29.3 − 9×0) / 10  ≈ 2.9px    (varieties touch, spacing 0)
-// That keeps the nesting readable — site gap (10) clearly > year gap (3)
-// clearly > variety gap (0) — while landing bar width in the 2-3px range the
-// brief calls for. The ratios hold even if the real plot width is smaller
-// (e.g. at 250px usable, bars still land ~1.5px, just thinner) because the
-// gaps are fixed pixel amounts, not proportional. Both inner levels turn their
-// ordinal x axis off, because at these cell sizes their tick labels overdraw
-// into mush: 2.9px variety cells can't carry a label at all, and the year level
-// is 12 cells of ~29px against ~24px-wide "1931"/"1932" labels. Only the
-// outermost site spread has room for its ticks, so it is the only one that
-// keeps an axis. The y axis stays on — it carries the value this slide is
-// about to lose.
+//   site cell    = (420 − 5×10) / 6   ≈ 61.7px
+//   variety cell = (61.7 − 9×1) / 10  ≈ 5.3px
+//   year/bar     = 5.3 / 2            ≈ 2.6px
+// The larger site gap and smaller variety gap make the hierarchy visible;
+// zero year spacing makes each 1931/1932 pair read as one comparison unit.
+// Both inner ordinal axes stay off because neither ten variety labels nor
+// sixty repeated year labels fit at this scale. Only the outer site spread
+// keeps its ticks. The y axis stays on because it carries the two values from
+// which the viewer must still estimate change.
 function renderVizVarietySpread(id = "chart-viz-spread-variety") {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   Chart(barley, vizChartOptions)
     .flow(
       spread("site", { dir: "x", spacing: 10 }),
-      spread("year", { dir: "x", spacing: 3, axes: { x: false } }),
-      spread("variety", { dir: "x", spacing: 0, axes: { x: false } })
+      spread("variety", { dir: "x", spacing: 1, axes: { x: false } }),
+      spread("year", { dir: "x", spacing: 0, axes: { x: false } })
     )
     .mark(rect({ h: "yield", fill: "variety" }))
     .render(el, { w: VIZ_W, h: VIZ_H, axes: true, legend: true });

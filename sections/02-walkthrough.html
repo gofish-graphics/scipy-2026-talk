@@ -880,18 +880,17 @@
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
-    <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="cut-highlight"><span class="viz-op">spread</span>(by="variety", dir="x")</span>
+    <span class="cut-highlight"><span class="viz-op">spread</span>(by="variety", dir="x")</span>,
+    <span class="viz-op">spread</span>(by="year", dir="x")
   )
   .<span class="viz-mark">mark</span>(
     <span class="cut-highlight"><span class="viz-mark">rect</span>(h="yield", fill="variety")</span>
   )</pre>
               <p class="viz-step-copy">
-                The obvious move: nest one more <code>spread</code>. Every
-                variety gets its own bar, so each variety's yield is right
-                there to read. But each variety's two years remain separate,
-                with nine neighbors between them. Color tells you which bars
-                match; nothing yet connects them as one trajectory.
+                Make variety the comparison unit, then put its two years
+                side by side. The pairing is now right. But every change is
+                still encoded as two separate heights, so the eye must infer
+                ten differences within every site.
               </p>
             </div>
             <div
@@ -899,14 +898,15 @@
               class="chart-container viz-gofish-chart"
             ></div>
             <aside class="notes">
-              This is the naive move, and it's the honest one to try first,
-              we wrote the query down, we need per-variety yield, so just
-              spread by variety too. It gives every variety its own bar, but
-              it also makes every bar a separate visual object. Comparing one
-              variety across its two years means jumping over nine neighbors
-              and matching by color. Spread is doing exactly what we asked:
-              separating values into slots. The next move asks what changes
-              when we connect the values that belong to the same entity.
+              This is the strongest version of the plain spread approach. We
+              wrote the query down, so make variety the unit of comparison
+              inside each site, then place 1931 and 1932 next to each other
+              inside each variety. That fixes the avoidable grouping problem:
+              the two values whose difference we care about are now adjacent.
+              What remains is the representational cost of bars themselves.
+              Each change is still something we infer from two endpoints,
+              repeated ten times per site. The next move asks what connection
+              adds once the grouping is already fair.
             </aside>
           </section>
 
