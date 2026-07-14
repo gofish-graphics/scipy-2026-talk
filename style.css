@@ -1293,16 +1293,6 @@
   pointer-events: none;
 }
 
-/* Endpoint labels under the axis-free bars-vs-line chart */
-.conn-line-label {
-  position: absolute;
-  bottom: 0;
-  transform: translate(-50%, 100%);
-  font-size: 0.52em;
-  color: #555;
-  pointer-events: none;
-}
-
 .viz-data-card,
 .viz-compare-card {
   background: #fffdf8;

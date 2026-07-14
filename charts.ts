@@ -2916,54 +2916,6 @@ function renderEnergyRibbon(id = "chart-move-ribbon") {
   renderEnergyStackChart(id, { sort: true, connect: true, w: 400, h: 320 });
 }
 
-// ── Bars vs. line (after Zacks & Tversky) ───────────────────────────────────
-// Mean yields for four unordered barley varieties, computed from the dataset
-// already used throughout the talk. Bars compare genuinely discrete
-// categories. Connecting those same categories imposes an arbitrary path
-// because variety has no continuous left-to-right order.
-const connVarietyOrder = ["Manchuria", "Velvet", "Trebi", "Peatland"];
-const connVarieties = connVarietyOrder.map((variety) => ({
-  variety,
-  yield: _.meanBy(
-    barley.filter((row) => row.variety === variety),
-    "yield"
-  ),
-}));
-
-function renderConnBars(id = "chart-conn-bars", w = 380, h = 280) {
-  const el = getContainer(id);
-  if (!el || el.children.length > 0) return;
-  Chart(connVarieties)
-    .flow(spread("variety", { dir: "x", spacing: 24 }))
-    .mark(rect({ h: "yield", fill: FRANCONERI_BAR_COLOR }))
-    .render(el, { w, h, axes: true });
-}
-
-function renderConnLine(id = "chart-conn-line", w = 380, h = 280) {
-  const el = getContainer(id);
-  if (!el || el.children.length > 0) return;
-  // Same four data points as chart-conn-bars, scattered by an index (scatter
-  // needs a numeric x for the categorical positions) and joined by a fused
-  // relational line mark. gofish-graphics 0.1.0-nightly.20260711 deletes
-  // `.connect()` and the `.mark(scaffold()).connect(line(...))` two-layer
-  // idiom along with it; `line({ by })` now consumes the scatter's placement
-  // directly as its own `.mark()`. Both rows share one `group` key so they
-  // resolve to a single two-point line entry (a fused relational mark does
-  // NOT inherit the flow's grouping — gofish #752 — so `by` must be restated
-  // here even though there's only one group).
-  // Axes off: the numeric index axis would read "xIndex 0..3"; the slide
-  // overlays the four variety labels under the positions instead.
-  const indexed = connVarieties.map((d, i) => ({
-    ...d,
-    xIndex: i,
-    group: "all",
-  }));
-  Chart(indexed, { axes: false })
-    .flow(scatter("xIndex", { x: "xIndex", y: "yield" }))
-    .mark(line({ by: "group", stroke: FRANCONERI_BAR_COLOR, strokeWidth: 2.5 }))
-    .render(el, { w, h: h - 40, axes: false });
-}
-
 // ── Public API ────────────────────────────────────────────────────────────
 export function renderCharts() {
   renderFranconeriA();
@@ -3071,8 +3023,6 @@ export function renderCharts() {
   renderTitanicMosaic();
   renderNightingaleRose();
   renderBottleChart();
-  renderConnBars();
-  renderConnLine();
   renderVizOpSpread();
   renderVizOpStack();
   renderVizOpScatter();
@@ -3435,8 +3385,6 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-titanic-mosaic": () => renderTitanicMosaic(),
   "chart-viz-ex-rose": () => renderNightingaleRose(),
   "chart-viz-ex-bottle": () => renderBottleChart(),
-  "chart-conn-bars": () => renderConnBars(),
-  "chart-conn-line": () => renderConnLine(),
   "chart-viz-op-spread": renderVizOpSpread,
   "chart-viz-op-stack": renderVizOpStack,
   "chart-viz-op-scatter": renderVizOpScatter,

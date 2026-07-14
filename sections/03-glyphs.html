@@ -176,8 +176,8 @@ chart(barley_scatter_by_year(1931)).flow(
           <!-- ─── BRIDGE: THE SLOPE CHART'S FIRST LAYER ───────────── -->
 
           <section class="viz-step" data-background-color="#f7f2e8" data-visibility="hidden">
-            <!-- HIDDEN: the relocated bars-versus-lines slide now establishes
-                 connection directly before the faceted slope chart. -->
+            <!-- HIDDEN: the grouped bars now lead directly to the faceted
+                 slope chart, so this points-only intermediate is redundant. -->
             <h2>first, just the points</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
@@ -244,11 +244,14 @@ chart(barley_scatter_by_year(1931)).flow(
               stray line apiece in University Farm and Grand Rapids.
             </p>
             <aside class="notes">
-              Here is connection applied to the barley question. Spread still
-              creates the six site panels and the two year positions. Scatter
-              creates one entity per variety, and line connects that variety's
-              two values. One quantifier, site, is a scan across panels. The
-              other, variety, is a scan down each panel's ten lines. The sign
+              In the grouped bars, each variety's years were finally adjacent,
+              but the change still had to be estimated between two tiny bar
+              heights. Here the line makes that relation a single trajectory.
+              Spread still creates the six site panels and the two year
+              positions. Scatter creates one entity per variety, and line
+              connects that variety's two values. One quantifier, site, is a
+              scan across panels. The other, variety, is a scan down each
+              panel's ten lines. The sign
               predicate reads from each line's slope. This is Trellis-style:
               Becker and Cleveland's own display for this dataset. It preserves
               both absolute yields and each year-to-year trajectory, but the

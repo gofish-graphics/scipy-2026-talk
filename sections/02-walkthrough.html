@@ -904,87 +904,14 @@
               inside each variety. That fixes the avoidable grouping problem:
               the two values whose difference we care about are now adjacent.
               What remains is the representational cost of bars themselves.
-              Each change is still something we infer from two endpoints,
-              repeated ten times per site. The next move asks what connection
-              adds once the grouping is already fair.
-            </aside>
-          </section>
-
-          <!-- Connection affordances: bars vs lines (Zacks & Tversky 1999). -->
-          <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>spread separates; line connects</h2>
-            <div
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                gap: 3rem;
-                margin-top: 0.8rem;
-              "
-            >
-              <div style="text-align: center">
-                <div id="chart-conn-bars" class="chart-container"></div>
-                <p
-                  class="fragment"
-                  data-fragment-index="1"
-                  style="
-                    margin-top: 0.5rem;
-                    font-size: 0.72em;
-                    font-family: 'Shantell Sans', sans-serif;
-                    color: #1a1a2e;
-                  "
-                >
-                  separate values invite discrete comparisons
-                </p>
-              </div>
-              <div style="text-align: center">
-                <div style="position: relative; display: inline-block">
-                  <div id="chart-conn-line" class="chart-container"></div>
-                  <div class="conn-line-label" style="left: 6%">Manchuria</div>
-                  <div class="conn-line-label" style="left: 35%">Velvet</div>
-                  <div class="conn-line-label" style="left: 65%">Trebi</div>
-                  <div class="conn-line-label" style="left: 94%">Peatland</div>
-                </div>
-                <p
-                  class="fragment"
-                  data-fragment-index="2"
-                  style="
-                    margin-top: 1.4rem;
-                    font-size: 0.72em;
-                    font-family: 'Shantell Sans', sans-serif;
-                    color: #1a1a2e;
-                  "
-                >
-                  connection invites a trend reading
-                </p>
-              </div>
-            </div>
-            <p
-              class="viz-step-copy fragment"
-              data-fragment-index="3"
-              style="font-size: 0.6em; margin-top: 0.6rem"
-            >
-              The data did not change. The relation between the marks did.
-              <span style="color: #777">Adapted from Zacks &amp; Tversky (1999)</span>
-            </p>
-            <aside class="notes">
-              Spread makes separate slots, so the bars invite separate-value
-              comparisons. These are mean yields for four barley varieties.
-              Variety is genuinely discrete: there is no continuum from
-              Manchuria through Velvet and Trebi to Peatland. The bar chart
-              asks which category is higher. The line imposes a rise-and-fall
-              path through an arbitrary ordering. Connection is not
-              decoration. It asserts continuity and identity, and here that
-              assertion is unwarranted. In the next slide it becomes useful:
-              connect each variety to itself across two ordered years, then
-              facet those trajectories by site. The representational contrast
-              is adapted from Zacks and Tversky; the barley values are computed
-              from the dataset used throughout this talk.
+              Each change is still something we infer from two tiny heights,
+              repeated ten times per site. The next slide turns each pair into
+              a single connected trajectory, so direction becomes visible.
             </aside>
           </section>
 
           <!-- HIDDEN: the stack/normalize/pies detour interrupts the more direct
-               spread -> connection -> slope -> delta argument. Keep these slides
+               spread -> slope -> delta argument. Keep these slides
                as operator examples for possible reuse. -->
           <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2><code>stack()</code></h2>
