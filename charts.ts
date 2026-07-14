@@ -2488,7 +2488,10 @@ function renderTitanicMosaic(id = "chart-viz-titanic-mosaic", w = 480, h = 400) 
     color: palette({ Yes: "#2b8cbe", No: "#c9c2b5" }),
   })
     .flow(
-      stack("class", { dir: "y", size: field("count").normalize() }),
+      stack("class", { dir: "y", size: field("count").normalize() }).label(
+        "class",
+        { position: "center", fontSize: 12, color: "white" }
+      ),
       stack("sex", { dir: "x", size: field("count").normalize() }),
       stack("survived", { dir: "y", size: field("count").normalize() })
     )
@@ -2765,7 +2768,10 @@ function renderMosaicSingleStackBase(
     color: palette({ Yes: "#2b8cbe", No: "#c9c2b5" }),
   })
     .flow(
-      stack("class", { dir: "y", size: field("count").normalize() }),
+      stack("class", { dir: "y", size: field("count").normalize() }).label(
+        "class",
+        { position: "center", fontSize: 12, color: "white" }
+      ),
       stack("survived", { dir: "x", size: field("count").normalize() })
     )
     .mark(rect({ fill: "survived", stroke: "white", strokeWidth: 1 }))
