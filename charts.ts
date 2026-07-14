@@ -2845,17 +2845,12 @@ const energyPalette = palette({
   Solar: "#f0bf4d",
 });
 
-// One renderer for all three charts on the move-3 slide, mirroring
-// renderVizStackChart's stack -> sort -> connect idiom: `sort` orders each
-// year's stack by amount (rank-as-position), `connect` adds the area/ribbon
-// layer tracking each source across years (identity-as-continuity). The
-// slide composes the two moves: base = sort only (sorted stacks — rank
-// reads as position, no connection); mid = area (fixed order + connected,
-// same spec with `area: true` — the bars collapse to zero width and the
-// ribbon goes to full opacity, so the connect layer alone becomes the whole
-// visible mark and reads as a continuous stacked area, bands never
-// crossing); ribbon = sort + connect both (now a crossing is a rank
-// inversion, an overtake).
+// One renderer for all three charts on the move-3 slide. `sort` orders each
+// year's stack by amount (rank as position); `.layer(ribbon(...))` connects
+// each source across years (identity as continuity). The slide composes the
+// two moves: base = sort only; area = a fixed-order stack fused directly
+// into solid ribbon bands; ribbon = sort + connect, where a crossing is a
+// rank inversion.
 function renderEnergyStackChart(
   id: string,
   {
@@ -2879,31 +2874,22 @@ function renderEnergyStackChart(
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   const chartOptions = { axes: { x: true, y: true }, color: energyPalette };
-  // `area` collapses the bars to a hairline so the ribbon bands between them
-  // become the entire visible mark, and pushes the ribbon to full opacity so
-  // the bands read as solid continuous area rather than a translucent
-  // overlay on visible bars — the same stack+connect spec, degenerate bars.
-  const effectiveBarW = area ? 1 : barW;
-  const barsFlow: any[] = [
+  const flow = [
     spread("year", { dir: "x", spacing }),
     stack(sort ? field("source").sort("amount") : "source", {
       dir: "y",
-      size: "amount",
     }),
   ];
-  const layers: any[] = [
-    Chart(energyMix, chartOptions)
-      .flow(...barsFlow)
-      .mark(rect({ w: effectiveBarW, fill: "source" }).name("bars")),
-  ];
-  if (connect || area) {
-    layers.push(
-      Chart(select("bars"))
-        .flow(group("source"))
-        .mark(ribbon({ opacity: area ? 1 : 0.5 }))
-    );
-  }
-  Layer(layers).render(el, { w, h, axes: { x: true, y: true } });
+  const base = Chart(energyMix, chartOptions).flow(...flow);
+  const result = area
+    ? base.mark(
+        ribbon({ by: "source", h: "amount", fill: "source", opacity: 0.8 })
+      )
+    : (() => {
+        const bars = base.mark(rect({ w: barW, h: "amount", fill: "source" }));
+        return connect ? bars.layer(ribbon({ by: "source", opacity: 0.5 })) : bars;
+      })();
+  result.render(el, { w, h, axes: { x: true, y: true } });
 }
 
 // Left-column ingredient charts render smaller (they stack vertically);

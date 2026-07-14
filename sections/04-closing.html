@@ -153,10 +153,10 @@
                 <pre class="viz-code compact">chart(seafood)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="lake", dir="x"),
-    <span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(row => <span class="viz-transform">repeat</span>(row, "count")),</span>
-    <span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(rows => chunk(rows, 5)),</span>
-    <span class="cut-line cut-highlight">    <span class="viz-op">spread</span>(dir="y", reverse=True),</span>
-    <span class="cut-line cut-highlight">    <span class="viz-op">spread</span>(dir="x")</span>
+    <span class="cut-line cut-highlight"><span class="viz-transform">derive</span>(row => <span class="viz-transform">repeat</span>(row, "count")),</span>
+    <span class="cut-line cut-highlight"><span class="viz-transform">derive</span>(rows => chunk(rows, 5)),</span>
+    <span class="cut-line cut-highlight"><span class="viz-op">spread</span>(dir="y", reverse=True),</span>
+    <span class="cut-line cut-highlight"><span class="viz-op">spread</span>(dir="x")</span>
   )
   <span class="cut-line cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, h=8, fill="species"))</span></pre>
               </div>
@@ -236,8 +236,8 @@ chart(titanic)
 chart(titanic)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">stack</span>("class", dir="y", size=share),
-    <span class="cut-line cut-highlight">    <span class="viz-op">stack</span>("sex", dir="x", size=share),</span>
-    <span class="cut-line cut-highlight">    <span class="viz-op">stack</span>("survived", dir="y", size=share)</span>
+    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("sex", dir="x", size=share),</span>
+    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("survived", dir="y", size=share)</span>
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
@@ -354,25 +354,22 @@ chart(titanic)
                 <p class="move-code-label">before</p>
                 <pre class="viz-code compact">sorted = chart(energyMix)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), size="amount"))
-  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="source"))
+    <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y"))
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="amount", fill="source"))
 
-connected = layer([
-  chart(energyMix).<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year"), <span class="viz-op">stack</span>(by="source"))
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="source").name("bars")),
-  chart(select("bars")).<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="source")).<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>())
-])</pre>
+area = chart(energyMix)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year"), <span class="viz-op">stack</span>(by="source"))
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(by="source", h="amount", fill="source", opacity=0.8))</pre>
               </div>
               <div>
                 <p class="move-code-label">after</p>
-                <pre class="viz-code compact">layer([
-  chart(energyMix)
-    .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x"),
-      <span class="cut-line cut-highlight">      <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y", size="amount"))</span>
-    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=36, fill="source").name("bars")),
-  <span class="cut-line cut-highlight">  chart(select("bars")).<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="source"))</span>
-    <span class="cut-line cut-highlight">    .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.5))</span>
-])</pre>
+                <pre class="viz-code compact">chart(energyMix)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y")</span>
+  )
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="amount", fill="source"))
+  <span class="cut-line cut-highlight">.<span class="viz-op">layer</span>(<span class="viz-mark">ribbon</span>(by="source", opacity=0.5))</span></pre>
               </div>
             </div>
             <p class="source-line" style="margin-top: 0.3em !important">
@@ -461,10 +458,10 @@ connected = layer([
                 <pre class="viz-code compact">chart(bottleData)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x"))
   .<span class="viz-mark">mark</span>(
-    <span class="cut-line cut-highlight">    <span class="viz-mark">paint</span>(blend="color", over=[</span>
-      <span class="cut-line cut-highlight">      <span class="viz-mark">image</span>("bottle.png"),</span>
-      <span class="cut-line cut-highlight">      <span class="viz-mark">rect</span>(h="amount", fill="green")</span>
-    <span class="cut-line cut-highlight">    ])</span>
+    <span class="cut-line cut-highlight"><span class="viz-mark">paint</span>(blend="color", over=[</span>
+      <span class="cut-line cut-highlight"><span class="viz-mark">image</span>("bottle.png"),</span>
+      <span class="cut-line cut-highlight"><span class="viz-mark">rect</span>(h="amount", fill="green")</span>
+    <span class="cut-line cut-highlight">])</span>
   )</pre>
               </div>
             </div>
