@@ -237,7 +237,7 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">stack</span>("class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
     <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("sex", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),</span>
-    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("survived", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())</span>
+    <span class="viz-op">stack</span>("survived", <span class="cut-highlight">dir="y"</span>, size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
