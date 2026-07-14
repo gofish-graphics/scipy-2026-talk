@@ -1600,10 +1600,10 @@
 
 .chart-space-route {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 1.4rem minmax(0, 1fr) 1.4rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 2.6rem minmax(0, 1fr) 2.6rem minmax(0, 1fr);
   align-items: center;
-  gap: 0.35rem;
-  max-width: 58rem;
+  gap: 0.8rem;
+  max-width: 64rem;
   margin: 0 auto;
 }
 

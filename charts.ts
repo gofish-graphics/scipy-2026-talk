@@ -3361,14 +3361,8 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-arc-bars": () => renderPlainBars("chart-arc-bars"),
   "chart-arc-slope": () =>
     renderVizBarleySlopePanels("chart-arc-slope", true, 540, 280),
-  "chart-arc-heatmap": () => {
-    const el = getContainer("chart-arc-heatmap");
-    if (!el || el.children.length > 0) return;
-    Chart(barley, { color: gradient(["#e8f4f8", "#1a5276"]) })
-      .flow(table("site", "year", { spacing: 4 }))
-      .mark(rect({ fill: "yield" }))
-      .render(el, { w: 380, h: 260, axes: true, legend: false });
-  },
+  "chart-arc-delta-bars": () =>
+    renderVizBarleyDeltaBars("chart-arc-delta-bars"),
   "chart-arc-waffle": () => renderWaffleChart("chart-arc-waffle", 300, 220),
   "chart-arc-mosaic": () =>
     renderTitanicMosaic("chart-arc-mosaic", 300, 220),
