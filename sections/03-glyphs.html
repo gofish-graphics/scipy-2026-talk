@@ -829,59 +829,59 @@ Frame(
             >
               <thead>
                 <tr style="border-bottom: 2px solid #1a1a2e">
-                  <th style="text-align: center; padding: 0.3rem 0.7rem; width: 20%">Visual structure</th>
-                  <th style="text-align: left; padding: 0.3rem 0.7rem; width: 48%">What it does</th>
-                  <th style="text-align: left; padding: 0.3rem 0.7rem; width: 32%">Operator</th>
+                  <th style="text-align: left; padding: 0.3rem 0.7rem; width: 45%">What you want to see</th>
+                  <th style="text-align: left; padding: 0.3rem 0.7rem; width: 33%">Operator</th>
+                  <th style="text-align: center; padding: 0.3rem 0.7rem; width: 22%">Visual structure</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.34rem 0.7rem">compare the same measure across discrete groups</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">spread</span>(by=key)</code></td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
                       <div id="chart-viz-op-spread"></div>
                     </div>
                   </td>
-                  <td style="padding: 0.34rem 0.7rem">put each key in its own slot; nest to control adjacency</td>
-                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">spread</span>(by=key)</code></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.34rem 0.7rem">see how parts add up to a whole</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">stack</span>(by=key, size=value)</code></td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
                       <div id="chart-viz-op-stack"></div>
                     </div>
                   </td>
-                  <td style="padding: 0.34rem 0.7rem">tile parts end to end, with each segment sized by a value</td>
-                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">stack</span>(by=key, size=value)</code></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.34rem 0.7rem">see how two measures vary together</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">scatter</span>(x, y)</code></td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
                       <div id="chart-viz-op-scatter"></div>
                     </div>
                   </td>
-                  <td style="padding: 0.34rem 0.7rem">place each item by one or two measured values</td>
-                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">scatter</span>(x, y)</code></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.34rem 0.7rem">follow the same item across positions</td>
+                  <td style="padding: 0.34rem 0.7rem">
+                    <code><span class="viz-mark">line</span>(by=key)</code> or
+                    <code><span class="viz-mark">ribbon</span>(by=key)</code>
+                  </td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
                       <div id="chart-viz-op-ribbon"></div>
                     </div>
                   </td>
-                  <td style="padding: 0.34rem 0.7rem">connect matching items across positions</td>
-                  <td style="padding: 0.34rem 0.7rem">
-                    <code><span class="viz-mark">line</span>(by=key)</code> or
-                    <code><span class="viz-mark">ribbon</span>(by=key)</code>
-                  </td>
                 </tr>
                 <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.34rem 0.7rem">look up a value by two discrete keys</td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">table</span>(row, col)</code></td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
                       <div id="chart-viz-op-table" style="margin-left: -40px"></div>
                     </div>
                   </td>
-                  <td style="padding: 0.34rem 0.7rem">cross two discrete keys into addressable cells</td>
-                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">table</span>(row, col)</code></td>
                 </tr>
               </tbody>
             </table>
@@ -890,15 +890,15 @@ Frame(
               and coordinate transforms change the geometry.
             </p>
             <aside class="notes">
-              This deliberately echoes the AI skill table from the opening,
-              but it replaces finished chart types with composable structural
-              moves. The visual preview is on the left, the concrete effect is
-              in the middle, and the highlighted syntax is on the right. These are ingredients,
-              not mutually exclusive answers. A slope chart, for example,
-              combines spread, scatter, and line. The small note below keeps
-              the wider toolbox visible without turning this into another
-              taxonomy: transforms change data, color changes grouping and
-              emphasis, and coordinates change geometry.
+              This is a little like choosing a chart type: start with what you
+              want the reader to see, then choose a structure that supports
+              it. The difference is that these are composable moves, not
+              mutually exclusive finished answers. A slope chart, for example,
+              combines spread, scatter, and line. A mosaic nests several
+              stacks. The small note below keeps the wider toolbox visible
+              without turning this into another taxonomy: transforms change
+              data, color changes grouping and emphasis, and coordinates
+              change geometry.
             </aside>
           </section>
 
