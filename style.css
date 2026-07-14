@@ -1705,3 +1705,44 @@
   font-size: 0.68em;
   font-weight: 700;
 }
+
+/* Paired GoFish specs on the closing move slides. Keep the code visually tied
+   to the before and after charts while reusing the deck's syntax colors. */
+.move-code-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  max-width: 52rem;
+  margin: 0.35rem auto 0;
+  text-align: left;
+}
+
+.move-code-pair > div {
+  min-width: 0;
+}
+
+.move-code-label {
+  margin: 0 0 0.08rem;
+  color: #555;
+  font-family: "Shantell Sans", "Comic Sans MS", cursive, sans-serif;
+  font-size: 0.38em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.move-code-pair .viz-code.compact {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0.45em 0.65em !important;
+  font-size: 0.29em !important;
+  line-height: 1.2 !important;
+}
+
+.move-code-pair-tight {
+  margin-top: 0.18rem;
+}
+
+.move-code-pair-tight .viz-code.compact {
+  font-size: 0.29em !important;
+}

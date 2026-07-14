@@ -138,21 +138,36 @@
                 </div>
               </div>
             </div>
-            <pre class="viz-code compact" style="max-width: 30rem; margin-left: auto; margin-right: auto">chart(seafood)
+            <div class="move-code-pair">
+              <div>
+                <p class="move-code-label">before</p>
+                <pre class="viz-code compact">chart(seafood)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="lake", dir="x"),
+    <span class="viz-op">stack</span>(by="species", dir="y", size="count")
+  )
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=36, fill="species"))</pre>
+              </div>
+              <div>
+                <p class="move-code-label">after</p>
+                <pre class="viz-code compact">chart(seafood)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="lake", dir="x"),
     <span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(row => <span class="viz-transform">repeat</span>(row, "count")),</span>
     <span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(rows => chunk(rows, 5)),</span>
-    <span class="viz-op">spread</span>(dir="y", reverse=True),
-    <span class="viz-op">spread</span>(dir="x")
+    <span class="cut-line cut-highlight">    <span class="viz-op">spread</span>(dir="y", reverse=True),</span>
+    <span class="cut-line cut-highlight">    <span class="viz-op">spread</span>(dir="x")</span>
   )
-  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, h=8, fill="species"))</pre>
+  <span class="cut-line cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, h=8, fill="species"))</span></pre>
+              </div>
+            </div>
             <aside class="notes">
               First pair, same seafood data. The left sizes each segment
               continuously; the right chunks the same counts into unit
-              squares. The nested for-eaches are identical, what changes is
-              the last line: an eyeballed "share of the total" becomes an
-              exact "count squares," because the units are countable atoms.
+              squares. The outer lake spread stays in place, while the
+              continuous species stack becomes repeat, chunk, and two small
+              spreads. An eyeballed "share of the total" becomes an exact
+              "count squares," because the units are countable atoms.
             </aside>
           </section>
 
@@ -202,15 +217,31 @@
                 </div>
               </div>
             </div>
-            <pre class="viz-code compact" style="max-width: 26rem; margin-left: auto; margin-right: auto">share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
+            <div class="move-code-pair">
+              <div>
+                <p class="move-code-label">before</p>
+                <pre class="viz-code compact">share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
+
+chart(titanic)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">stack</span>("class", dir="y", size=share),
+    <span class="viz-op">stack</span>("survived", dir="x", size=share)
+  )
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
+              </div>
+              <div>
+                <p class="move-code-label">after</p>
+                <pre class="viz-code compact">share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
 
 chart(titanic)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">stack</span>("class", dir="y", size=share),
     <span class="cut-line cut-highlight">    <span class="viz-op">stack</span>("sex", dir="x", size=share),</span>
-    <span class="viz-op">stack</span>("survived", dir="y", size=share)
+    <span class="cut-line cut-highlight">    <span class="viz-op">stack</span>("survived", dir="y", size=share)</span>
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
+              </div>
+            </div>
             <p class="viz-step-copy" style="text-align: center; margin-top: 0.5rem">
               one level short, the chart says the opposite. (Simpson's paradox)
             </p>
@@ -318,13 +349,32 @@ chart(titanic)
                 </div>
               </div>
             </div>
-            <pre class="viz-code compact" style="max-width: 36rem; margin: 0.25rem auto 0; font-size: 0.3em !important; line-height: 1.2 !important; padding: 0.4em 0.6em !important">layer([
+            <div class="move-code-pair move-code-pair-tight">
+              <div>
+                <p class="move-code-label">before</p>
+                <pre class="viz-code compact">sorted = chart(energyMix)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), size="amount"))
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="source"))
+
+connected = layer([
+  chart(energyMix).<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year"), <span class="viz-op">stack</span>(by="source"))
+    .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="source").name("bars")),
+  chart(select("bars")).<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="source")).<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>())
+])</pre>
+              </div>
+              <div>
+                <p class="move-code-label">after</p>
+                <pre class="viz-code compact">layer([
   chart(energyMix)
-    .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x", spacing=30),
+    .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x"),
       <span class="cut-line cut-highlight">      <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y", size="amount"))</span>
     .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=36, fill="source").name("bars")),
-  <span class="cut-line cut-highlight">  chart(select("bars")).<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="source")).<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.5))</span>
+  <span class="cut-line cut-highlight">  chart(select("bars")).<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="source"))</span>
+    <span class="cut-line cut-highlight">    .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.5))</span>
 ])</pre>
+              </div>
+            </div>
             <p class="source-line" style="margin-top: 0.3em !important">
               UK electricity generation · Our World in Data / Ember
             </p>
@@ -394,6 +444,28 @@ chart(titanic)
                 <div class="viz-query" style="font-size: 0.5em; margin-top: 0.2rem">
                   <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨fill shares⟩</span> across bottles</span>
                 </div>
+              </div>
+            </div>
+            <div class="move-code-pair">
+              <div>
+                <p class="move-code-label">before</p>
+                <pre class="viz-code compact">chart(bottleBarData)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="category", dir="x"),
+    <span class="viz-op">stack</span>(by="part", dir="y", size="amount")
+  )
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="part"))</pre>
+              </div>
+              <div>
+                <p class="move-code-label">after</p>
+                <pre class="viz-code compact">chart(bottleData)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x"))
+  .<span class="viz-mark">mark</span>(
+    <span class="cut-line cut-highlight">    <span class="viz-mark">paint</span>(blend="color", over=[</span>
+      <span class="cut-line cut-highlight">      <span class="viz-mark">image</span>("bottle.png"),</span>
+      <span class="cut-line cut-highlight">      <span class="viz-mark">rect</span>(h="amount", fill="green")</span>
+    <span class="cut-line cut-highlight">    ])</span>
+  )</pre>
               </div>
             </div>
             <p class="viz-step-copy" style="text-align: center; margin-top: 0.9rem">
