@@ -1709,6 +1709,11 @@
 /* Paired GoFish specs on the closing move slides. Keep the code visually tied
    to the before and after charts while reusing the deck's syntax colors. */
 .move-code-pair {
+  --viz-op: #49a66a;
+  --viz-mark: #d6a62f;
+  --viz-transform: #4d90cf;
+  --viz-ink: #24211f;
+
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.25rem;
@@ -1737,6 +1742,19 @@
   padding: 0.45em 0.65em !important;
   font-size: 0.29em !important;
   line-height: 1.2 !important;
+}
+
+/* In the paired snippets, highlight only the changed code itself. The
+   walkthrough's full-line bands are useful for a one-line-at-a-time build,
+   but they create visual gutters when several regions are highlighted here. */
+.move-code-pair .cut-line {
+  display: inline;
+}
+
+.move-code-pair .cut-highlight {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: inset 0 -0.18em 0 rgba(74, 127, 181, 0.3);
 }
 
 .move-code-pair-tight {
