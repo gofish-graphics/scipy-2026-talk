@@ -482,11 +482,11 @@
       ], blendMode="color").name("bottle"),
       <span class="cut-line cut-highlight"><span class="viz-mark">rect</span>(h=1, y="amount", fill="gray").name("line"),</span>
       <span class="cut-line cut-highlight"><span class="viz-mark">text</span>(text="{amount}%", fill="gray").name("label"),</span>
-    ]).<span class="viz-op">constrain</span>(lambda bottle, line, label: [
-      <span class="viz-op">Constraint</span>.<span class="viz-op">align</span>([bottle, line], x="start"),
-      <span class="viz-op">Constraint</span>.<span class="viz-op">distribute</span>([line, label], dir="y", spacing=0),
-      <span class="viz-op">Constraint</span>.<span class="viz-op">align</span>([label, line], x="end"),
-    ])
+    <span class="cut-line cut-highlight">]).<span class="viz-op">constrain</span>(lambda bottle, line, label: [</span>
+      <span class="cut-line cut-highlight"><span class="viz-op">Constraint</span>.<span class="viz-op">align</span>([bottle, line], x="start"),</span>
+      <span class="cut-line cut-highlight"><span class="viz-op">Constraint</span>.<span class="viz-op">distribute</span>([line, label], dir="y", spacing=0),</span>
+      <span class="cut-line cut-highlight"><span class="viz-op">Constraint</span>.<span class="viz-op">align</span>([label, line], x="end"),</span>
+    <span class="cut-line cut-highlight">])</span>
   )</pre>
               </div>
             </div>
