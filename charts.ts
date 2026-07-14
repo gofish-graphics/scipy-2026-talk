@@ -1650,17 +1650,15 @@ const barleyDeltaScale = chroma
   .scale(["#2c7bb6", "#f7f2e8", "#e08214"])
   .domain([-barleyDeltaMaxAbs, 0, barleyDeltaMaxAbs]);
 
-function pairYears(rows: BarleyRow[]) {
-  return Object.values(_.groupBy(rows, (d) => `${d.site}|${d.variety}`)).map(
-    (pair) => {
-      const delta =
-        pair.find((r) => r.year === 1932)!.yield -
-        pair.find((r) => r.year === 1931)!.yield;
-      return {
-        site: pair[0].site,
-        variety: pair[0].variety,
-        delta,
-        deltaColor: barleyDeltaScale(delta).hex(),
+function deltaFromYears(rows: BarleyRow[]) {
+  const [y1931, y1932] = rows;
+  const delta = y1932.yield - y1931.yield;
+  return [
+    {
+      site: y1931.site,
+      variety: y1931.variety,
+      delta,
+      deltaColor: barleyDeltaScale(delta).hex(),
         // For a SIGNED bar (renderVizBarleyDeltaBars): rect's `h` channel
         // does not grow a bar upward from a zero baseline for a negative
         // value the way every other (always-positive) `h`-bound rect in
@@ -1674,15 +1672,14 @@ function pairYears(rows: BarleyRow[]) {
         // fall) and a magnitude (`barHeight`), and bind `y`/`h` to those
         // instead. `y: "<field>"` as a literal position channel is already
         // proven correct (see the DOTS chart's zero-baseline rect above).
-        barTop: Math.min(0, delta),
-        barHeight: Math.abs(delta),
-      };
-    }
-  );
+      barTop: Math.min(0, delta),
+      barHeight: Math.abs(delta),
+    },
+  ];
 }
 
 // (3) DELTA DOTS / (4) DELTA BARS — the year spread collapses into
-// `pairYears`'s computed delta; one mark per (site, variety), with a dashed
+// `deltaFromYears`'s computed delta; one mark per (site, variety), with a dashed
 // zero baseline so "above the line" reads as "rose". The connecting line
 // from (1)/(2) is gone: with only one point left per (site, variety), there
 // is nothing left to connect.
@@ -2007,7 +2004,7 @@ function renderVizBarleyDeltaDots(
       .flow(spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }))
       .mark(zeroBaselineMark("delta")),
     Chart(barley, vizChartOptions)
-      .flow(derive(pairYears), ...deltaPanelsFlow)
+      .flow(...deltaPanelsFlow, derive(deltaFromYears))
       // HACK (gofish#770 workaround): a small rounded `rect` positioned by
       // `y` stands in for a "dot" — `scatter` was the natural mark here,
       // but it collapses the panels (see comment above).
@@ -2058,19 +2055,19 @@ function renderVizBarleyDeltaBars(
       .flow(spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }))
       .mark(zeroBaselineMark("barTop")),
     Chart(barley, chartOptions)
-      .flow(derive(pairYears), ...deltaPanelsFlow)
+      .flow(...deltaPanelsFlow, derive(deltaFromYears))
       .mark(
         rect({
           y: "barTop",
           h: "barHeight",
           fill: highlight ? "site" : "variety",
         })
-      ), // HACK: see barTop/barHeight comment in pairYears
+      ), // HACK: see barTop/barHeight comment in deltaFromYears
   ]).render(el, {
     w,
     h,
     // `barTop` is the internal precomputed-top-edge hack field (see the
-    // `pairYears` comment) — it must never leak onto the axis as a label, so
+    // `deltaFromYears` comment) — it must never leak onto the axis as a label, so
     // the axis title is overridden with the real quantity it displays.
     axes: { x: true, y: { title: "Δ yield (bu/acre)" } },
     legend: !highlight,

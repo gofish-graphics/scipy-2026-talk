@@ -366,14 +366,11 @@ chart(barley_scatter_by_year(1931)).flow(
             </p>
             <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
 ><span class="cut-line">  .<span class="viz-op">flow</span>(</span
-><span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(lambda rows: (</span
-><span class="cut-line cut-highlight">      rows.pivot(index=["site", "variety"],</span
-><span class="cut-line cut-highlight">        columns="year", values="yield")</span
-><span class="cut-line cut-highlight">      .assign(delta=lambda d: d[1932] - d[1931])</span
-><span class="cut-line cut-highlight">      .reset_index()</span
-><span class="cut-line cut-highlight">    )),</span
 ><span class="cut-line">    <span class="viz-op">spread</span>(by="site", dir="x"),</span
-><span class="cut-line cut-highlight">    <span class="viz-op">spread</span>(by="variety", dir="x"),</span
+><span class="cut-line">    <span class="viz-op">spread</span>(by="variety", dir="x"),</span
+><span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(lambda rows: [{</span
+><span class="cut-line cut-highlight">      **rows[0], "delta": rows[1]["yield"] - rows[0]["yield"]</span
+><span class="cut-line cut-highlight">    }]),</span
 ><span class="cut-line">  )</span
 ><span class="cut-line cut-highlight">  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="delta"))</span></pre>
             <div
