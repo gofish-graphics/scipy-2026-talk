@@ -2483,17 +2483,14 @@ function renderBalloonChart() {
 function renderTitanicMosaic(id = "chart-viz-titanic-mosaic", w = 480, h = 400) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  // Each level normalizes the same raw field; `field(...)` is immutable, so one
-  // expression can fill all three `size` slots.
-  const share = field("count").normalize();
   Chart(titanic, {
     axes: false,
     color: palette({ Yes: "#2b8cbe", No: "#c9c2b5" }),
   })
     .flow(
-      stack("class", { dir: "y", size: share }),
-      stack("sex", { dir: "x", size: share }),
-      stack("survived", { dir: "y", size: share })
+      stack("class", { dir: "y", size: field("count").normalize() }),
+      stack("sex", { dir: "x", size: field("count").normalize() }),
+      stack("survived", { dir: "y", size: field("count").normalize() })
     )
     .mark(rect({ fill: "survived", stroke: "white", strokeWidth: 1 }))
     .render(el, { w, h, axes: false });
@@ -2763,14 +2760,13 @@ function renderMosaicSingleStackBase(
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
-  const share = field("count").normalize();
   Chart(titanic, {
     axes: false,
     color: palette({ Yes: "#2b8cbe", No: "#c9c2b5" }),
   })
     .flow(
-      stack("class", { dir: "y", size: share }),
-      stack("survived", { dir: "x", size: share })
+      stack("class", { dir: "y", size: field("count").normalize() }),
+      stack("survived", { dir: "x", size: field("count").normalize() })
     )
     .mark(rect({ fill: "survived", stroke: "white", strokeWidth: 1 }))
     .render(el, { w, h, axes: false });

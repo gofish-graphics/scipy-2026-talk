@@ -220,24 +220,20 @@
             <div class="move-code-pair">
               <div>
                 <p class="move-code-label">before</p>
-                <pre class="viz-code compact">share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
-
-chart(titanic)
+                <pre class="viz-code compact">chart(titanic)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">stack</span>("class", dir="y", size=share),
-    <span class="viz-op">stack</span>("survived", dir="x", size=share)
+    <span class="viz-op">stack</span>("class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="viz-op">stack</span>("survived", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
               <div>
                 <p class="move-code-label">after</p>
-                <pre class="viz-code compact">share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
-
-chart(titanic)
+                <pre class="viz-code compact">chart(titanic)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">stack</span>("class", dir="y", size=share),
-    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("sex", dir="x", size=share),</span>
-    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("survived", dir="y", size=share)</span>
+    <span class="viz-op">stack</span>("class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("sex", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),</span>
+    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("survived", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())</span>
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
@@ -489,13 +485,11 @@ area = chart(energyMix)
           <section class="split viz-step" data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: superseded by the Simpson's-paradox move-3 slide, which now teaches the nested mosaic -->
             <h2>three stacks make a mosaic</h2>
             <div>
-              <pre class="viz-code">share = <span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()
-
-chart(titanic)
+              <pre class="viz-code">chart(titanic)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">stack</span>("class",    dir="y", size=share),
-    <span class="viz-op">stack</span>("sex",      dir="x", size=share),
-    <span class="viz-op">stack</span>("survived", dir="y", size=share)
+    <span class="viz-op">stack</span>("class",    dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="viz-op">stack</span>("sex",      dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="viz-op">stack</span>("survived", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(fill="survived")
