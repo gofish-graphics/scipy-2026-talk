@@ -1606,7 +1606,7 @@
 /* Opening route through graphical space. The regions are deliberately flat,
    not boxed cards: this is a path through the talk, not a three-bin taxonomy. */
 .chart-space-map h2 {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.95rem;
 }
 
 .chart-space-route {
