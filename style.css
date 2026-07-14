@@ -1786,12 +1786,19 @@
   display: none;
 }
 
-.move-code-builder:has(.move-code-stage.fragment.visible) .move-code-stage:first-child {
-  display: none;
+.move-code-builder:has(.move-code-stage.fragment.visible) {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.move-code-builder:has(.move-code-stage:nth-child(3).visible) .move-code-stage:nth-child(2) {
-  display: none;
+.move-code-builder:has(.move-code-stage:nth-child(3).visible) {
+  grid-template-columns: 0.8fr 0.8fr 1.4fr;
+  max-width: 1080px;
+}
+
+.move-code-builder:has(.move-code-stage:nth-child(3).visible) .viz-code.compact {
+  font-size: 0.32em !important;
 }
 
 .move-code-builder .viz-code.compact {
