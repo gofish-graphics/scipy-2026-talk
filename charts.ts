@@ -2794,7 +2794,7 @@ function renderBottleBarBase(id = "chart-q-bottle-base", w = 220, h = 210) {
     .flow(spread("category", { dir: "x", spacing: 12 }))
     .mark(
       markLayer([
-        rect({ w: 36, h: 100, fill: "#e0ded4" }),
+        rect({ w: 36, h: datum(100), fill: "#e0ded4" }),
         rect({ w: 36, h: "amount", fill: "#5aa66c" }),
       ])
     )

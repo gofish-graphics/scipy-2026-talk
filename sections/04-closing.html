@@ -442,7 +442,7 @@ area = chart(energyMix)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x"))
   .<span class="viz-mark">mark</span>(
     <span class="viz-op">layer</span>([
-      <span class="viz-mark">rect</span>(h=100, fill="gray"),
+      <span class="viz-mark">rect</span>(h=datum(100), fill="gray"),
       <span class="viz-mark">rect</span>(h="amount", fill="green")
     ])
   )</pre>
