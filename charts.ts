@@ -3358,6 +3358,23 @@ export const chartRenderers: Record<string, () => void> = {
       .mark(rect({ fill: "yield" }))
       .render(el, { w: 560, h: 360, axes: true, legend: false });
   },
+  "chart-arc-bars": () => renderPlainBars("chart-arc-bars"),
+  "chart-arc-slope": () =>
+    renderVizBarleySlopePanels("chart-arc-slope", true, 540, 280),
+  "chart-arc-heatmap": () => {
+    const el = getContainer("chart-arc-heatmap");
+    if (!el || el.children.length > 0) return;
+    Chart(barley, { color: gradient(["#e8f4f8", "#1a5276"]) })
+      .flow(table("site", "year", { spacing: 4 }))
+      .mark(rect({ fill: "yield" }))
+      .render(el, { w: 380, h: 260, axes: true, legend: false });
+  },
+  "chart-arc-waffle": () => renderWaffleChart("chart-arc-waffle", 300, 220),
+  "chart-arc-mosaic": () =>
+    renderTitanicMosaic("chart-arc-mosaic", 300, 220),
+  "chart-arc-ribbon": () => renderEnergyRibbon("chart-arc-ribbon"),
+  "chart-arc-bottle": () => renderBottleChart("chart-arc-bottle", 300, 200),
+  "chart-arc-sankey": () => renderSankeyTree("chart-arc-sankey"),
   "chart-kv-heatmap": () => {
     const el = getContainer("chart-kv-heatmap");
     if (!el || el.children.length > 0) return;

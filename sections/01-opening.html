@@ -1050,37 +1050,120 @@
             </aside>
           </section>
 
-          <section>
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                margin-top: 0.8rem;
-              "
-            >
-              <img
-                src="motivational-images/gofish-homepage.png"
-                style="
-                  max-width: 95%;
-                  max-height: 74vh;
-                  border-radius: 4px;
-                  object-fit: contain;
-                "
-                alt="gofish.graphics home page: bottle pictorial, streamgraph, scatterpie, rose chart, and pulley diagram examples"
-              />
-              <p style="margin-top: 0.6rem; font-size: 0.75em; color: #555">
-                <a href="https://gofish.graphics" target="_blank" rel="noopener noreferrer"
-                  >gofish.graphics</a
-                >
-              </p>
+          <section class="chart-space-map" data-background-color="#f7f2e8">
+            <h2>we'll learn the moves here, then keep going</h2>
+            <div class="chart-space-route">
+              <div class="chart-space-region">
+                <h3>familiar chart space</h3>
+                <div class="chart-space-familiar">
+                  <figure>
+                    <div class="chart-space-thumb chart-space-thumb-wide">
+                      <div id="chart-arc-bars" class="chart-container"></div>
+                    </div>
+                    <figcaption>bar chart</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb chart-space-thumb-wide">
+                      <div id="chart-arc-slope" class="chart-container"></div>
+                    </div>
+                    <figcaption>slope chart</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb chart-space-thumb-wide">
+                      <div id="chart-arc-heatmap" class="chart-container"></div>
+                    </div>
+                    <figcaption>heatmap</figcaption>
+                  </figure>
+                </div>
+              </div>
+
+              <div class="chart-space-arrow" aria-hidden="true">→</div>
+
+              <div class="chart-space-region">
+                <h3>the long tail</h3>
+                <div class="chart-space-grid">
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <div id="chart-arc-waffle" class="chart-container"></div>
+                    </div>
+                    <figcaption>waffle</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <div id="chart-arc-mosaic" class="chart-container"></div>
+                    </div>
+                    <figcaption>mosaic</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <div id="chart-arc-ribbon" class="chart-container"></div>
+                    </div>
+                    <figcaption>ribbon</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <div id="chart-arc-bottle" class="chart-container"></div>
+                    </div>
+                    <figcaption>bottle chart</figcaption>
+                  </figure>
+                </div>
+              </div>
+
+              <div class="chart-space-arrow" aria-hidden="true">→</div>
+
+              <div class="chart-space-region">
+                <h3>beyond chart space</h3>
+                <div class="chart-space-grid">
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <div id="chart-arc-sankey" class="chart-container"></div>
+                    </div>
+                    <figcaption>sankey tree</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <img
+                        src="gallery-images/pulley-diagram.png"
+                        alt="Pulley diagram rendered with GoFish"
+                      />
+                    </div>
+                    <figcaption>pulley diagram</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <img
+                        src="gallery-images/gotree-sunburst.svg"
+                        alt="Sunburst rendered with GoTree and GoFish"
+                      />
+                    </div>
+                    <figcaption>sunburst</figcaption>
+                  </figure>
+                  <figure>
+                    <div class="chart-space-thumb">
+                      <img
+                        src="gallery-images/gotree-orthogonal.svg"
+                        alt="Orthogonal node-link tree rendered with GoTree and GoFish"
+                      />
+                    </div>
+                    <figcaption>orthogonal tree</figcaption>
+                  </figure>
+                </div>
+              </div>
             </div>
+            <p class="chart-space-promise">
+              the same compositional moves carry us across the whole space
+            </p>
             <aside class="notes">
-              This is the vibe: the front page is a wall of the gallery, bar
-              charts, streamgraphs, scatterpies, rose charts, even a pulley
-              diagram, all one language. npm install today, Python alpha close
-              behind. I'll come back to some of these examples at the end.
+              Here is the route through the talk. We'll start over here, with
+              charts we already know, because familiar examples make the
+              language easy to learn. Then we'll use the same compositional
+              moves to enter the long tail: waffles, mosaics, ribbons, and
+              pictorial charts that do not fit neatly into a small chart menu.
+              At the end, we'll keep going into structures we may not even call
+              statistical charts. This is not a taxonomy. It is the path we're
+              taking through graphical space, and GoFish is the language that
+              lets us keep composing all the way across it. The library is open
+              source and available now at gofish.graphics.
             </aside>
           </section>
 
