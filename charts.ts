@@ -1851,12 +1851,6 @@ const barleyZeroRows = _.uniqBy(barley, "site").map((d) => ({
   barTop: 0,
 }));
 
-const morrisLabelRows = barley
-  .filter((d) => d.site === "Morris")
-  .map((d) => ({
-    ...d,
-    callout: "Morris: every variety rose",
-  }));
 // TWO stacked bugs conspired to make the zero baseline totally invisible
 // (confirmed by DOM inspection — the emitted <rect> for this mark had
 // `height="0"`, `stroke-width="0"`, and no `stroke-dasharray` attribute at
@@ -2070,25 +2064,6 @@ function renderVizBarleyDeltaBars(
           fill: highlight ? "site" : "variety",
         })
       ), // HACK: see barTop/barHeight comment in deltaFromYears
-    ...(annotate
-      ? [
-          Chart(morrisLabelRows, { axes: false })
-            .flow(
-              spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }).label(
-                "callout",
-                {
-                  position: "outset-top",
-                  fontSize: 14,
-                  color: "#e08214",
-                  fontWeight: 700,
-                }
-              ),
-              spread({ by: "variety", dir: "x", spacing: 1 }),
-              derive(deltaFromYears)
-            )
-            .mark(rect({ y: "barTop", h: "barHeight", opacity: 0 })),
-        ]
-      : []),
   ]).render(el, {
     w,
     h,
@@ -2127,7 +2102,9 @@ function renderVizBarleyDeltaBars(
     .then(() => realignSiteTicks(id)) // HACK: see realignSiteTicks above
     .then(() => dashZeroBaseline(id)) // HACK: see dashZeroBaseline above
     .then(() => unclipSvgWidth(id)) // HACK: see unclipSvgWidth above
-    .then(() => undefined);
+    .then(() => {
+      if (annotate) addDeltaBarsCallout(id);
+    });
 }
 
 // Modeled closely on `addSlopeCallout` above — same DOM-measurement move
