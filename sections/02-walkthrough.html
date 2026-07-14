@@ -178,16 +178,14 @@
             <aside class="notes">
               Site nested by year, the same site-then-year structure as the
               opening, now on the real barley data. That two-level spec,
-              spread(by="site") then spread(by="year"), is now built. Next,
-              three slides walk that same spec bottom-up, starting from a
-              single mark and moving the cut up the spec one line at a time,
-              tying each line to a perceptual-query chip, the notation
-              promised back in the opening.
+              spread(by="site") then spread(by="year"), is now built. The
+              important idea is already visible: graphical operators can
+              nest, and their order determines which values become neighbors.
             </aside>
           </section>
 
           <!-- Step 1: cut at the mark -->
-          <section class="mini-table-slide" data-background-color="#f7f2e8">
+          <section class="mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>each line of the spec is a cut</h2>
             <div
               style="
@@ -261,7 +259,7 @@
           </section>
 
           <!-- Step 2: cut at the inner spread(by="year") -->
-          <section class="mini-table-slide" data-background-color="#f7f2e8">
+          <section class="mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>each line of the spec is a cut</h2>
             <div
               style="
@@ -341,7 +339,7 @@
           </section>
 
           <!-- Step 3: cut at the outer spread(by="site") -->
-          <section class="mini-table-slide" data-background-color="#f7f2e8">
+          <section class="mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
             <h2>each line of the spec is a cut</h2>
             <div
               style="
@@ -856,17 +854,16 @@
               <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s <em class="q-field">yield</em>⟩</span> across <em class="q-field">years</em></span>
             </div>
             <p class="fragment" style="margin-top: 1rem; font-size: 0.55em; color: #555">
-              this time, start from the query, then build the structure that answers it
+              compare each variety across years, then look for a shared direction
             </p>
             <aside class="notes">
               The totals rose at Morris and fell everywhere else. But a total can
               hide its parts: maybe one big variety swung it. To answer, we break
-              each site open by variety. New move: instead of reading the query
-              off a chart we already built, write the query down first, for each
-              variety, for each site, how did yield change, and go hunting for
-              the structure that makes it cheap. The rest of this section is that
-              hunt, and the obvious first stop is the operator that just handed
-              us site and year: spread again.
+              each site open by variety. The more specific question is: for
+              each variety, at each site, how did yield change? The rest of
+              this section looks for a structure that makes the answer visible,
+              starting with the operator that just handed us site and year:
+              spread again.
             </aside>
           </section>
 
@@ -899,7 +896,7 @@
             ></div>
             <aside class="notes">
               This is the strongest version of the plain spread approach. We
-              wrote the query down, so make variety the unit of comparison
+              need per-variety change, so make variety the unit of comparison
               inside each site, then place 1931 and 1932 next to each other
               inside each variety. That fixes the avoidable grouping problem:
               the two values whose difference we care about are now adjacent.

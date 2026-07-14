@@ -223,8 +223,7 @@ chart(barley_scatter_by_year(1931)).flow(
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
             </div>
             <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              "Every variety decreased at every site, except Morris, where
-              every variety increased."
+              "Morris is the only site where every variety increased."
             </p>
             <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(
@@ -817,7 +816,87 @@ Frame(
 
           <!-- ─── OPERATOR / GESTALT TABLE ─────────────────────── -->
 
-          <section>
+          <section data-background-color="#f7f2e8">
+            <h2>choose by the structure you need</h2>
+            <table
+              style="
+                width: 100%;
+                margin-top: 0.7rem;
+                border-collapse: collapse;
+                font-size: 0.78em;
+                line-height: 1.4;
+              "
+            >
+              <thead>
+                <tr style="border-bottom: 2px solid #1a1a2e">
+                  <th style="text-align: left; padding: 0.38rem 0.7rem; width: 34%">
+                    What you're building
+                  </th>
+                  <th style="text-align: left; padding: 0.38rem 0.7rem; width: 30%">
+                    Structural move
+                  </th>
+                  <th style="text-align: left; padding: 0.38rem 0.7rem; width: 36%">
+                    Useful additions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.42rem 0.7rem">separate or nest groups</td>
+                  <td style="padding: 0.42rem 0.7rem"><code>spread(by=key)</code></td>
+                  <td style="padding: 0.42rem 0.7rem; color: #555">
+                    nest another <code>spread</code> to control adjacency
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.42rem 0.7rem">assemble parts into a whole</td>
+                  <td style="padding: 0.42rem 0.7rem"><code>stack(by=key, size=value)</code></td>
+                  <td style="padding: 0.42rem 0.7rem; color: #555">
+                    normalize for shares; sort to reveal order
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.42rem 0.7rem">place items by measured values</td>
+                  <td style="padding: 0.42rem 0.7rem"><code>scatter(x, y)</code></td>
+                  <td style="padding: 0.42rem 0.7rem; color: #555">
+                    add color or size, or use a chart as each point
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.42rem 0.7rem">connect the same thing across positions</td>
+                  <td style="padding: 0.42rem 0.7rem"><code>line(by=key)</code> or <code>ribbon(by=key)</code></td>
+                  <td style="padding: 0.42rem 0.7rem; color: #555">
+                    draw over a <code>spread</code>, <code>scatter</code>, or <code>stack</code>
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #d8d3ca">
+                  <td style="padding: 0.42rem 0.7rem">cross two discrete keys</td>
+                  <td style="padding: 0.42rem 0.7rem"><code>table(row, col)</code></td>
+                  <td style="padding: 0.42rem 0.7rem; color: #555">
+                    put any mark or nested chart in each cell
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size: 0.58em; color: #666; margin-top: 0.7rem; text-align: left">
+              Beyond layout: data transforms change the values, color changes grouping and emphasis,
+              and coordinate transforms change the geometry.
+            </p>
+            <aside class="notes">
+              This deliberately echoes the AI skill table from the opening,
+              but the recommendations are composable structural moves rather
+              than finished chart types. The left column describes the visual
+              structure you need, the middle gives the operator, and the last
+              column shows common ways to extend it. These are ingredients,
+              not mutually exclusive answers. A slope chart, for example,
+              combines spread, scatter, and line. The small note below keeps
+              the wider toolbox visible without turning this into another
+              taxonomy: transforms change data, color changes grouping and
+              emphasis, and coordinates change geometry.
+            </aside>
+          </section>
+
+          <section data-visibility="hidden">
             <h2>each operator makes one query cheap</h2>
             <table
               style="

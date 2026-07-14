@@ -20,6 +20,13 @@ if (slidesEl) {
     glyphsHtml,
     closingHtml,
   ].join("\n");
+
+  // The audience-facing deck no longer shows the experimental query grammar.
+  // Remove its Reveal fragment classes as well as hiding it in CSS, otherwise
+  // invisible query chips would still consume advance clicks.
+  slidesEl
+    .querySelectorAll(".viz-query.fragment, .viz-query .fragment")
+    .forEach((el) => el.classList.remove("fragment"));
 }
 
 // Mini reference table pinned to the upper-right of the walkthrough slides

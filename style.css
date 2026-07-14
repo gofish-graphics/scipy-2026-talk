@@ -1395,7 +1395,9 @@
    structure makes cheap, in the talk's foreach notation. Keywords take
    .q-kw; an optional plain-language gloss line takes .q-gloss. */
 .viz-query {
-  display: inline-block;
+  /* Kept in source for research notes and hidden alternates, but removed
+     from the audience-facing version of this talk. */
+  display: none !important;
   background: #eef4fb;
   border: 1.5px dashed #4a7fb5;
   border-radius: 6px;
