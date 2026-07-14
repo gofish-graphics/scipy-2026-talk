@@ -228,9 +228,9 @@ chart(barley_scatter_by_year(1931)).flow(
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">scatter</span>(by="variety", y="yield"),
+    <span class="cut-highlight"><span class="viz-op">scatter</span>(by="variety", y="yield"),</span>
   )
-  .<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(stroke="variety"))</pre>
+  <span class="cut-highlight">.<span class="viz-mark">mark</span>(<span class="viz-mark">line</span>(stroke="variety"))</span></pre>
             <div
               id="chart-viz-barley-slope"
               class="chart-container viz-gofish-chart"

@@ -95,9 +95,9 @@
             <h2>place one slot per site</h2>
             <div>
               <pre class="viz-code">chart(barley)
-  .<span class="viz-op">flow</span>(
-    <span class="viz-op">spread</span>(by="site", dir="x")
-  )</pre>
+  <span class="cut-highlight">.<span class="viz-op">flow</span>(</span>
+    <span class="cut-highlight"><span class="viz-op">spread</span>(by="site", dir="x")</span>
+  <span class="cut-highlight">)</span></pre>
               <p class="viz-step-copy">
                 The first operator creates a row of visual neighborhoods.
               </p>
@@ -118,9 +118,9 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x")
   )
-  .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>(h="yield")
-  )</pre>
+  <span class="cut-highlight">.<span class="viz-mark">mark</span>(</span>
+    <span class="cut-highlight"><span class="viz-mark">rect</span>(h="yield")</span>
+  <span class="cut-highlight">)</span></pre>
               <p class="viz-step-copy">
                 The mark says what gets drawn; the channel says what property
                 carries the value.
@@ -165,10 +165,10 @@
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
-    <span class="viz-op">spread</span>(by="year", dir="x")
+    <span class="cut-highlight"><span class="viz-op">spread</span>(by="year", dir="x")</span>
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>(h="yield", fill="site")
+    <span class="cut-highlight"><span class="viz-mark">rect</span>(h="yield", fill="site")</span>
   )</pre>
             </div>
             <div
@@ -881,10 +881,10 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">spread</span>(by="variety", dir="x")
+    <span class="cut-highlight"><span class="viz-op">spread</span>(by="variety", dir="x")</span>
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>(h="yield", fill="variety")
+    <span class="cut-highlight"><span class="viz-mark">rect</span>(h="yield", fill="variety")</span>
   )</pre>
               <p class="viz-step-copy">
                 The obvious move: nest one more <code>spread</code>. Every
@@ -946,10 +946,10 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">stack</span>("variety", dir="y", size="yield")
+    <span class="cut-highlight"><span class="viz-op">stack</span>("variety", dir="y", size="yield")</span>
   )
   .<span class="viz-mark">mark</span>(
-    <span class="viz-mark">rect</span>(w=8, fill="variety")
+    <span class="cut-highlight"><span class="viz-mark">rect</span>(w=8, fill="variety")</span>
   )</pre>
               <p class="viz-step-copy">
                 Spreading a third time lost the total. Stacking variety
@@ -1554,4 +1554,3 @@
           <!-- ─── COLOR + LABELS ────────────────────────────────── -->
         </section>
         <!-- /COLUMN 2 -->
-

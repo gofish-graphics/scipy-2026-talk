@@ -1168,9 +1168,11 @@
   display: block;
 }
 
-.viz-code .cut-line.cut-highlight {
+.viz-code .cut-highlight {
   background: rgba(74, 127, 181, 0.18);
+  -webkit-box-decoration-break: clone;
   border-radius: 3px;
+  box-decoration-break: clone;
 }
 
 .viz-code .cut-line.cut-collapsed {
