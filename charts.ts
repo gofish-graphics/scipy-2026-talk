@@ -2865,6 +2865,7 @@ function renderEnergyStackChart(
     w = 340,
     h = 260,
     barW = 36,
+    spacing = 30,
   }: {
     sort?: boolean;
     connect?: boolean;
@@ -2872,6 +2873,7 @@ function renderEnergyStackChart(
     w?: number;
     h?: number;
     barW?: number;
+    spacing?: number;
   } = {}
 ) {
   const el = getContainer(id);
@@ -2883,7 +2885,7 @@ function renderEnergyStackChart(
   // overlay on visible bars — the same stack+connect spec, degenerate bars.
   const effectiveBarW = area ? 1 : barW;
   const barsFlow: any[] = [
-    spread("year", { dir: "x", spacing: 30 }),
+    spread("year", { dir: "x", spacing }),
     stack(sort ? field("source").sort("amount") : "source", {
       dir: "y",
       size: "amount",
@@ -2910,7 +2912,7 @@ function renderEnergyRibbonBase(id = "chart-move-ribbon-base") {
   renderEnergyStackChart(id, { sort: true, w: 280, h: 180, barW: 26 });
 }
 function renderEnergyRibbonMid(id = "chart-move-ribbon-mid") {
-  renderEnergyStackChart(id, { area: true, w: 280, h: 180 });
+  renderEnergyStackChart(id, { area: true, w: 420, h: 180, spacing: 90 });
 }
 function renderEnergyRibbon(id = "chart-move-ribbon") {
   renderEnergyStackChart(id, { sort: true, connect: true, w: 400, h: 320 });
