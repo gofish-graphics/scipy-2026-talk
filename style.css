@@ -1765,10 +1765,8 @@
   font-size: 0.33em !important;
 }
 
-/* Move slides are code builders: one complete specification occupies the
-   reading slot at a time. Reveal keeps earlier fragments in the DOM, so the
-   next visible stage replaces rather than accumulates beside the previous
-   spec. */
+/* Move slides are code builders. Reserve the final comparison layout from the
+   first reveal, then make each later spec visible in its already-sized slot. */
 .move-code-builder {
   --viz-op: #49a66a;
   --viz-mark: #d6a62f;
@@ -1776,6 +1774,9 @@
   margin: 0.45rem auto 0;
   max-width: 820px;
   position: relative;
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .move-code-builder .move-code-stage {
@@ -1783,21 +1784,15 @@
 }
 
 .move-code-builder .move-code-stage.fragment:not(.visible) {
-  display: none;
+  visibility: hidden;
 }
 
-.move-code-builder:has(.move-code-stage.fragment.visible) {
-  display: grid;
-  gap: 0.55rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.move-code-builder:has(.move-code-stage:nth-child(3).visible) {
+.move-code-builder:has(.move-code-stage:nth-child(3)) {
   grid-template-columns: 0.8fr 0.8fr 1.4fr;
   max-width: 1080px;
 }
 
-.move-code-builder:has(.move-code-stage:nth-child(3).visible) .viz-code.compact {
+.move-code-builder:has(.move-code-stage:nth-child(3)) .viz-code.compact {
   font-size: 0.32em !important;
 }
 
@@ -1810,6 +1805,17 @@
 
 .move-code-builder .move-code-label {
   margin-bottom: 0.16rem;
+}
+
+.move-code-builder .cut-line {
+  display: block;
+}
+
+.move-code-builder .cut-highlight {
+  background: rgba(74, 127, 181, 0.2);
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .waffle-mark-definition {
