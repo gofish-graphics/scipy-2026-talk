@@ -1808,7 +1808,7 @@
 }
 
 .move-code-builder .cut-line {
-  display: block;
+  display: inline;
 }
 
 .move-code-builder .cut-highlight {
