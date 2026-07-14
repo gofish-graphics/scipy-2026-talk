@@ -446,7 +446,7 @@ area = chart(energyMix)
   .<span class="viz-mark">mark</span>(
     <span class="viz-op">layer</span>([
       <span class="viz-op">paint</span>([
-        <span class="viz-mark">image</span>(href=bottlePng, h=<span class="viz-transform">v</span>(100)),
+        <span class="viz-mark">image</span>(href=bottlePng, h=<span class="viz-transform">datum</span>(100)),
         <span class="viz-mark">rect</span>(h="amount", w=175, fill="green"),
       ], blendMode="color").name("bottle"),
       <span class="viz-mark">rect</span>(h=1, y="amount", fill="gray").name("line"),

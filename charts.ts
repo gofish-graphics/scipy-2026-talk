@@ -2672,7 +2672,7 @@ function renderBottleChart(
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
   const bottle = paint({ blendMode: "color" }, [
-    image({ href: bottlePng, h: v(100) }),
+    image({ href: bottlePng, h: datum(100) }),
     rect({ h: "amount", w: 175, fill: "#00ff00" }),
   ]).name("bottle");
   const marks = annotations
