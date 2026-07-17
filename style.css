@@ -731,7 +731,7 @@
 /* Close slide: two side-by-side boxes, each with its own logo frame */
 .close-slide-two-boxes {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.09fr 0.91fr;
   gap: 2.5rem;
   align-items: stretch;
   width: 100%;
@@ -801,6 +801,7 @@
   font-size: 0.73em;
   line-height: 1.42;
 }
+
 
 /* ─── SciPy / thesis-talk skin ─────────────────────────────────────── */
 :root {
