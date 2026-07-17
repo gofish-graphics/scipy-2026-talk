@@ -713,9 +713,11 @@
   height: 38px;
   box-sizing: border-box;
   background-image: url(gofish-logo.png);
-  background-repeat: repeat-x;
+  /* Space whole fish across the strip instead of cropping a partial tile at
+     either end when the panel width is not a multiple of the fish width. */
+  background-repeat: space no-repeat;
   background-size: auto 38px;
-  background-position: left center;
+  background-position: center;
   opacity: 0.88;
 }
 
@@ -765,9 +767,10 @@
 .close-slide-logo-border-side {
   flex: 0 0 38px;
   background-image: url(gofish-logo.png);
-  background-repeat: repeat-y;
+  /* The same treatment vertically keeps the top and bottom fish whole. */
+  background-repeat: no-repeat space;
   background-size: 38px auto;
-  background-position: center top;
+  background-position: center;
   opacity: 0.88;
 }
 
