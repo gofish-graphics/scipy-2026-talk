@@ -16,7 +16,7 @@
     "d3-array": "^3.2.4",
     "d3-dsv": "^3.0.1",
     "fast-kde": "^0.2.2",
-    "gofish-graphics": "0.1.0-nightly.20260711",
+    "gofish-graphics": "0.1.0-nightly.20260716",
     "lodash": "^4.17.21",
     "perfect-arrows": "^0.3.7",
     "reveal.js": "^5.1.0",

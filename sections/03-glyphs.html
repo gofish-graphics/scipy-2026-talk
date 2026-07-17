@@ -14,10 +14,10 @@
             <div class="two-col">
               <div class="col-code">
                 <pre><code class="language-python">chart(scatter_data).flow(
-    scatter("lake", x="x", y="y")
+    scatter(by="lake", x="x", y="y")
 ).mark(
     chart(coord=clock())
-    .flow(stack("species", dir="x", size="count"))
+    .flow(stack(by="species", dir="x", size="count"))
     .mark(rect(fill="species"))
 )</code></pre>
                 <div
@@ -88,12 +88,12 @@ def site_pie(data):
     total_yield = total_yield_for(1931, data[0]["site"])
     return (
         chart(data[0]["collection"], coord=clock())
-        .flow(stack("variety", dir="x", h=pie_radius(total_yield), size="yield"))
+        .flow(stack(by="variety", dir="x", h=pie_radius(total_yield), size="yield"))
         .mark(rect(fill="variety"))
     )
 
 chart(barley_scatter_by_year(1931)).flow(
-    scatter("site", x="x", y="y")
+    scatter(by="site", x="x", y="y")
 ).mark(site_pie)</code></pre>
                 <div
                   style="
@@ -175,15 +175,11 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <!-- ─── BRIDGE: THE SLOPE CHART'S FIRST LAYER ───────────── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8">
+          <section class="viz-step viz-step-side-by-side" data-background-color="#f7f2e8">
             <h2>first, just the points</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
             </div>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Each site panel scatters every variety's two years as points,
-              the connecting lines come next.
-            </p>
             <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
@@ -197,24 +193,21 @@ chart(barley_scatter_by_year(1931)).flow(
               style="height: 312px; min-height: 312px"
             ></div>
             <aside class="notes">
-              Same spread/spread skeleton as the slope chart, with its first
-              actual mark: scatter makes one placed point per variety in each
-              site-year cell, and circle draws it. The series key combines
-              site-year cell. The next slide connects each variety along the
-              year axis.
+              Same site-then-year spread skeleton as the normalized stacks we
+              just saw. Now swap stack for scatter: instead of accumulating
+              variety into a whole, scatter places one point per variety in
+              each site-year cell, and circle draws it. The next slide connects
+              each variety along the year axis.
             </aside>
           </section>
 
-          <!-- ─── SLOPE PANELS: THE TAKEAWAY IS A SENTENCE ────────── -->
+          <!-- ─── SLOPE PANELS: CONNECT THE POINTS WITH LINES ─────── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>the takeaway is a sentence</h2>
+          <section class="viz-step viz-step-side-by-side" data-background-color="#f7f2e8">
+            <h2>connect the points with lines</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
             </div>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              "Morris is the only site where every variety increased."
-            </p>
             <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
@@ -227,11 +220,6 @@ chart(barley_scatter_by_year(1931)).flow(
               class="chart-container viz-gofish-chart"
               style="height: 312px; min-height: 312px"
             ></div>
-            <p class="viz-step-copy" style="font-size: 0.56em">
-              Six site panels, ten variety-lines each. Morris tilts up
-              across the board; every other panel tilts down, save one
-              stray line apiece in University Farm and Grand Rapids.
-            </p>
             <aside class="notes">
               In the grouped bars, each variety's years were finally adjacent,
               but the change still had to be estimated between two tiny bar
@@ -288,10 +276,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨each <em class="q-field">variety</em>'s trend⟩</span> at each <em class="q-field">site</em>, one variety, or all?</span>
             </div>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Same slope panels as before, the starting point for four
-              one-edit steps toward a faster read.
-            </p>
             <pre class="viz-code compact">chart(barley)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
@@ -305,7 +289,7 @@ chart(barley_scatter_by_year(1931)).flow(
               style="height: 312px; min-height: 312px"
             ></div>
             <aside class="notes">
-              Same chart, same spec, as the "takeaway is a sentence" slide,
+              Same chart, same spec, as the "connect the points with lines" slide,
               deliberately, so it re-anchors the through-line right after the
               section break. This is the through-line for the next four
               slides: each step is exactly one edit to this spec, and each
@@ -323,10 +307,6 @@ chart(barley_scatter_by_year(1931)).flow(
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨Δ <em class="q-field">yield</em> from 1931⟩</span>, site by site</span>
             </div>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              One edit: normalize each variety's 1931 yield to zero, so the
-              line's own angle becomes the delta.
-            </p>
             <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
 ><span class="cut-line">  .<span class="viz-op">flow</span>(</span
 ><span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(anchor_to_1931),</span
@@ -354,15 +334,11 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <!-- ─── SIMPLIFY YOUR MESSAGE: STEP 3 OF 4, BARS ───────── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8">
+          <section class="viz-step viz-step-side-by-side" data-background-color="#f7f2e8">
             <h2>trade angle for position</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
             </div>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              <code>derive</code> collapses each year pair into one signed
-              delta. Every change now starts from the same zero baseline.
-            </p>
             <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
 ><span class="cut-line">  .<span class="viz-op">flow</span>(</span
 ><span class="cut-line">    <span class="viz-op">spread</span>(by="site", dir="x"),</span
@@ -405,10 +381,6 @@ chart(barley_scatter_by_year(1931)).flow(
             data-visibility="hidden"
           >
             <h2>the line has nothing left to connect</h2>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Same one-edit step as the bars slide, dots instead of bars for
-              the same collapsed delta.
-            </p>
             <pre class="viz-code compact"><span class="cut-line">chart(barley)</span
 ><span class="cut-line">  .<span class="viz-op">flow</span>(</span
 ><span class="cut-line cut-highlight">    <span class="viz-transform">derive</span>(delta),</span
@@ -434,20 +406,12 @@ chart(barley_scatter_by_year(1931)).flow(
 
           <!-- ─── COLOR: HIGHLIGHT THE EXCEPTION (now on the delta bars) ── -->
 
-          <section class="viz-step" data-background-color="#f7f2e8">
+          <section class="viz-step viz-step-side-by-side" data-background-color="#f7f2e8">
             <h2>use color for emphasis</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
             </div>
-            <p class="viz-step-copy" style="margin-top: 0; font-size: 0.62em">
-              Same bars, now colored by site with Morris in orange. The sign
-              is already carried by which side of zero a bar sits on, so
-              color is free to spend on emphasis instead of encoding.
-            </p>
-            <pre class="viz-code compact">chart(
-  barley,
-  <span class="cut-highlight">color=<span class="viz-op">palette</span>({"Morris": "#e08214"}),  # every other site gray</span>
-)
+            <pre class="viz-code compact">chart(barley, <span class="cut-highlight">color=<span class="viz-op">palette</span>({"Morris": "#e08214"})</span>)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="variety", dir="x"),
@@ -455,7 +419,7 @@ chart(barley_scatter_by_year(1931)).flow(
       **rows[0], "delta": rows[1]["yield"] - rows[0]["yield"]
     }]),
   )
-  .<span class="viz-mark">mark</span>(<span class="cut-highlight"><span class="viz-mark">rect</span>(h="delta", fill="site")</span>)</pre>
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="delta", <span class="cut-highlight">fill="site"</span>))</pre>
             <div
               id="chart-viz-barley-delta-bars-highlight"
               class="chart-container viz-gofish-chart"
@@ -481,9 +445,9 @@ chart(barley_scatter_by_year(1931)).flow(
             </aside>
           </section>
 
-          <!-- Labels/annotations: say the takeaway out loud (now on the delta bars) -->
-          <section class="viz-step" data-background-color="#f7f2e8">
-            <h2>annotations carry the takeaway</h2>
+          <!-- Labels/annotations: emphasize the message (now on the delta bars) -->
+          <section class="viz-step viz-step-side-by-side" data-background-color="#f7f2e8">
+            <h2>annotations can emphasize your message</h2>
             <div class="viz-query" style="margin: 0.2rem 0 0.5rem; font-size: 0.58em">
               <span class="q-line"><span class="q-val">find</span> <span class="q-hole">⟨the sign of Δ <em class="q-field">yield</em>⟩</span>, by <em class="q-field">site</em></span>
             </div>
@@ -492,11 +456,26 @@ chart(barley_scatter_by_year(1931)).flow(
               class="chart-container viz-gofish-chart"
               style="height: 312px; min-height: 312px"
             ></div>
-            <p class="viz-step-copy" style="font-size: 0.6em">
-              Color drew the eye; a label says the takeaway out loud: "Morris
-              is the only site where every variety rose. Everywhere else,
-              they fell."
-            </p>
+            <div class="annotation-code-row">
+              <div class="annotation-code-proposal annotation-code-full">
+                <div class="annotation-code-status">proposed in #805</div>
+                <pre class="viz-code compact"><span class="cut-line">chart(barley, color=<span class="viz-op">palette</span>({"Morris": "#e08214"}))</span
+><span class="cut-line">  .<span class="viz-op">flow</span>(</span
+><span class="cut-line">    <span class="viz-op">spread</span>(by="site", dir="x")</span
+><span class="cut-line cut-highlight">      .<span class="viz-op">label</span>(</span
+><span class="cut-line cut-highlight">        <span class="viz-transform">field</span>("site").map({</span
+><span class="cut-line cut-highlight">          "Morris": "Only Morris rose across every variety"</span
+><span class="cut-line cut-highlight">        }),</span
+><span class="cut-line cut-highlight">        position="outset-top", color="#e08214"</span
+><span class="cut-line cut-highlight">      ),</span
+><span class="cut-line">    <span class="viz-op">spread</span>(by="variety", dir="x"),</span
+><span class="cut-line">    <span class="viz-transform">derive</span>(lambda rows: [{</span
+><span class="cut-line">      **rows[0], "delta": rows[1]["yield"] - rows[0]["yield"]</span
+><span class="cut-line">    }]),</span
+><span class="cut-line">  )</span
+><span class="cut-line">  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="delta", fill="site"))</span></pre>
+              </div>
+            </div>
             <aside class="notes">
               The last step of explanatory polish: annotate. If the sentence
               is the point, write the sentence on the chart, don't leave the
@@ -504,10 +483,13 @@ chart(barley_scatter_by_year(1931)).flow(
               bars, same Morris-orange highlight, color already made
               Morris's bars pop; the callout states the conclusion directly
               instead of leaving the reader to scan six site groups of signed
-              bars. Morris sits third of six site groups, so the callout has
-              room in the upper area of the chart without covering any bars.
-              Exploratory charts help you find the story; explanatory charts
-              tell it.
+              bars. The visible code is the proposed field-map spelling from
+              draft PR #805: it is a serializable partial mapping, and an
+              unmapped value produces no label. Until that PR lands, this live
+              chart uses the already-merged equivalent: a derived takeaway
+              field that is empty for five sites and contains the sentence for
+              Morris, labeled on the outer site spread. Exploratory charts help
+              you find the story; explanatory charts tell it.
             </aside>
           </section>
 
@@ -549,7 +531,7 @@ layer([
     )),
 ])</code></pre>
                 <!-- <pre><code class="language-python">chart(scatter_data).flow(
-    scatter("lake", x="x", y="y")
+    scatter(by="lake", x="x", y="y")
 ).mark(
     FlowerChart(
         petal(
@@ -746,7 +728,8 @@ Frame(
 
           <!-- ─── PIVOT ──────────────────────────────────────────── -->
 
-          <section>
+          <section data-visibility="hidden">
+            <!-- HIDDEN: structure-vs-gallery takeaway cut for pacing. Restore by removing data-visibility. -->
             <div
               style="
                 margin-top: 1.4rem;
@@ -851,7 +834,7 @@ Frame(
                 </tr>
                 <tr style="border-bottom: 1px solid #d8d3ca">
                   <td style="padding: 0.34rem 0.7rem">see how two measures vary together</td>
-                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">scatter</span>(x, y)</code></td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">scatter</span>(by=key, x=x, y=y)</code></td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
                       <div id="chart-viz-op-scatter"></div>
@@ -872,7 +855,7 @@ Frame(
                 </tr>
                 <tr style="border-bottom: 1px solid #d8d3ca">
                   <td style="padding: 0.34rem 0.7rem">look up a value by two discrete keys</td>
-                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">table</span>(row, col)</code></td>
+                  <td style="padding: 0.34rem 0.7rem"><code><span class="viz-op">table</span>(by=(row, col))</code></td>
                   <td style="padding: 0.18rem 0.7rem">
                     <div style="width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: auto">
                       <div id="chart-viz-op-table" style="margin-left: -40px"></div>

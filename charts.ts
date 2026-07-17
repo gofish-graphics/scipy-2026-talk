@@ -63,11 +63,12 @@ const Chart = (data?: unknown, options: Record<string, unknown> = {}) =>
     ? gofishChart()
     : gofishChart(data, { axes: true, ...options });
 
-// A `by` slot is either a bare field name or a `field(...)` expression carrying
-// domain ops (`.sort()`, `.reverse()`, `.bin()`); anything else is an options bag.
-type By = string | FieldExpr;
+// A `by` slot is a field name, key function, or a `field(...)` expression
+// carrying domain ops (`.sort()`, `.reverse()`, `.bin()`); anything else is an
+// options bag.
+type By = string | ((row: any) => unknown) | FieldExpr;
 const isBy = (x: unknown): x is By =>
-  typeof x === "string" || x instanceof FieldExpr;
+  typeof x === "string" || typeof x === "function" || x instanceof FieldExpr;
 
 const spread = (byOrOptions: By | Record<string, unknown>, options = {}) =>
   isBy(byOrOptions)
@@ -149,6 +150,14 @@ type BarleyRow = {
 };
 
 const barley = barleyRaw as BarleyRow[];
+const MORRIS_TAKEAWAY = "Only Morris rose across every variety";
+const barleyWithTakeaway = barley.map((row) => ({
+  ...row,
+  // `.label()` reads a field (or aggregate) in the Python API. Keeping the
+  // note constant within each site group lets the outer spread own exactly
+  // one annotation; empty strings suppress labels for the other sites.
+  takeaway: row.site === "Morris" ? MORRIS_TAKEAWAY : "",
+}));
 // Temporary workaround for gofish-graphics#794: the current `line` mark does
 // not inherit the enclosing site facet when partitioned by variety alone.
 const barleySeries = barley.map((row) => ({
@@ -980,10 +989,10 @@ function renderVizStackedSorted(id = "chart-viz-stacked-sorted") {
   renderVizStackChart(id, { sort: true });
 }
 
-// The composition beat, in TWO slides over ONE structure: spread site ->
+// The composition beat, in THREE slides over ONE structure: spread site ->
 // spread year -> stack variety. The slides are visually identical except for
-// the y-extent, because the ONLY thing that changes between them is `stack`'s
-// `size` argument — normalization reads to the audience as a one-line edit.
+// stack's field pipeline / y-extent, so sort and normalization each read to
+// the audience as a one-line edit.
 //
 //   1. `chart-viz-stacked` (raw, `size: "yield"`) — introduces `stack()`. Bar
 //      height is the site-year's TOTAL yield, each segment a variety's
@@ -994,6 +1003,10 @@ function renderVizStackedSorted(id = "chart-viz-stacked-sorted") {
 //      Every bar is 100% tall, so "the bands line up between a site's 1931 and
 //      1932 bars" now means the variety MIX held — which it did. Answers "did
 //      the mix change, or just the total?".
+//   3. `chart-viz-stacked-sort` combines normalization with
+//      `by: field("variety").sort("yield")`, sorting each site-year stack
+//      independently by contribution. This makes within-stack rank cheaper,
+//      while changing segment order makes identity tracking harder.
 //
 // Facet nesting and spacing (64 between sites / 26 between the year pair
 // inside a site — widened from `renderVizSiteYear`'s 24/4 so the "1931"/
@@ -1007,7 +1020,7 @@ function renderVizStackedSorted(id = "chart-viz-stacked-sorted") {
 // own `panels.render`).
 function renderVizVarietyStack(
   id: string,
-  { normalize = false, w = VIZ_W, h = VIZ_H } = {}
+  { normalize = false, sort = false, w = VIZ_W, h = VIZ_H } = {}
 ) {
   const el = getContainer(id);
   if (!el || el.children.length > 0) return;
@@ -1015,7 +1028,7 @@ function renderVizVarietyStack(
     .flow(
       spread("site", { dir: "x", spacing: 64 }),
       spread("year", { dir: "x", spacing: 26 }),
-      stack("variety", {
+      stack(sort ? field("variety").sort("yield") : "variety", {
         dir: "y",
         size: normalize ? field("yield").normalize() : "yield",
       })
@@ -1026,6 +1039,9 @@ function renderVizVarietyStack(
 
 function renderVizVarietyStackRaw(id = "chart-viz-stacked") {
   renderVizVarietyStack(id, {});
+}
+function renderVizVarietyStackSorted(id = "chart-viz-stacked-sort") {
+  renderVizVarietyStack(id, { normalize: true, sort: true });
 }
 function renderVizVarietyShare(id = "chart-viz-stacked-share") {
   renderVizVarietyStack(id, { normalize: true });
@@ -2051,12 +2067,29 @@ function renderVizBarleyDeltaBars(
   const chartOptions = highlight
     ? { color: palette({ Morris: "#e08214" }), legend: false }
     : vizChartOptions;
+  const siteSpread = spread({
+    by: "site",
+    dir: "x",
+    spacing: DELTA_SITE_SPACING,
+  });
+  const annotatedSiteSpread = annotate
+    ? siteSpread.label("takeaway", {
+        position: "outset-top",
+        color: "#e08214",
+        fontSize: 14,
+        fontWeight: "bold",
+      })
+    : siteSpread;
   Layer([
     Chart(barleyZeroRows)
       .flow(spread({ by: "site", dir: "x", spacing: DELTA_SITE_SPACING }))
       .mark(zeroBaselineMark("barTop")),
-    Chart(barley, chartOptions)
-      .flow(...deltaPanelsFlow, derive(deltaFromYears))
+    Chart(annotate ? barleyWithTakeaway : barley, chartOptions)
+      .flow(
+        annotatedSiteSpread,
+        spread({ by: "variety", dir: "x", spacing: 1 }),
+        derive(deltaFromYears)
+      )
       .mark(
         rect({
           y: "barTop",
@@ -2101,66 +2134,7 @@ function renderVizBarleyDeltaBars(
     })
     .then(() => realignSiteTicks(id)) // HACK: see realignSiteTicks above
     .then(() => dashZeroBaseline(id)) // HACK: see dashZeroBaseline above
-    .then(() => unclipSvgWidth(id)) // HACK: see unclipSvgWidth above
-    .then(() => {
-      if (annotate) addDeltaBarsCallout(id);
-    });
-}
-
-// Modeled closely on `addSlopeCallout` above — same DOM-measurement move
-// (find the Morris-colored marks' rendered bbox, draw plain SVG `<text>`
-// above them), adapted for `<rect>` marks instead of `<path>` lines: the
-// highlight variant fills Morris's bars (and the zero baseline's `<line>`,
-// which never carries this fill) with the same "#e08214", so `rect` is
-// enough to find them. Positioned above the Morris cluster since its bars
-// are the only ones that go UP (positive delta) — that's the sentence's own
-// point, so the callout sits where the rise is, guarded against running off
-// the canvas top the same way `addSlopeCallout` guards `startY`.
-async function addDeltaBarsCallout(id: string) {
-  const el = getContainer(id);
-  if (!el) return;
-  const svg = await waitForChild(el, "svg");
-  if (!svg) return;
-  const morrisMarks = Array.from(
-    svg.querySelectorAll("rect, path")
-  ).filter(
-    (p) =>
-      p.getAttribute("fill") === "#e08214" ||
-      p.getAttribute("stroke") === "#e08214"
-  ) as unknown as SVGGraphicsElement[];
-  if (morrisMarks.length === 0) return;
-  await waitForVisible(svg);
-  let minX = Infinity;
-  let maxX = -Infinity;
-  let minY = Infinity;
-  morrisMarks.forEach((p) => {
-    const b = p.getBBox();
-    minX = Math.min(minX, b.x);
-    maxX = Math.max(maxX, b.x + b.width);
-    minY = Math.min(minY, b.y);
-  });
-  const centerX = (minX + maxX) / 2;
-  const noteColor = "#e08214"; // Morris orange, same hex the highlight variant fills Morris with
-  const lines = [
-    "Morris is the only site",
-    "where every variety rose.",
-    "Everywhere else, they fell.",
-  ];
-  const lineHeight = 18;
-  const startY = Math.max(16, minY - lineHeight * lines.length - 6);
-  const ns = "http://www.w3.org/2000/svg";
-  lines.forEach((lineText, i) => {
-    const t = document.createElementNS(ns, "text");
-    t.setAttribute("x", String(centerX));
-    t.setAttribute("y", String(startY + i * lineHeight));
-    t.setAttribute("text-anchor", "middle");
-    t.setAttribute("fill", noteColor);
-    t.setAttribute("font-family", "'Shantell Sans', sans-serif");
-    t.setAttribute("font-size", "14");
-    t.setAttribute("font-weight", i === 0 ? "700" : "400");
-    t.textContent = lineText;
-    svg.appendChild(t);
-  });
+    .then(() => unclipSvgWidth(id)); // HACK: see unclipSvgWidth above
 }
 
 // ── Part 2: Scatter pie ───────────────────────────────────────────────────
@@ -2488,15 +2462,82 @@ function renderTitanicMosaic(id = "chart-viz-titanic-mosaic", w = 480, h = 400) 
     color: palette({ Yes: "#2b8cbe", No: "#c9c2b5" }),
   })
     .flow(
-      stack("class", { dir: "y", size: field("count").normalize() }).label(
-        "class",
-        { position: "center", fontSize: 12, color: "white" }
-      ),
-      stack("sex", { dir: "x", size: field("count").normalize() }),
-      stack("survived", { dir: "y", size: field("count").normalize() })
+      stack("class", {
+        dir: "y",
+        size: field("count").normalize(),
+      }),
+      stack("sex", {
+        dir: "x",
+        size: field("count").normalize(),
+      }),
+      stack("survived", {
+        dir: "y",
+        size: field("count").normalize(),
+      })
     )
     .mark(rect({ fill: "survived", stroke: "white", strokeWidth: 1 }))
     .render(el, { w, h, axes: false });
+  addMosaicClassLabels(id);
+}
+
+// Work around the current label-elaboration measure-union bug on a
+// three-level normalized mosaic. Chaining `.label("class")` on the outer
+// stack overlays that node with descendants whose conditional shares have
+// intentionally distinct measures; using key functions to erase the measure
+// names avoids the error but collapses all three normalizations into one
+// global frame. Keep the canonical string-key stack spec above, then add the
+// four class names after layout so labels cannot change the mosaic geometry.
+async function addMosaicClassLabels(id: string) {
+  const el = getContainer(id);
+  if (!el) return;
+  const svg = await waitForChild(el, "svg");
+  if (!svg) return;
+  await waitForVisible(svg);
+
+  const plotRects = Array.from(svg.querySelectorAll("rect")).filter((r) => {
+    const b = r.getBBox();
+    // Legend swatches are 10×10; at least one dimension of every plot cell
+    // is appreciably larger, including the narrow survival slivers.
+    return b.width > 20 || b.height > 20;
+  });
+  if (plotRects.length === 0) return;
+
+  const boxes = plotRects.map((r) => r.getBBox());
+  const minX = Math.min(...boxes.map((b) => b.x));
+  const maxX = Math.max(...boxes.map((b) => b.x + b.width));
+  const minY = Math.min(...boxes.map((b) => b.y));
+  const maxY = Math.max(...boxes.map((b) => b.y + b.height));
+  const plotHeight = maxY - minY;
+
+  const classOrder = ["Crew", "Third", "Second", "First"];
+  const classTotals = Object.fromEntries(
+    Object.entries(_.groupBy(titanic, "class")).map(([cls, rows]) => [
+      cls,
+      _.sumBy(rows, "count"),
+    ])
+  ) as Record<string, number>;
+  const total = _.sum(Object.values(classTotals));
+  const ns = "http://www.w3.org/2000/svg";
+  let y = minY;
+
+  classOrder.forEach((cls) => {
+    const rowHeight = plotHeight * (classTotals[cls] / total);
+    const label = document.createElementNS(ns, "text");
+    label.setAttribute("x", String((minX + maxX) / 2));
+    label.setAttribute("y", String(y + rowHeight / 2));
+    label.setAttribute("text-anchor", "middle");
+    label.setAttribute("dominant-baseline", "middle");
+    label.setAttribute("fill", "white");
+    // Match GoFish's native `.label()` typography in the before chart.
+    label.setAttribute("font-family", "source-sans-pro, sans-serif");
+    label.setAttribute("font-size", "12px");
+    label.setAttribute("font-weight", "400");
+    label.setAttribute("pointer-events", "none");
+    label.setAttribute("data-mosaic-class-label", cls);
+    label.textContent = cls;
+    svg.appendChild(label);
+    y += rowHeight;
+  });
 }
 
 // ── Sankey tree (v1 layer/spreadX/stackY/spreadY tree API) ────────────────
@@ -2775,11 +2816,17 @@ function renderMosaicSingleStackBase(
     color: palette({ Yes: "#2b8cbe", No: "#c9c2b5" }),
   })
     .flow(
-      stack("class", { dir: "y", size: field("count").normalize() }).label(
+      stack("class", {
+        dir: "y",
+        size: field("count").normalize(),
+      }).label(
         "class",
         { position: "center", fontSize: 12, color: "white" }
       ),
-      stack("survived", { dir: "x", size: field("count").normalize() })
+      stack("survived", {
+        dir: "x",
+        size: field("count").normalize(),
+      })
     )
     .mark(rect({ fill: "survived", stroke: "white", strokeWidth: 1 }))
     .render(el, { w, h, axes: false });
@@ -3039,6 +3086,7 @@ export const chartRenderers: Record<string, () => void> = {
   "chart-viz-variety-site-mini": renderVizVarietySiteMini,
   "chart-viz-spread-variety": () => renderVizVarietySpread(),
   "chart-viz-stacked": () => renderVizVarietyStackRaw(),
+  "chart-viz-stacked-sort": () => renderVizVarietyStackSorted(),
   "chart-viz-stacked-share": () => renderVizVarietyShare(),
   "chart-viz-variety-pies-table": () => renderVizVarietyPiesTable(),
   "chart-viz-stacked-sorted": () => renderVizStackedSorted(),

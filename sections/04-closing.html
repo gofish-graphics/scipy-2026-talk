@@ -22,7 +22,7 @@
                sign-of-change; ribbons price rank-change queries, which is
                what this energy dataset is actually for). -->
           <section data-background-color="#f7f2e8" data-visibility="hidden"><!-- HIDDEN: move 1 (bars → pies → scatter) cut for time/pacing. Restore by removing data-visibility, and renumber the "move N of 3" kickers below back to "move N of 4" (this slide back to "move 1 of 4"). The renderers (renderScatterPieGridBase, renderScatterPieSpreadMid, renderScatterPieChart) and their chart-q-scatterpie-* containers are untouched in charts.ts. -->
-            <h2>moves that change what you can see</h2>
+            <h2>beyond standard charts</h2>
             <p class="part">move 1 of 4 · bars → pies → scatter</p>
             <div
               style="
@@ -97,7 +97,7 @@
           </section>
 
           <section data-background-color="#f7f2e8">
-            <h2>moves that change what you can see</h2>
+            <h2>beyond standard charts</h2>
             <p class="part">size → units</p>
             <div
               style="
@@ -122,8 +122,8 @@
                   <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">species</em> shares, as segments⟩</span> across <em class="q-field">lakes</em></span>
                 </div>
               </div>
-              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
-              <div style="text-align: center">
+              <div class="fragment" data-fragment-index="1" style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div class="fragment" data-fragment-index="1" style="text-align: center">
                 <div
                   id="chart-q-waffle"
                   class="chart-container viz-ex-tile"
@@ -148,7 +148,7 @@
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=36, fill="species"))</pre>
               </div>
-              <div class="move-code-stage fragment" data-fragment-index="1">
+              <div class="move-code-stage fragment" data-fragment-index="2">
                 <p class="move-code-label">countable units</p>
                 <pre class="viz-code compact">chart(seafood)
   .<span class="viz-op">flow</span>(
@@ -180,7 +180,7 @@
                surviving above Crew (24.0%); adding the sex level reverses
                it within BOTH sexes (the crew is 97% male). -->
           <section data-background-color="#f7f2e8">
-            <h2>moves that change what you can see</h2>
+            <h2>beyond standard charts</h2>
             <p class="part">one more level</p>
             <div
               style="
@@ -205,8 +205,8 @@
                   <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨survival shares⟩</span> across <em class="q-field">classes</em></span>
                 </div>
               </div>
-              <div style="font-size: 1.6em; color: #4a7fb5">→</div>
-              <div style="text-align: center">
+              <div class="fragment" data-fragment-index="1" style="font-size: 1.6em; color: #4a7fb5">→</div>
+              <div class="fragment" data-fragment-index="1" style="text-align: center">
                 <div
                   id="chart-q-mosaic"
                   class="chart-container viz-ex-tile"
@@ -214,7 +214,7 @@
                   aria-label="Three-level mosaic: survival share within each class and sex; Crew beats Third within both sexes"
                 ></div>
                 <p class="viz-ex-caption" style="margin: 0.2rem 0 0">
-                  add sex: the answer flips
+                  condition on sex: the answer flips
                 </p>
                 <div class="viz-query" style="font-size: 0.5em; margin-top: 0.25rem">
                   <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨survival shares⟩</span> across <em class="q-field">class</em> <span style="background: rgba(74, 127, 181, 0.18); border-radius: 3px; padding: 0 3px">× <em class="q-field">sex</em></span></span>
@@ -226,25 +226,22 @@
                 <p class="move-code-label">one level</p>
                 <pre class="viz-code compact">chart(titanic)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">stack</span>("class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
-    <span class="viz-op">stack</span>("survived", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
+    <span class="viz-op">stack</span>(by="class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="viz-op">stack</span>(by="survived", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
-              <div class="move-code-stage fragment" data-fragment-index="1">
+              <div class="move-code-stage fragment" data-fragment-index="2">
                 <p class="move-code-label">one more level</p>
                 <pre class="viz-code compact">chart(titanic)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">stack</span>("class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
-    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>("sex", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),</span>
-    <span class="viz-op">stack</span>("survived", <span class="cut-highlight">dir="y"</span>, size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
+    <span class="viz-op">stack</span>(by="class", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="cut-line cut-highlight"><span class="viz-op">stack</span>(by="sex", dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),</span>
+    <span class="viz-op">stack</span>(by="survived", <span class="cut-highlight">dir="y"</span>, size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="survived"))</pre>
               </div>
             </div>
-            <p class="viz-step-copy" style="text-align: center; margin-top: 0.5rem">
-              one level short, the chart says the opposite. (Simpson's paradox)
-            </p>
             <aside class="notes">
               Second pair, Titanic data, and this one has teeth. The
               two-level mosaic answers the class question directly: Third
@@ -278,7 +275,7 @@
                passes Coal too as Coal collapses 29.6 -> 5.0), Wind passes
                Nuclear 2018->2022, Solar passes Coal by 2022. -->
           <section data-background-color="#f7f2e8">
-            <h2>moves that change what you can see</h2>
+            <h2>beyond standard charts</h2>
             <p class="part">sort + connect</p>
             <div
               style="
@@ -289,35 +286,46 @@
                 margin-top: 0.5rem;
               "
             >
-              <div style="display: flex; flex-direction: column; gap: 0.7rem">
-                <div style="text-align: center">
-                  <div
-                    id="chart-move-ribbon-base"
-                    class="chart-container viz-ex-tile"
-                    style="zoom: 0.6"
-                    aria-label="Sorted stacks: UK generation mix, one stack per year, each year's sources ordered by amount, no connection"
-                  ></div>
-                  <p class="viz-ex-caption" style="margin: 0.15rem 0 0; font-size: 0.5em">
-                    each year's stack, sorted
-                  </p>
-                  <div class="viz-query" style="font-size: 0.4em; margin-top: 0.15rem">
-                    <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">source</em> shares⟩</span> within a <em class="q-field">year</em></span>                  </div>
-                </div>
-                <div style="text-align: center">
-                  <div
-                    id="chart-move-ribbon-mid"
-                    class="chart-container viz-ex-tile"
-                    style="zoom: 0.6"
-                    aria-label="Stacked area: fixed-order stacks connected continuously across years; bands never cross"
-                  ></div>
-                  <p class="viz-ex-caption" style="margin: 0.15rem 0 0; font-size: 0.5em">
-                    the same stacks, connected
-                  </p>
-                  <div class="viz-query" style="font-size: 0.4em; margin-top: 0.15rem">
-                    <span class="q-line"><span class="q-val">follow</span> <span class="q-hole">⟨each <em class="q-field">source</em>⟩</span> across <em class="q-field">years</em></span>                  </div>
+              <div style="text-align: center">
+                <div
+                  id="chart-move-ribbon-base"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.6"
+                  aria-label="Sorted stacks: UK generation mix, one stack per year, each year's sources ordered by amount, no connection"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.15rem 0 0; font-size: 0.5em">
+                  each year's stack, sorted
+                </p>
+                <div class="viz-query" style="font-size: 0.4em; margin-top: 0.15rem">
+                  <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨<em class="q-field">source</em> shares⟩</span> within a <em class="q-field">year</em></span>
                 </div>
               </div>
-              <div style="text-align: center; color: #4a7fb5">
+              <div class="fragment" data-fragment-index="1" style="text-align: center; color: #4a7fb5">
+                <div
+                  style="
+                    font-size: 0.5em;
+                    font-family: 'Shantell Sans', sans-serif;
+                  "
+                >
+                  connect
+                </div>
+                <div style="font-size: 1.6em; line-height: 1">→</div>
+              </div>
+              <div class="fragment" data-fragment-index="1" style="text-align: center">
+                <div
+                  id="chart-move-ribbon-mid"
+                  class="chart-container viz-ex-tile"
+                  style="zoom: 0.6"
+                  aria-label="Stacked area: fixed-order stacks connected continuously across years; bands never cross"
+                ></div>
+                <p class="viz-ex-caption" style="margin: 0.15rem 0 0; font-size: 0.5em">
+                  the same stacks, connected
+                </p>
+                <div class="viz-query" style="font-size: 0.4em; margin-top: 0.15rem">
+                  <span class="q-line"><span class="q-val">follow</span> <span class="q-hole">⟨each <em class="q-field">source</em>⟩</span> across <em class="q-field">years</em></span>
+                </div>
+              </div>
+              <div class="fragment" data-fragment-index="3" style="text-align: center; color: #4a7fb5">
                 <div
                   style="
                     font-size: 0.5em;
@@ -328,7 +336,7 @@
                 </div>
                 <div style="font-size: 1.6em; line-height: 1">→</div>
               </div>
-              <div style="text-align: center">
+              <div class="fragment" data-fragment-index="3" style="text-align: center">
                 <div
                   id="chart-move-ribbon"
                   class="chart-container viz-ex-tile"
@@ -354,21 +362,21 @@
                 <p class="move-code-label">sort each year's stack</p>
                 <pre class="viz-code compact">sorted = chart(energyMix)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y"))
+    <span class="viz-op">stack</span>(by=<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y"))
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="amount", fill="source"))</pre>
               </div>
-              <div class="move-code-stage fragment" data-fragment-index="1">
+              <div class="move-code-stage fragment" data-fragment-index="2">
                 <p class="move-code-label">connect the stacks</p>
                 <pre class="viz-code compact">area = chart(energyMix)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="year"), <span class="viz-op">stack</span>(by="source"))
   .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(by="source", h="amount", fill="source", opacity=0.8))</pre>
               </div>
-              <div class="move-code-stage fragment" data-fragment-index="2">
+              <div class="move-code-stage fragment" data-fragment-index="4">
                 <p class="move-code-label">sort + connect</p>
                 <pre class="viz-code compact">chart(energyMix)
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">stack</span>(<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y")
+    <span class="viz-op">stack</span>(by=<span class="viz-transform">field</span>("source").<span class="viz-transform">sort</span>("amount"), dir="y")
   )
   .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="amount", fill="source"))
   <span class="cut-line cut-highlight">.<span class="viz-op">layer</span>(<span class="viz-mark">ribbon</span>(by="source", opacity=0.5))</span></pre>
@@ -378,12 +386,11 @@
               UK electricity generation · Our World in Data / Ember
             </p>
             <aside class="notes">
-              Third move, a composition, so the layout shows the two
-              ingredients separately and then combined. Left top: sort each
-              year's stack by amount, rank reads as position, but sorting
+              Third move, in three stages. First, sort each year's stack by
+              amount: rank reads as position, but sorting
               re-purposes position from an identity channel to a rank
               channel, so following one source across years is a color hunt.
-              Left bottom: connect instead, the bands carry "same source"
+              Then connect instead: the bands carry "same source"
               identity across years, but in fixed stacking order they never
               cross, so there's nothing to read at a crossing. Compose them
               and the combination pays off: with rank as position AND
@@ -405,7 +412,8 @@
           <!-- Query gallery, part 2: the query stays fixed while the mark gains
                a pictorial form and then an annotation layer. -->
           <section data-background-color="#f7f2e8">
-            <h2>a move that doesn't</h2>
+            <h2>beyond standard charts</h2>
+            <p class="part">pictorial charts</p>
             <div
               style="
                 display: flex;
@@ -426,8 +434,8 @@
                   ordinary normalized bars
                 </p>
               </div>
-              <div style="font-size: 1.35em; color: #4a7fb5">→</div>
-              <div style="text-align: center">
+              <div class="fragment" data-fragment-index="1" style="font-size: 1.35em; color: #4a7fb5">→</div>
+              <div class="fragment" data-fragment-index="1" style="text-align: center">
                 <div
                   id="chart-q-bottle"
                   class="chart-container viz-ex-tile"
@@ -438,8 +446,8 @@
                   paint the bars as bottles
                 </p>
               </div>
-              <div style="font-size: 1.35em; color: #4a7fb5">→</div>
-              <div style="text-align: center">
+              <div class="fragment" data-fragment-index="3" style="font-size: 1.35em; color: #4a7fb5">→</div>
+              <div class="fragment" data-fragment-index="3" style="text-align: center">
                 <div
                   id="chart-q-bottle-annotated"
                   class="chart-container viz-ex-tile"
@@ -461,7 +469,7 @@
     <span class="viz-mark">rect</span>(h="amount", fill="green"),
   ]))</pre>
               </div>
-              <div class="move-code-stage fragment" data-fragment-index="1">
+              <div class="move-code-stage fragment" data-fragment-index="2">
                 <p class="move-code-label">paint the bottle</p>
                 <pre class="viz-code compact"><span class="viz-op">chart</span>(bottleData, axes=False)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x", spacing=20))
@@ -470,7 +478,7 @@
     <span class="viz-mark">rect</span>(h="amount", w=175, fill="green"),
   ], blendMode="color"))</span></pre>
               </div>
-              <div class="move-code-stage fragment" data-fragment-index="2">
+              <div class="move-code-stage fragment" data-fragment-index="4">
                 <p class="move-code-label">layer on labels</p>
                 <pre class="viz-code compact"><span class="viz-op">chart</span>(bottleData, axes=False)
   .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x", spacing=20))
@@ -493,9 +501,6 @@
             <p class="source-line" style="margin-top: 0.3em !important">
               Pictorial composition grammar adapted from PiCCL · Shi et al., IEEE VIS 2025
             </p>
-            <p class="viz-step-copy" style="text-align: center; margin-top: 0.45rem">
-              same query. different voice. clearer annotation.
-            </p>
             <aside class="notes">
               Hold the query fixed: compare the fill shares across bottles.
               First, turn the normalized bars into bottle pictorials with
@@ -515,20 +520,13 @@
             <div>
               <pre class="viz-code">chart(titanic)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">stack</span>("class",    dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
-    <span class="viz-op">stack</span>("sex",      dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
-    <span class="viz-op">stack</span>("survived", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
+    <span class="viz-op">stack</span>(by="class",    dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="viz-op">stack</span>(by="sex",      dir="x", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>()),
+    <span class="viz-op">stack</span>(by="survived", dir="y", size=<span class="viz-transform">field</span>("count").<span class="viz-transform">normalize</span>())
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(fill="survived")
   )</pre>
-              <p class="viz-step-copy">
-                No new operators, just <code>stack</code> three deep. Cell
-                area is the joint count; the blue fraction is the survival
-                rate. And the nesting order decides which comparison you read
-                first, the same choice as the grouped bars that opened the
-                talk.
-              </p>
             </div>
             <div style="position: relative; display: inline-block">
               <div
@@ -559,95 +557,68 @@
             </aside>
           </section>
 
-          <!-- Escalation beat: keep composing and the chart menu runs out.
-               Only structures the audience has NOT already seen, the mosaic
-               and bottle tiles were cut once they starred in the move slides.
-               Sankey is a live render; sunburst, orthogonal tree are gotree
-               SVGs; the pulley diagram (formerly the dedicated horizon slide,
-               now folded in here) is a static PNG export. Polar coverage:
-               sunburst only, since the rose tile was replaced. -->
+          <!-- Escalation beat: six examples from the GoFish gallery. The
+               screenshots are captured from the current GoFish checkout;
+               the polar ribbon and flower use the matching docs assets. -->
           <section data-background-color="#f7f2e8">
             <h2>the same moves, stranger structures</h2>
-            <div
-              style="
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.3rem 0.8rem;
-                margin-top: 0.4rem;
-                justify-items: center;
-                align-items: center;
-              "
-            >
-              <div style="text-align: center">
-                <div
-                  id="chart-viz-ex-sankey"
-                  class="chart-container viz-ex-tile"
-                  style="zoom: 0.55"
-                ></div>
-                <p class="viz-ex-caption">sankey tree</p>
-              </div>
-              <div style="text-align: center">
+            <div class="closing-example-grid">
+              <div class="closing-example">
                 <img
-                  src="gallery-images/pulley-diagram.png"
-                  alt="Pulley diagram of the Larkin and Simon problem: pulleys A, B, C, rope segments, weights W1 and W2, rendered with GoFish"
-                  style="max-height: 180px; max-width: 100%"
+                  data-closing-example="polar-ribbon"
+                  src="gallery-images/polar-ribbon-chart.png"
+                  alt="Polar ribbon chart with five colored ribbons wrapping and crossing around a circular coordinate system"
                 />
-                <p class="viz-ex-caption">pulley diagram</p>
               </div>
-              <div style="text-align: center">
+              <div class="closing-example">
                 <img
-                  src="gallery-images/gotree-sunburst.svg"
-                  alt="Sunburst chart rendered with gofish-gotree"
-                  style="max-height: 180px; max-width: 100%"
+                  data-closing-example="insertion-sort"
+                  src="gallery-images/insertion-sort.png"
+                  alt="Insertion sort trace with five array stages, sorted-prefix outlines, and arrows showing each move"
                 />
-                <p class="viz-ex-caption">sunburst</p>
               </div>
-              <div style="text-align: center">
+              <div class="closing-example">
                 <img
-                  src="gallery-images/gotree-orthogonal.svg"
-                  alt="Orthogonal node-link tree rendered with gofish-gotree"
-                  style="max-height: 180px; max-width: 100%"
+                  data-closing-example="silhouette-tree"
+                  src="gallery-images/multilevel-silhouette-tree.png"
+                  alt="Multilevel silhouette tree mixing radial node-link fans and filled wedge silhouettes"
                 />
-                <p class="viz-ex-caption">orthogonal tree</p>
+              </div>
+              <div class="closing-example closing-example--wide">
+                <img
+                  data-closing-example="layered-bars-area"
+                  src="gallery-images/layered-bars-and-area.png"
+                  alt="Layered bars and area chart showing barley yield changes between 1931 and 1932 across varieties"
+                />
+              </div>
+              <div class="closing-example closing-example--wide">
+                <img
+                  data-closing-example="titanic-circle-treemap"
+                  src="gallery-images/titanic-fare-circle-treemap.png"
+                  alt="Titanic fare circle treemap with passengers packed by class, sized by fare, and colored by survival"
+                />
+              </div>
+              <div class="closing-example">
+                <img
+                  data-closing-example="flower-chart"
+                  src="gallery-images/flower-chart.png"
+                  alt="Flower chart with multicolored petals showing species counts for each lake"
+                />
               </div>
             </div>
-            <p
-              class="viz-step-copy fragment"
-              data-fragment-index="1"
-              style="margin-top: 0.7rem"
-            >
-              Keep composing the same moves and you run out of chart names.
-            </p>
             <aside class="notes">
               Escalation beat. The moves the audience just learned, spread,
               stack, nest, restyle, don't stop where the chart menu does.
-              Walk the tiles and say the operators out loud, since they're
-              not printed on the slide anymore: the sankey is spreads and
-              stacks with ribbons connecting named tiers. The sunburst and
-              the orthogonal tree come from GoTree, a tree-layout grammar
-              embedded in GoFish. And the pulley diagram is not clip art:
-              it's the GoFish docs-gallery export of the Bluefish pulley
-              example, drawn by the same layers, alignment, and constraints
-              as everything else in this talk. It reproduces Figure 1 of
-              Larkin and Simon 1987, "Why a Diagram Is (Sometimes) Worth Ten
-              Thousand Words", their claim is this talk's thesis stated for
-              diagrams in 1987: a diagram earns its keep by making the right
-              inferences cheap. None of these four has a slot in a chart
-              dropdown, they're all the same composition carried further.
-              It's the escalation beat taken to its limit, the sankey,
-              sunburst, and tree at least have chart names; the pulley has
-              none. [advance] Keep composing the same moves and you don't
-              just run out of chart names, you leave charts behind entirely.
-              The structure language already reaches diagrams; the query
-              language for them is open research, a diagram's queries are
-              richer than for-each and share, things like incidence,
-              attachment, which way does it turn, and that's where the
-              research goes next. Close the loop: the strange Science
-              figures and systems diagrams from the opening are in reach of
-              the same moves. The dedicated horizon slide, with the full
-              Larkin and Simon problem text and the speculative look-up,
-              follow, and compare chips, is parked in a comment just below
-              this one; restore it if there's time.
+              Walk the six examples: polar ribbon, insertion sort,
+              multilevel silhouette tree, layered bars and area, Titanic
+              fare circle treemap, and flower chart. Each pushes a familiar
+              operation further: wrap and connect; align and constrain;
+              switch templates inside a hierarchy; layer bars with ribbons;
+              pack circles by fare; replace bars with multivariate glyphs.
+              They are not six new primitive chart types. They are the same
+              small structural vocabulary composed in six different ways.
+              [advance] Keep composing the same moves and you run out of
+              chart names.
             </aside>
           </section>
 
@@ -678,15 +649,6 @@
                 </div>
                 <p style="margin-top: 0.4rem; font-size: 0.5em; color: #666">
                   Larkin &amp; Simon 1987, "Why a Diagram Is (Sometimes) Worth Ten Thousand Words"
-                </p>
-                <p class="viz-step-copy fragment">
-                  The same operators drew this. The structure language already
-                  reaches diagrams, the query language for them is open
-                  research.
-                </p>
-                <p class="viz-step-copy fragment">
-                  And the strange diagrams from the start of the talk? Same
-                  moves, within reach.
                 </p>
               </div>
               <div style="flex: 1; text-align: center">
@@ -785,18 +747,17 @@
               "
             >
               <p class="fragment">
-                <strong>1.</strong> Chart types are great shortcuts, but
-                graphics are actually sophisticated visual structures.
+                <strong>1.</strong> Graphics are visual data structures that we
+                query with our eyes.
               </p>
               <p class="fragment" style="margin-top: 0.8rem">
-                <strong>2.</strong> Changing this structure changes what your
-                reader can <em>and can't</em> see in (probably) predictable
-                ways.
+                <strong>2.</strong> GoFish makes visual structure composable,
+                letting us build familiar charts and continue beyond what
+                conventional visualization grammars make easy.
               </p>
               <p class="fragment" style="margin-top: 0.8rem">
-                <strong>3.</strong> Thinking structurally helps us move beyond
-                familiar charts and rigid rules to designs that might better fit
-                our data or task.
+                <strong>3.</strong> Start with what the reader needs to see,
+                then build the structure that makes it easy.
               </p>
               <!-- <p class="fragment" style="margin-top: 1.2rem; color: #555">
                 GoFish is one attempt. I'd love to hear, in Q&amp;A, in the
@@ -808,13 +769,14 @@
               </p> -->
             </div>
             <aside class="notes">
-              Land all three explicitly. 1: the Part 1 journey, bar, stacked,
-              sorted, ribbon, polar, weren't different chart types, they were
-              structural moves. 2: affordances thread, every move opens some
-              queries and closes others. 3: the composition payoff,
-              scatter-pie, flower, balloon weren't in any dropdown. Then the
-              honest close: GoFish is one attempt, Q&A is needfinding. ~27 min
-              mark.
+              Land all three explicitly. 1: the central thesis, graphics are
+              visual data structures and reading them means querying that
+              structure with our eyes. 2: the GoFish contribution, those
+              structural moves are directly authorable and keep composing
+              after the conventional chart vocabulary runs out. 3: the design
+              method, start from the reader's question and build the structure
+              that makes it easy to answer. Then the honest close: GoFish is
+              one attempt, Q&A is needfinding. ~27 min mark.
             </aside>
           </section>
 
@@ -873,6 +835,15 @@
                           target="_blank"
                           rel="noopener noreferrer"
                           ><code>gofish-graphics/gofish-graphics</code></a
+                        >
+                      </p>
+                      <p>
+                        🎞️ <strong>Slides:</strong>
+                        <a
+                          href="https://github.com/gofish-graphics/scipy-2026-talk"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><code>gofish-graphics/scipy-2026-talk</code></a
                         >
                       </p>
                     </div>
@@ -980,10 +951,25 @@
                 ></div>
               </div>
             </div>
+            <div class="close-slide-next">
+              <h2>what's next?</h2>
+              <p>
+                I’m defending my PhD in a week and a half(!) I don’t know
+                exactly what comes next, but I want to work with scientists,
+                mathematicians, and software engineers on challenging
+                visualization design problems. I also want to maintain GoFish
+                as a system that bridges visualization research and practice.
+              </p>
+            </div>
             <aside class="notes">
               Quick pip install (--pre for the alpha), docs, and GitHub.
-              Socials, scan the QR or find me at joshmpollock.com. ~28 min
-              mark.
+              Socials, scan the QR or find me at joshmpollock.com. I’m
+              defending in a week and a half and still figuring out what comes
+              next; the
+              throughline I’m looking for is hard visualization design work
+              with scientists, mathematicians, and software engineers, while
+              maintaining GoFish as a bridge between visualization research
+              and practice. ~28 min mark.
             </aside>
           </section>
 

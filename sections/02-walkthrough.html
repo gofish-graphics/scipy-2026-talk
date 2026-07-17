@@ -43,10 +43,6 @@
             <h2>start with the data</h2>
             <div>
               <pre class="viz-code">chart(barley)</pre>
-              <p class="viz-step-copy">
-                Ten varieties, six sites, two years, before any operator
-                touches it, the chart is just the data.
-              </p>
             </div>
             <table class="data-table">
               <thead>
@@ -98,9 +94,6 @@
   <span class="cut-highlight">.<span class="viz-op">flow</span>(</span>
     <span class="cut-highlight"><span class="viz-op">spread</span>(by="site", dir="x")</span>
   <span class="cut-highlight">)</span></pre>
-              <p class="viz-step-copy">
-                The first operator creates a row of visual neighborhoods.
-              </p>
             </div>
             <div
               id="chart-viz-site-slots"
@@ -121,10 +114,6 @@
   <span class="cut-highlight">.<span class="viz-mark">mark</span>(</span>
     <span class="cut-highlight"><span class="viz-mark">rect</span>(h="yield")</span>
   <span class="cut-highlight">)</span></pre>
-              <p class="viz-step-copy">
-                The mark says what gets drawn; the channel says what property
-                carries the value.
-              </p>
             </div>
             <div
               id="chart-viz-site-yield"
@@ -171,6 +160,68 @@
   .<span class="viz-mark">mark</span>(
     <span class="cut-highlight"><span class="viz-mark">rect</span>(h="yield", fill="site")</span>
   )</pre>
+              <h3 class="transform-heading fragment" data-fragment-index="1">
+                data transformation pipeline
+              </h3>
+              <div class="transform-build" aria-label="The barley rows are grouped by site, then by year; each resulting group becomes a rectangle whose height sums yield and whose fill takes the site value.">
+                <div class="transform-stage transform-data fragment" data-fragment-index="1">
+                  <span class="transform-stage-label">barley</span>
+                  <span class="transform-stage-detail">120 rows</span>
+                  <span class="transform-fields">variety · site · year · yield</span>
+                </div>
+
+                <div class="transform-step fragment" data-fragment-index="2">
+                  <span class="transform-arrow">↓</span>
+                  <code>group_by("site")</code>
+                </div>
+                <div class="transform-groups transform-sites fragment" data-fragment-index="2">
+                  <div class="transform-group">
+                    <b>University Farm</b><span>20 rows</span>
+                  </div>
+                  <div class="transform-group">
+                    <b>Waseca</b><span>20 rows</span>
+                  </div>
+                  <span class="transform-ellipsis">…</span>
+                  <div class="transform-group">
+                    <b>Morris</b><span>20 rows</span>
+                  </div>
+                </div>
+
+                <div class="transform-step fragment" data-fragment-index="3">
+                  <span class="transform-arrow">↓</span>
+                  <code>group_by("year")</code>
+                </div>
+                <div class="transform-groups transform-years fragment" data-fragment-index="3">
+                  <div><span>1931</span><span>1932</span></div>
+                  <div><span>1931</span><span>1932</span></div>
+                  <span class="transform-ellipsis">…</span>
+                  <div><span>1931</span><span>1932</span></div>
+                </div>
+
+                <div class="transform-step fragment" data-fragment-index="4">
+                  <span class="transform-arrow">↓</span>
+                </div>
+                <div class="transform-groups transform-rects fragment" data-fragment-index="4">
+                  <div>
+                    <span class="transform-rect-cell"><i aria-hidden="true"></i><b>rect</b></span>
+                    <span class="transform-rect-cell"><i aria-hidden="true"></i><b>rect</b></span>
+                  </div>
+                  <div>
+                    <span class="transform-rect-cell"><i aria-hidden="true"></i><b>rect</b></span>
+                    <span class="transform-rect-cell"><i aria-hidden="true"></i><b>rect</b></span>
+                  </div>
+                  <span class="transform-ellipsis">…</span>
+                  <div>
+                    <span class="transform-rect-cell"><i aria-hidden="true"></i><b>rect</b></span>
+                    <span class="transform-rect-cell"><i aria-hidden="true"></i><b>rect</b></span>
+                  </div>
+                </div>
+                <div class="transform-leaf-note fragment" data-fragment-index="4">
+                  <b>each <span class="viz-mark">rect</span></b>
+                  <code><i>h</i> = sum(yield)</code>
+                  <code><i>fill</i> = first(site)</code>
+                </div>
+              </div>
             </div>
             <div
               id="chart-viz-site-year"
@@ -182,6 +233,10 @@
               spread(by="site") then spread(by="year"), is now built. The
               important idea is already visible: graphical operators can
               nest, and their order determines which values become neighbors.
+              Build the transform view in four beats: the 120 source rows;
+              six site groups; two year groups inside each site; then one rect
+              per site-year leaf. Height sums the ten varieties' yields in the
+              leaf, while fill takes the homogeneous site value.
             </aside>
           </section>
 
@@ -534,29 +589,29 @@
           -->
 
           <!-- Nesting build-up: one layout at a time, then all three together -->
-          <section class="viz-step mini-table-slide" data-background-color="#f7f2e8">
+          <section class="viz-step mini-table-slide nesting-order-slide" data-background-color="#f7f2e8">
             <h2>group by site, then year</h2>
             <div
               style="
                 display: flex;
                 gap: 1.1rem;
                 justify-content: center;
-                align-items: center;
-                margin-top: 0;
+                align-items: flex-start;
+                margin-top: 3rem;
                 min-height: 440px;
                 font-size: 0.95em;
               "
             >
-              <div
-                id="chart-viz-nest-grouped-r-solo"
-                class="chart-container viz-gofish-chart"
-                style="flex: 0 0 auto"
-              ></div>
               <pre class="viz-code cut-spec" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
               ><span class="cut-line">chart(barley).flow(</span>
 <span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
 <span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
+              <div
+                id="chart-viz-nest-grouped-r-solo"
+                class="chart-container viz-gofish-chart"
+                style="flex: 0 0 auto"
+              ></div>
               <div class="cut-chips" style="flex: 0 0 auto; max-width: 300px; display: flex; flex-direction: column; gap: 0.6rem; align-self: stretch; justify-content: center;">
                 <div class="viz-query" style="font-size: 0.68em">
                   <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">site</em>'s <em class="q-field">year</em> pattern⟩</span> across <em class="q-field">sites</em></span>
@@ -590,29 +645,29 @@
             </aside>
           </section>
 
-          <section class="viz-step mini-table-slide" data-background-color="#f7f2e8">
+          <section class="viz-step mini-table-slide nesting-order-slide" data-background-color="#f7f2e8">
             <h2>or group by year, then site</h2>
             <div
               style="
                 display: flex;
                 gap: 1.1rem;
                 justify-content: center;
-                align-items: center;
-                margin-top: 0;
+                align-items: flex-start;
+                margin-top: 3rem;
                 min-height: 440px;
                 font-size: 0.95em;
               "
             >
-              <div
-                id="chart-viz-nest-grouped-solo"
-                class="chart-container viz-gofish-chart"
-                style="flex: 0 0 auto"
-              ></div>
               <pre class="viz-code cut-spec" style="flex: 0 0 auto; margin-top: 0; width: fit-content"
               ><span class="cut-line">chart(barley).flow(</span>
 <span class="cut-line">  <span class="viz-op">spread</span>(by="year", dir="x"),</span>
 <span class="cut-line">  <span class="viz-op">spread</span>(by="site", dir="x"),</span>
 <span class="cut-line">).<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="yield", fill="site"))</span></pre>
+              <div
+                id="chart-viz-nest-grouped-solo"
+                class="chart-container viz-gofish-chart"
+                style="flex: 0 0 auto"
+              ></div>
               <div class="cut-chips" style="flex: 0 0 auto; max-width: 300px; display: flex; flex-direction: column; gap: 0.6rem; align-self: stretch; justify-content: center;">
                 <div class="viz-query" style="font-size: 0.68em">
                   <span class="q-line"><span class="q-val">compare</span> <span class="q-hole">⟨each <em class="q-field">year</em>'s <em class="q-field">site</em> pattern⟩</span> across <em class="q-field">years</em></span>
@@ -787,7 +842,7 @@
                 <pre
                   style="margin: 0; font-size: 0.9em"
                 ><code class="language-python">chart(barley).flow(
-  table("site", "year"),
+  table(by=("site", "year")),
 ).mark(rect(fill="yield"))</code></pre>
                 <div class="viz-query" style="font-size: 0.78em; max-width: 100%">
                   <span class="q-line"><span class="q-val">look up</span> <span class="q-hole">⟨a <em class="q-field">yield</em> color⟩</span> at <em class="q-field">site</em> × <em class="q-field">year</em></span>
@@ -881,12 +936,6 @@
   .<span class="viz-mark">mark</span>(
     <span class="cut-highlight"><span class="viz-mark">rect</span>(h="yield", fill="variety")</span>
   )</pre>
-              <p class="viz-step-copy">
-                Make variety the comparison unit, then put its two years
-                side by side. The pairing is now right. But every change is
-                still encoded as two separate heights, so the eye must infer
-                ten differences within every site.
-              </p>
             </div>
             <div
               id="chart-viz-spread-variety"
@@ -900,15 +949,16 @@
               the two values whose difference we care about are now adjacent.
               What remains is the representational cost of bars themselves.
               Each change is still something we infer from two tiny heights,
-              repeated ten times per site. The next slide turns each pair into
-              a single connected trajectory, so direction becomes visible.
+              repeated ten times per site. Before connecting those pairs, keep
+              site and year fixed and try one other way of arranging variety:
+              stack its values into a whole.
             </aside>
           </section>
 
-          <!-- HIDDEN: the stack/normalize/pies detour interrupts the more direct
-               spread -> slope -> delta argument. Keep these slides
-               as operator examples for possible reuse. -->
-          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
+          <!-- Stack and normalization introduce both constructs before the later
+               mosaic examples. They also establish the site -> year scaffold
+               reused by the slope chart. The pie variant below stays hidden. -->
+          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8">
             <h2><code>stack()</code></h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
@@ -919,20 +969,11 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="cut-highlight"><span class="viz-op">stack</span>("variety", dir="y", size="yield")</span>
+    <span class="cut-highlight"><span class="viz-op">stack</span>(by="variety", dir="y", size="yield")</span>
   )
   .<span class="viz-mark">mark</span>(
     <span class="cut-highlight"><span class="viz-mark">rect</span>(w=8, fill="variety")</span>
   )</pre>
-              <p class="viz-step-copy">
-                Spreading a third time lost the total. Stacking variety
-                instead of spreading it puts the parts back into a whole:
-                opening each site's bar by variety shows that the
-                <strong>total</strong> moved, bar heights differ between the
-                two years. Whether the <em>mix</em> changed is still an
-                expensive read: each variety's segment sits on a shifting
-                baseline set by everything stacked below it.
-              </p>
             </div>
             <div
               id="chart-viz-stacked"
@@ -953,12 +994,12 @@
               bigger than Morris's own Manchuria (+6.9) or Glabron (+6.4),
               and its segment is nearly impossible to isolate here, buried
               mid-stack on a baseline that itself moved. That failure is the
-              point: it's what sends us to normalize next, throwing the total
-              away on purpose to make the mix question cheap.
+              point: normalize next, throwing the total away on purpose to
+              make the composition question cheap.
             </aside>
           </section>
 
-          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
+          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8">
             <h2>did the mix change?</h2>
             <div>
               <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
@@ -969,16 +1010,11 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="site", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="cut-highlight"><span class="viz-op">stack</span>("variety", dir="y", size=<span class="viz-op">field</span>("yield").<span class="viz-transform">normalize</span>())</span>
+    <span class="cut-highlight"><span class="viz-op">stack</span>(by="variety", dir="y", size=<span class="viz-transform">field</span>("yield").<span class="viz-transform">normalize</span>())</span>
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(w=8, fill="variety")
   )</pre>
-              <p class="viz-step-copy">
-                One line changed: <code>normalize()</code>. Every bar is now
-                the same height, so the total is deliberately thrown away and
-                only composition is left.
-              </p>
             </div>
             <div
               id="chart-viz-stacked-share"
@@ -988,11 +1024,48 @@
               A negative result, and a real finding: the bands line up across
               each site's year pair, the variety mix held. It isn't one big
               variety swinging the total; it's all of them, moving together,
-              roughly in proportion. Only the total moved. That's exactly
-              what licenses the simplification that follows, if the mix is
-              stable, the total (or really, its site-by-site delta) is the
-              whole story, and we can stop carrying per-variety segments at
-              all. The next beat abstracts down to a single number per site.
+              roughly in proportion. Only the total moved. But aligned band
+              boundaries still do not make ten individual changes easy to
+              follow. The next beat keeps the same site-then-year scaffold,
+              replaces stack with scatter, and connects each variety's two
+              values into a trajectory.
+            </aside>
+          </section>
+
+          <!-- HIDDEN ALTERNATE: sorting each normalized stack makes within-year
+               rank spatial, but destroys the stable band ordering that makes
+               the across-year composition comparison useful. -->
+          <section class="split viz-step mini-table-slide" data-background-color="#f7f2e8" data-visibility="hidden">
+            <h2>now sort each normalized stack</h2>
+            <div>
+              <div class="viz-query" style="margin: 0.3rem 0 0.7rem; font-size: 0.62em">
+                <span class="q-ctx"><em class="q-field">site</em> = Morris</span>
+                <span class="q-line"><span class="q-val">rank</span> <span class="q-hole" style="white-space: nowrap">⟨each <em class="q-field">variety</em>'s share of <em class="q-field">yield</em>⟩</span> within each <em class="q-field">year</em></span>
+              </div>
+              <pre class="viz-code">chart(barley)
+  .<span class="viz-op">flow</span>(
+    <span class="viz-op">spread</span>(by="site", dir="x"),
+    <span class="viz-op">spread</span>(by="year", dir="x"),
+    <span class="cut-highlight"><span class="viz-op">stack</span>(by=<span class="viz-transform">field</span>("variety").<span class="viz-transform">sort</span>("yield"), dir="y",</span>
+          <span class="cut-highlight">size=<span class="viz-transform">field</span>("yield").<span class="viz-transform">normalize</span>())</span>
+  )
+  .<span class="viz-mark">mark</span>(
+    <span class="viz-mark">rect</span>(w=8, fill="variety")
+  )</pre>
+            </div>
+            <div
+              id="chart-viz-stacked-sort"
+              class="chart-container viz-gofish-chart"
+            ></div>
+            <aside class="notes">
+              This retains normalize from the previous slide and adds sort to
+              the stack's grouping field. Sort runs independently inside every
+              site-year leaf: the largest share lands at the top and the
+              smallest at the bottom. Rank is cheaper, but the stable band
+              ordering is gone, so comparing one variety's share across years
+              is harder. The next beat keeps the same site-then-year scaffold,
+              replaces stack with scatter, and connects each variety's two
+              absolute values into a trajectory.
             </aside>
           </section>
 
@@ -1005,20 +1078,13 @@
               </div>
               <pre class="viz-code">chart(barley)
   .<span class="viz-op">flow</span>(
-    <span class="viz-op">table</span>(by="site", by="year"),
+    <span class="viz-op">table</span>(by=("site", "year")),
   )
   .<span class="viz-mark">mark</span>(
     <span class="cut-highlight">chart(coord=clock())</span>
-      .<span class="viz-op">flow</span>(<span class="viz-op">stack</span>("variety", dir="x", size="yield"))
+      .<span class="viz-op">flow</span>(<span class="viz-op">stack</span>(by="variety", dir="x", size="yield"))
       .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(fill="variety"))
   )</pre>
-              <p class="viz-step-copy">
-                Still one line changed, and still the same normalized stack,
-                only the coordinate system is different. Length became angle.
-                The mix comparison that was a glance at the normalized bars
-                (do the band boundaries line up?) is now a wedge-to-wedge
-                comparison of angles, stacked one pie on top of another.
-              </p>
             </div>
             <div
               id="chart-viz-variety-pies-table"
@@ -1097,7 +1163,7 @@
                   style="margin: 0; font-size: 0.9em"
                 ><code class="language-python">chart(data).flow(
   spread(by="lake", dir="x"),
-  stack("species",  dir="y", size="count"),
+  stack(by="species", dir="y", size="count"),
 ).mark(rect(fill="species"))</code></pre>
               </div>
 
@@ -1125,7 +1191,7 @@
                 <pre
                   style="margin: 0; font-size: 0.9em"
                 ><code class="language-python">chart(data).flow(
-  table("lake", "species"),
+  table(by=("lake", "species")),
 ).mark(rect(fill="count"))</code></pre>
               </div>
             </div>
@@ -1147,15 +1213,11 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="variety", dir="x", spacing=24),
     <span class="viz-op">spread</span>(by="year", dir="x", spacing=4),
-    <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
+    <span class="viz-op">stack</span>(by=<span class="viz-transform">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(fill="site")
   )</pre>
-              <p class="viz-step-copy">
-                Add year as a second grouping, then sort each stack by yield
-                before placing it.
-              </p>
             </div>
             <div
               id="chart-viz-year-sorted"
@@ -1175,15 +1237,11 @@
   .<span class="viz-op">flow</span>(
     <span class="viz-op">spread</span>(by="variety", dir="x"),
     <span class="viz-op">spread</span>(by="year", dir="x"),
-    <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
+    <span class="viz-op">stack</span>(by=<span class="viz-transform">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
   )
   .<span class="viz-mark">mark</span>(
     <span class="viz-mark">rect</span>(w=8, fill="site")
   )</pre>
-              <p class="viz-step-copy">
-                Order each stack by yield. Rank, min, and max now read off
-                position; what we give up is the "same site, same slot" tracking.
-              </p>
             </div>
             <div
               id="chart-viz-stacked-sorted"
@@ -1203,18 +1261,13 @@
     .<span class="viz-op">flow</span>(
       <span class="viz-op">spread</span>(by="variety", dir="x", spacing=24),
       <span class="viz-op">spread</span>(by="year", dir="x", spacing=16),
-      <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
+      <span class="viz-op">stack</span>(by=<span class="viz-transform">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
     )
     .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=8, fill="site").name("bars")),
   chart(selectAll("bars"))
     .<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="variety"), <span class="viz-op">group</span>(by="site"))
     .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.5))
 ])</pre>
-              <p class="viz-step-copy">
-                Connection restores the identity that sorting gave up: the
-                areas track each site across stacks, and a crossing reads as a
-                rank change.
-              </p>
             </div>
             <div
               id="chart-viz-ribbon"
@@ -1243,17 +1296,13 @@
     .<span class="viz-op">flow</span>(
       <span class="viz-op">spread</span>(by="variety", dir="x", spacing=38),
       <span class="viz-op">spread</span>(by="year", dir="x", spacing=8),
-      <span class="viz-op">stack</span>(<span class="viz-op">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
+      <span class="viz-op">stack</span>(by=<span class="viz-transform">field</span>("site").<span class="viz-transform">sort</span>("yield"), dir="y", size="yield")
     )
     .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(w=16, fill="site").name("bars")),
   chart(selectAll("bars"))
     .<span class="viz-op">flow</span>(<span class="viz-op">group</span>(by="variety"), <span class="viz-op">group</span>(by="site"))
     .<span class="viz-mark">mark</span>(<span class="viz-mark">ribbon</span>(opacity=0.78))
 ])</pre>
-              <p class="viz-step-copy">
-                Once the structure is right, palette becomes an attention
-                decision instead of a chart-type decision.
-              </p>
             </div>
             <div
               id="chart-viz-ribbon-highlight"

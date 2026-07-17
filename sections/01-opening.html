@@ -4,11 +4,16 @@
              TITLE
              ══════════════════════════════════════════════════════ -->
           <section data-background-color="#f7f2e8" class="scipy-title-slide">
+            <img
+              class="title-gofish-logo"
+              src="gofish-logo.png"
+              alt="GoFish logo"
+            />
             <h1>
               <span class="title-product">GoFish:</span>
               <span class="title-claim">Graphical Structure in Plain Sight</span>
             </h1>
-            <p class="meta">Josh Pollock · with Arvind Satyanarayan</p>
+            <p class="meta">Josh Pollock with Arvind Satyanarayan</p>
             <div class="title-logo-row">
               <img src="mit-csail-logo.svg" alt="MIT CSAIL logo" />
               <img src="mit-vis-logo.png" alt="MIT Visualization Group logo" />
@@ -719,12 +724,12 @@
           </section>
 
           <!-- Marks & channels: related work that doesn't explain the swap -->
-          <section data-background-color="#f7f2e8">
-            <h2>the grammar of graphics: marks and channels</h2>
-            <div
-              class="two-col"
-              style="gap: 2.5rem; align-items: start; margin-top: 0.5rem"
-            >
+          <section
+            data-background-color="#f7f2e8"
+            data-slide-key="grammar-of-graphics"
+          >
+            <h2>the grammar of graphics: marks, channels, and coordinates</h2>
+            <div class="gog-concepts-grid">
               <div class="fragment" data-fragment-index="1">
                 <h3>marks <span style="color: #888; font-weight: 400">(shapes)</span></h3>
                 <img
@@ -759,9 +764,22 @@
                   Munzner, <em>Visualization Analysis and Design</em> (2014)
                 </p>
               </div>
+              <div class="fragment gog-coordinate-column" data-fragment-index="3">
+                <h3>coordinates <span style="color: #888; font-weight: 400">(space transformations)</span></h3>
+                <div class="gog-coordinate-image-frame">
+                  <img
+                    src="marks-channels/thompson-growth-transformation.png"
+                    alt="Thompson’s growth transformation: a fish and its coordinate grid progressively warped into two curved forms"
+                  />
+                </div>
+                <p class="source-line gog-coordinate-source">
+                  Thompson’s growth transformation · via Wilkinson,
+                  <em>The Grammar of Graphics</em>
+                </p>
+              </div>
             </div>
-            <h2 class="fragment" data-fragment-index="3" style="margin-top: 1.2rem; font-size: 1.2em">
-              but there's <span class="highlight">no account of structure</span>, so it can't explain what we just saw
+            <h2 class="fragment" data-fragment-index="4" style="margin-top: 1.2rem; font-size: 1.2em">
+              but we need a notion of <span class="highlight">visual structure</span> to explain what we just saw
             </h2>
             <aside class="notes">
               This is the strongest answer yet. You might object that the
@@ -769,7 +787,9 @@
               channels. Marks are the shapes; channels are how data maps onto
               them, and there's a famous accuracy ranking: position and length
               beat angle, area, and color. That tells us how precisely one
-              value can be read. But you just saw the counterexample: same
+              value can be read. Coordinate systems can also transform the
+              space in which those marks are drawn. But you just saw the
+              counterexample: same
               marks, same channels, same rankings, and you read the three
               charts differently. Marks and channels are blind to arrangement
               and how things are grouped and laid out. So we need a way of
@@ -1043,10 +1063,48 @@
             </aside>
           </section>
 
-          <section class="chart-space-map" data-background-color="#f7f2e8">
-            <h2>the same structure can describe both simple charts and very complex ones</h2>
+          <!-- Section transition: introduce GoFish before showing its range. -->
+          <section class="scipy-statement" data-background-color="#f7f2e8">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+              "
+            >
+              <img
+                src="gofish-logo.png"
+                alt="GoFish logo"
+                style="height: 72px; object-fit: contain"
+              />
+              <h2
+                style="
+                  font-size: 2.4em;
+                  margin: 0;
+                  font-family:
+                    &quot;Shantell Sans&quot;, &quot;Comic Sans MS&quot;,
+                    cursive, sans-serif;
+                "
+              >
+                GoFish
+              </h2>
+            </div>
+            <aside class="notes">
+              GoFish is the structure language. Before we build a chart one
+              operator at a time, I want to show the range of structures the
+              same language can describe.
+            </aside>
+          </section>
+
+          <section
+            class="chart-space-map"
+            data-background-color="#f7f2e8"
+            data-slide-key="chart-space-map"
+          >
+            <h2>visual structure can help us describe both simple charts and very complex ones</h2>
             <div class="chart-space-route">
-              <div class="chart-space-region">
+              <div class="chart-space-region fragment fade-in" data-fragment-index="1">
                 <h3>familiar chart space</h3>
                 <div class="chart-space-familiar">
                   <figure>
@@ -1070,9 +1128,9 @@
                 </div>
               </div>
 
-              <div class="chart-space-arrow" aria-hidden="true">→</div>
+              <div class="chart-space-arrow fragment fade-in" data-fragment-index="2" aria-hidden="true">→</div>
 
-              <div class="chart-space-region">
+              <div class="chart-space-region fragment fade-in" data-fragment-index="2">
                 <h3>the long tail</h3>
                 <div class="chart-space-grid">
                   <figure>
@@ -1102,9 +1160,9 @@
                 </div>
               </div>
 
-              <div class="chart-space-arrow" aria-hidden="true">→</div>
+              <div class="chart-space-arrow fragment fade-in" data-fragment-index="3" aria-hidden="true">→</div>
 
-              <div class="chart-space-region">
+              <div class="chart-space-region fragment fade-in" data-fragment-index="3">
                 <h3>beyond chart space</h3>
                 <div class="chart-space-grid">
                   <figure>
@@ -1204,7 +1262,7 @@
             </aside>
           </section>
           <!-- GoFish is based on Gestalt grouping principles -->
-          <section>
+          <section data-slide-key="gofish-gestalt">
             <h2>GoFish is based on Gestalt grouping principles</h2>
             <table
               style="
@@ -1321,7 +1379,7 @@
           </section>
 
           <!-- Science example + Gestalt grouping table (same rows as previous slide) -->
-          <section>
+          <section data-slide-key="gofish-gestalt-example">
             <!-- <h2>Gestalt structure, not a taxonomic menu</h2> -->
             <div
               class="gestalt-taxonomy-slide-body"
@@ -1495,36 +1553,102 @@
 
           <!-- The anon->barley reveal slide moved up to sit right after the Franconeri demo (2026-07-12). -->
 
-          <!-- Transition: gestalt theory → GoFish walkthrough -->
-          <section class="scipy-statement" data-background-color="#f7f2e8">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 1rem;
-              "
-            >
-              <img
-                src="gofish-logo.png"
-                alt="GoFish logo"
-                style="height: 72px; object-fit: contain"
-              />
-              <h2
-                style="
-                  font-size: 2.4em;
-                  margin: 0;
-                  font-family:
-                    &quot;Shantell Sans&quot;, &quot;Comic Sans MS&quot;,
-                    cursive, sans-serif;
-                "
-              >
-                GoFish
-              </h2>
+          <section class="api-tiers-slide" data-background-color="#f7f2e8">
+            <div class="api-tiers-header">
+              <div>
+                <h2>
+                  GoFish has
+                  <span class="api-tier-count">
+                    <span class="api-tier-count-three">three</span>
+                    <span class="api-tier-count-four fragment fade-in" data-fragment-index="4">four</span>
+                  </span>
+                  API tiers
+                </h2>
+              </div>
+              <div class="api-tier-bars" aria-label="A three-bar chart">
+                <i style="--bar-h: 42%"></i><i style="--bar-h: 82%"></i><i style="--bar-h: 60%"></i>
+              </div>
             </div>
+
+            <div class="api-tier-stack">
+              <div class="api-tier api-tier-template fragment fade-in" data-fragment-index="4">
+                <div class="api-tier-name">
+                  <strong>chart templates</strong>
+                  <span>proposed</span>
+                </div>
+                <pre class="api-tier-code">bar_chart(data, x="category", y="value")</pre>
+                <div class="api-tier-use">popular chart types</div>
+              </div>
+
+              <div class="api-tier fragment fade-in" data-fragment-index="1">
+                <span class="api-tier-arrow fragment fade-in" data-fragment-index="4" aria-hidden="true">↓</span>
+                <div class="api-tier-name"><strong>pipelines</strong></div>
+                <pre class="api-tier-code">chart(data)
+  .<span class="viz-op">flow</span>(<span class="viz-op">spread</span>(by="category", dir="x"))
+  .<span class="viz-mark">mark</span>(<span class="viz-mark">rect</span>(h="value"))</pre>
+                <div class="api-tier-use">common and uncommon statistical graphics</div>
+                <span class="api-tier-focus fragment" data-fragment-index="5" aria-hidden="true"></span>
+              </div>
+
+              <div class="api-tier fragment fade-in" data-fragment-index="2">
+                <span class="api-tier-arrow fragment fade-in" data-fragment-index="2" aria-hidden="true">↓</span>
+                <div class="api-tier-name"><strong>components</strong></div>
+                <pre class="api-tier-code">groups = (
+  data.<span class="viz-transform">group_by</span>("category")
+      .<span class="viz-transform">agg</span>(<span class="viz-transform">pl.col</span>("value").<span class="viz-transform">sum</span>())
+)
+
+rects = [
+  <span class="viz-mark">rect</span>(key=d["category"], h=<span class="viz-transform">datum</span>(d["value"]))
+  <span class="viz-keyword">for</span> d <span class="viz-keyword">in</span> groups.<span class="viz-transform">iter_rows</span>(named=<span class="viz-keyword">True</span>)
+]
+
+<span class="viz-op">spread</span>(rects, dir="x", alignment="baseline")</pre>
+                <div class="api-tier-use">one-off annotations, non-tabular data (e.g., trees)</div>
+              </div>
+
+              <div class="api-tier fragment fade-in" data-fragment-index="3">
+                <span class="api-tier-arrow fragment fade-in" data-fragment-index="3" aria-hidden="true">↓</span>
+                <div class="api-tier-name"><strong>constraints</strong></div>
+                <pre class="api-tier-code">groups = ...
+
+rects = ...
+
+<span class="viz-op">layer</span>(rects).<span class="viz-op">constrain</span>(<span class="viz-keyword">lambda</span> a, b, c: [
+  Constraint.<span class="viz-op">align</span>([a, b, c], y="baseline"),
+  Constraint.<span class="viz-op">distribute</span>([a, b, c], dir="x")
+])</pre>
+                <div class="api-tier-use">diagrams and other bespoke graphics</div>
+              </div>
+            </div>
+
             <aside class="notes">
-              Enough theory, let's get into the code. We'll rebuild the bar
-              charts from the opening in GoFish, one operator at a time.
+              GoFish currently gives us three ways to describe the same
+              structure. Pipelines are the everyday chart-building API.
+              Components expose the visual tree directly. Constraints expose
+              the relations that operators compile down to: align the bars at
+              a common baseline, then distribute them along x.
+
+              <br /><br />
+
+              These are not separate systems, and you do not have to choose
+              one tier for an entire graphic. The tiers interoperate. A
+              pipeline constructs components and elaborates into constraints;
+              you can start at a high level, then drop down locally for one
+              annotation, one non-tabular subtree, or one bespoke relation.
+              The arrows are meant literally: each level expands into the
+              level beneath it.
+
+              <br /><br />
+
+              There is a proposed fourth tier above pipelines: chart
+              templates. The design notes call these named expansions, not new
+              primitives. So bar_chart is just a concise name for the pipeline
+              immediately below it, and it remains possible to elaborate or
+              customize the result at a lower tier. The dashed boundary marks
+              this tier as a proposal rather than the stable API used in the
+              rest of the talk. [advance] For the rest of this talk, we're
+              going to work primarily at the pipeline tier.
             </aside>
           </section>
 
